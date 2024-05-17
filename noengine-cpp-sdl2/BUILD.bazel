@@ -1,0 +1,64 @@
+load("@bazel_skylib//lib:selects.bzl", "selects")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@rules_ecsact//ecsact:defs.bzl", "ecsact_binary", "ecsact_codegen")
+
+ecsact_codegen(
+    name = "ecsact_cpp_sources",
+    srcs = glob(["src/**/*.ecsact"]),
+    output_directory = "generated",
+    plugins = [
+        "@ecsact_lang_cpp//cpp_header_codegen",
+        "@ecsact_lang_cpp//cpp_systems_header_codegen",
+        "@ecsact_lang_cpp//systems_header_codegen",
+        "@ecsact_lang_cpp//cpp_systems_source_codegen",
+    ],
+)
+
+ecsact_binary(
+    name = "ecsact_runtime",
+    srcs = glob(["src/**/*.ecsact"]),
+    recipes = [
+        "@ecsact_rt_entt",
+    ],
+)
+
+cc_binary(
+    name = "ecsact-examples-noengine-cpp-sdl2",
+    srcs = glob(["src/**/*.cc", "src/**/*.hh"]) + [
+        ":ecsact_cpp_sources",
+    ],
+    defines = [
+        "ECSACT_ENTT_RUNTIME_DYNAMIC_SYSTEM_IMPLS",
+    ],
+    copts = selects.with_or({
+        "@rules_cc//cc/compiler:clang": [
+            "-std=c++20",
+            "-fexperimental-library",
+        ],
+        ("@rules_cc//cc/compiler:msvc-cl", "@rules_cc//cc/compiler:clang-cl"): [
+            "/std:c++20",
+            "/permissive-",
+            "/Zc:preprocessor",
+        ],
+        "//conditions:default": [
+            "-std=c++20",
+        ],
+    }),
+    deps = [
+        ":ecsact_runtime",
+        "@sdl2",
+        "@sdl2//:sdl2_main",
+        "@cute_c2",
+        "@imgui",
+        "@imgui//backends:sdlrenderer2",
+        "@imgui//backends:sdl2",
+        "@ecsact_runtime//:core",
+        "@ecsact_lang_cpp//:support",
+        "@ecsact_lang_cpp//:execution_context",
+    ],
+)
+
+alias(
+    name = "example",
+    actual = ":ecsact-examples-noengine-cpp-sdl2",
+)

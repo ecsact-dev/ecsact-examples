@@ -1,0 +1,88 @@
+main package example;
+
+component Player;
+component Projectile;
+component Gravity { f32 value; }
+component Position { f32 x; f32 y; }
+component Velocity { f32 x; f32 y; }
+component Moving { f32 dir_x; f32 dir_y; }
+
+component Colliding {
+  f32 pressure_dir_x;
+  f32 pressure_dir_y;
+}
+
+action Move {
+  f32 dir_x;
+  f32 dir_y;
+
+  include Player;
+  readwrite Moving;
+}
+
+action Fire {
+  include Player;
+  readonly Position;
+  readonly Moving;
+  generates {
+    required Projectile;
+    required Position;
+    required Velocity;
+  }
+}
+
+action ReverseGravity {
+    readwrite Gravity;
+}
+
+action Jump {
+    include Player;
+    readwrite Velocity;
+}
+
+system PhysicsParent {
+    readonly Gravity;
+    system Physics {
+        readwrite Velocity;
+    }
+}
+
+system Movement {
+    readwrite Velocity;
+    readonly Moving;
+}
+
+system AlwaysRemoveColliding {
+    removes Colliding;
+}
+
+system CollisionParent {
+  readonly Position;
+  system Collision {
+      readwrite Position;
+      adds Colliding;
+  }
+}
+
+system CollisionPressurePush {
+    readonly Colliding;
+    readwrite Velocity;
+}
+
+system ApplyVelocity {
+    readwrite Position;
+    readonly Velocity;
+}
+
+system ViewportCollision {
+    readwrite Position;
+}
+
+system Render {
+    readonly Position;
+}
+
+system RenderAimer {
+    readonly Moving;
+    readonly Position;
+}
