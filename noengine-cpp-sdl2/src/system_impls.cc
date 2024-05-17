@@ -21,19 +21,24 @@ auto example::Fire::impl(context& ctx) -> void {
 	auto player_pos = ctx.get<Position>();
 	auto moving = ctx.get<Moving>();
 
-	auto projectile_pos = Position{player_pos};
-	projectile_pos.x += moving.dir_x * 10.f;
-	projectile_pos.y += moving.dir_y * 10.f;
+	for(auto i = 0; 50 > i; ++i) {
+		auto projectile_pos = Position{player_pos};
+		projectile_pos.x += moving.dir_x * 10.f;
+		projectile_pos.y += moving.dir_y * 10.f;
+		projectile_pos.x += i;
+		projectile_pos.y += i;
 
-	auto projectile_vel = Velocity{};
-	projectile_vel.x = moving.dir_x * projectile_speed;
-	projectile_vel.y = moving.dir_y * projectile_speed;
-
-	ctx._ctx.generate(
-		Projectile{},
-		std::move(projectile_pos),
-		std::move(projectile_vel)
-	);
+		auto projectile_vel = Velocity{};
+		projectile_vel.x = moving.dir_x * projectile_speed;
+		projectile_vel.y = moving.dir_y * projectile_speed;
+		projectile_vel.x += i;
+		projectile_vel.y += i;
+		ctx._ctx.generate(
+			Projectile{},
+			std::move(projectile_pos),
+			std::move(projectile_vel)
+		);
+	}
 }
 
 auto example::ReverseGravity::impl(context& ctx) -> void {
