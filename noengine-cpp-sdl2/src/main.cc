@@ -188,13 +188,30 @@ auto main(int argc, char* argv[]) -> int {
 		&done
 	);
 
-	auto entity_count = reg.count_entities();
 	auto exec_options = ecsact::core::execution_options{};
 	auto evc = ecsact::core::execution_events_collector<>{};
 
+	auto create_entity_events_fired = 0;
+	auto destroy_entity_events_fired = 0;
+	auto init_events_fired = 0;
+	auto update_events_fired = 0;
+	auto remove_events_fired = 0;
+
+	evc.set_any_init_callback([&](auto, const auto&) { init_events_fired += 1; });
+	evc.set_any_update_callback([&](auto, const auto&) {
+		update_events_fired += 1;
+	});
+	evc.set_any_remove_callback([&](auto, const auto&) {
+		remove_events_fired += 1;
+	});
+
 	// NOTE: created/destroyed callback being called too often
-	evc.set_entity_created_callback([&](auto, auto) { entity_count += 1; });
-	evc.set_entity_destroyed_callback([&](auto) { entity_count -= 1; });
+	evc.set_entity_created_callback([&](auto, auto) {
+		create_entity_events_fired += 1;
+	});
+	evc.set_entity_destroyed_callback([&](auto) {
+		destroy_entity_events_fired -= 1;
+	});
 
 	auto physics_singleton = reg.create_entity();
 	reg.add_component(physics_singleton, example::Gravity{9810.f});
@@ -227,8 +244,12 @@ auto main(int argc, char* argv[]) -> int {
 
 			ImGui::Begin("Details");
 			ImGui::Text("Execution Count: %i", execution_count);
-			ImGui::Text("Entity Count (callback): %i", entity_count);
 			ImGui::Text("Entity Count (api): %i", reg.count_entities());
+			ImGui::Text("Create Entity Events: %i", create_entity_events_fired);
+			ImGui::Text("Destroy Entity Events: %i", destroy_entity_events_fired);
+			ImGui::Text("Init Events: %i", init_events_fired);
+			ImGui::Text("Update Events: %i", update_events_fired);
+			ImGui::Text("Remove Events: %i", remove_events_fired);
 
 			auto before_exec = SDL_GetTicks64();
 			auto err = reg.execute_systems(std::array{exec_options}, evc);

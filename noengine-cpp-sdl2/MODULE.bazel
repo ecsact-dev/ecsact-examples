@@ -4,9 +4,9 @@ bazel_dep(name = "rules_cc", version = "0.0.9")
 bazel_dep(name = "sdl2")
 bazel_dep(name = "toolchains_llvm", version = "1.0.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
-bazel_dep(name = "ecsact_runtime", version = "0.6.1")
+bazel_dep(name = "ecsact_runtime", version = "0.6.2")
 bazel_dep(name = "bazel_skylib", version = "1.6.1")
-bazel_dep(name = "rules_ecsact", version = "0.5.1")
+bazel_dep(name = "rules_ecsact", version = "0.5.2")
 bazel_dep(name = "ecsact_cli", version = "0.3.6")
 bazel_dep(name = "ecsact_lang_cpp", version = "0.4.1")
 bazel_dep(name = "boost.dll", version = "1.83.0.bzl.2")
@@ -29,10 +29,6 @@ local_path_override(
 local_path_override(
     module_name = "sdl2",
     path = "../../../seaube/SDL",
-)
-local_path_override(
-    module_name = "rules_ecsact",
-    path = "../../rules_ecsact",
 )
 local_path_override(
     module_name = "ecsact_rt_entt",
