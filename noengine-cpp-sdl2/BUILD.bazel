@@ -27,9 +27,6 @@ cc_binary(
     srcs = glob(["src/**/*.cc", "src/**/*.hh"]) + [
         ":ecsact_cpp_sources",
     ],
-    defines = [
-        "ECSACT_ENTT_RUNTIME_DYNAMIC_SYSTEM_IMPLS",
-    ],
     copts = selects.with_or({
         "@rules_cc//cc/compiler:clang": [
             "-std=c++20",
