@@ -22,17 +22,20 @@ archive_override(
     urls = ["https://github.com/seaube/bazel_cute_headers/releases/download/bazel-cute-headers-2024-05-16/bzlmod_cute_c2_1.10.tar.gz"],
 )
 
-local_path_override(
+git_override(
     module_name = "imgui",
-    path = "../../../zaucy/imgui",
+    commit = "975821a9513e230601b358aea829b9659de13d11",
+    remote = "https://github.com/zaucy/imgui.git",
 )
-local_path_override(
+git_override(
     module_name = "sdl2",
-    path = "../../../seaube/SDL",
+    commit = "2c8acf0e46f14ebbafe3ec9cc05d7ee4b6d7609f",
+    remote = "https://github.com/zaucy/sdl.git",
 )
-local_path_override(
+git_override(
     module_name = "ecsact_rt_entt",
-    path = "../../ecsact_rt_entt",
+    commit = "5ed2115146a9f187dca3c0ff9f8c66fbea09bf23",
+    remote = "https://github.com/ecsact-dev/ecsact_rt_entt.git",
 )
 
 ecsact = use_extension("@rules_ecsact//ecsact:extensions.bzl", "ecsact", dev_dependency = True)
