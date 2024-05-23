@@ -83,7 +83,7 @@ auto example::PhysicsParent::Physics::impl(context& ctx) -> void {
 	}
 
 	vel.y = std::clamp(vel.y, -terminal_velocity, terminal_velocity);
-	vel.y = std::clamp(vel.y, -terminal_velocity, terminal_velocity);
+	vel.x = std::clamp(vel.x, -terminal_velocity, terminal_velocity);
 
 	ctx.update(vel);
 }
