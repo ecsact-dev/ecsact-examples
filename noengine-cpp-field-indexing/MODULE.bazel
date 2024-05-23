@@ -1,0 +1,66 @@
+module(name = "ecsact-examples-noengine-cpp-sdl2")
+
+bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "sdl2")
+bazel_dep(name = "toolchains_llvm", version = "1.0.0", dev_dependency = True)
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+bazel_dep(name = "ecsact_runtime", version = "0.6.2")
+bazel_dep(name = "bazel_skylib", version = "1.6.1")
+bazel_dep(name = "rules_ecsact", version = "0.5.2")
+bazel_dep(name = "ecsact_cli", version = "0.3.7")
+bazel_dep(name = "ecsact_lang_cpp", version = "0.4.1")
+bazel_dep(name = "boost.dll", version = "1.83.0.bzl.2")
+bazel_dep(name = "boost.process", version = "1.83.0.bzl.2")
+bazel_dep(name = "platforms", version = "0.0.10")
+bazel_dep(name = "ecsact_rt_entt", version = "0.3.2")
+bazel_dep(name = "cute_c2")
+bazel_dep(name = "imgui")
+
+archive_override(
+    module_name = "cute_c2",
+    integrity = "sha256-8RRKdXKWnbKziyQ6rKZcIJwsEuRk/q8WP9P1iFCOGfg=",
+    urls = ["https://github.com/seaube/bazel_cute_headers/releases/download/bazel-cute-headers-2024-05-16/bzlmod_cute_c2_1.10.tar.gz"],
+)
+
+git_override(
+    module_name = "imgui",
+    commit = "975821a9513e230601b358aea829b9659de13d11",
+    remote = "https://github.com/zaucy/imgui.git",
+)
+git_override(
+    module_name = "sdl2",
+    commit = "2c8acf0e46f14ebbafe3ec9cc05d7ee4b6d7609f",
+    remote = "https://github.com/zaucy/sdl.git",
+)
+git_override(
+    module_name = "ecsact_rt_entt",
+    commit = "5ed2115146a9f187dca3c0ff9f8c66fbea09bf23",
+    remote = "https://github.com/ecsact-dev/ecsact_rt_entt.git",
+)
+
+ecsact = use_extension("@rules_ecsact//ecsact:extensions.bzl", "ecsact", dev_dependency = True)
+ecsact.toolchain(use_ecsact_cli = True)
+use_repo(ecsact, "ecsact_toolchain")
+
+# TODO: https://github.com/bazelbuild/bazel-central-registry/pull/1916
+git_override(
+    module_name = "libarchive",
+    commit = "7c331f92acea5243c195cdc6fb46ecfa11ce1ce2",
+    remote = "https://github.com/zaucy/libarchive.git",
+)
+
+git_override(
+    module_name = "hedron_compile_commands",
+    commit = "204aa593e002cbd177d30f11f54cff3559110bb9",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+)
+
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm", dev_dependency = True)
+llvm.toolchain(llvm_version = "17.0.6")
+use_repo(llvm, "llvm_toolchain")
+
+register_toolchains(
+    "@llvm_toolchain//:all",
+    "@ecsact_toolchain//:all",
+    dev_dependency = True,
+)
