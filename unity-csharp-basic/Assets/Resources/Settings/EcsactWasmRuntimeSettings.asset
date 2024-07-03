@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61f6048043c761b47b4e0be2b0a0e30e, type: 3}
+  m_Name: EcsactWasmRuntimeSettings
+  m_EditorClassIdentifier: 
+  useDefaultLoader: 0
+  autoFindSystemImpls: 1
+  wasmSystemEntries:
+  - systemId: 13
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 14
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 15
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 16
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 22
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 3
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 17
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 18
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 20
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 21
+    wasmAsset: {fileID: 0}
+    wasmExportName: 
+  - systemId: 23
+    wasmAsset: {fileID: 0}
+    wasmExportName: 

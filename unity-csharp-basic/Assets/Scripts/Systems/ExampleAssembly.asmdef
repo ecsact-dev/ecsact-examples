@@ -1,0 +1,17 @@
+{
+    "name": "ExampleAssembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6e7029456009ab94da19a8f93d5e3523",
+        "GUID:2d10fa57d8150f7499b7579b289a41a2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

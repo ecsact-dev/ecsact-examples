@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c06d71d460aeb804fa9b6550d0ff0218, type: 3}
+  m_Name: EcsactRuntimeSettings
+  m_EditorClassIdentifier: 
+  useVisualScriptingEvents: 1
+  runner: 0
+  deltaTime: 32
+  defaultRegistry:
+    registryName: Default Registry
+    updateMethod: 2
+  enableUnitySync: 1
+  unitySyncScripts:
+  - scriptEnabled: 1
+    scriptAssemblyQualifiedName: AddBlock, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  - scriptEnabled: 1
+    scriptAssemblyQualifiedName: SyncMove, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  systemImplSource: 0
+  defaultCsharpSystemImplsAssemblyName: ExampleAssembly
+  runtimeLibraryPaths:
+  - Assets/Plugins/EcsactRuntime

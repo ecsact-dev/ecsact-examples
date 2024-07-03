@@ -1,0 +1,93 @@
+main package example;
+
+//BASIC EXAMPLE
+
+component Example {
+	i32 example_value;
+}
+
+component ToBeRemoved;
+
+system AddToExample {
+	readwrite Example;
+	removes ToBeRemoved;
+}
+
+// MOVE SYSTEMS
+
+component CanMove;
+
+component Velocity {
+	f32 x_value;
+	f32 y_value;
+	f32 speed;
+}
+
+component Position {
+	f32 x;
+	f32 y;
+	f32 prev_x;
+	f32 prev_y;
+}
+
+component Collider {
+	i32 x_radius;
+	i32 y_radius;
+}
+
+// GENERATOR
+component Block{}
+
+component BlockGenerator;
+
+action Move {
+	f32 dir_x;
+	f32 dir_y;
+	include CanMove;
+	readwrite Velocity;
+}
+
+// BASIC COLLISION
+
+system CollisionComparer {
+	readonly Position;
+	readonly Collider;
+	system CheckCollision {
+		readwrite Position;
+		readwrite Velocity;
+		readwrite Collider;
+	}
+}
+
+system ApplyVelocity {
+	readwrite Position;
+	readwrite Velocity;
+}
+
+component QueueBlock {
+	i32 pos_x;
+	i32 pos_y;
+}
+
+action PerformGenerateBlock {
+	i32 pos_x;
+	i32 pos_y;
+	include BlockGenerator;
+	adds QueueBlock; 
+}
+
+system GenerateBlock {
+	include BlockGenerator;
+	readwrite QueueBlock;
+	generates {
+		required CanMove;
+		required Block;
+		required Position;
+		required Collider;
+		required Velocity;
+	}
+}
+
+system RemoveQueueBlock {
+	removes QueueBlock;
+}
