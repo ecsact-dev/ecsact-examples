@@ -8,7 +8,6 @@ public class BasicExample : MonoBehaviour
   List<System.Action> cleanUpFns = new();
 
   public TMP_Text textCounter;
-
   int entityId;
 
   void Start()
@@ -40,7 +39,7 @@ public class BasicExample : MonoBehaviour
     // Declare a ToBeRemoved component type
     var removeComponent = new example.ToBeRemoved { };
 
-    // Create an entity and add inital components
+    // Create an entity and add an initial components list
     Ecsact.Defaults.Runner.executionOptions.CreateEntity()
         .AddComponent(exampleComponent)
         .AddComponent(removeComponent);
