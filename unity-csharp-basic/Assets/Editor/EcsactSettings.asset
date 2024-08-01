@@ -18,5 +18,5 @@ MonoBehaviour:
   runtimeBuilderDebugBuild: 1
   runtimeBuilderPrintSubcommandStdout: 1
   runtimeBuilderPrintSubcommandStderr: 1
+  recipePath: rt_entt
   runtimeBuilderCompilerPath: 
-  recipePath: C:\Users\Austin\Documents\programming.ecsact-recipe-bundle

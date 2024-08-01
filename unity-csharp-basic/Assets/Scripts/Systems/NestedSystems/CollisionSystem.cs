@@ -1,10 +1,12 @@
 using UnityEngine;
 
-public class CollisionSystem : MonoBehaviour {
+public class CollisionSystem : MonoBehaviour
+{
 
   [Ecsact.DefaultSystemImpl(typeof(example.CollisionComparer.CheckCollision))]
   public static void
-  CheckCollision(EcsactRuntime.SystemExecutionContext context) {
+  CheckCollision(EcsactRuntime.SystemExecutionContext context)
+  {
     if (context.Same(context.Parent()))
       return;
 
@@ -17,24 +19,34 @@ public class CollisionSystem : MonoBehaviour {
     var xDiff = System.Math.Abs(position.x - otherPos.x);
     var yDiff = System.Math.Abs(position.y - otherPos.y);
 
-    if (xDiff <= other_collider.x_radius && yDiff <= other_collider.y_radius) {
+    if (xDiff <= other_collider.x_radius && yDiff <= other_collider.y_radius)
+    {
       position.x = position.prev_x;
       position.y = position.prev_y;
 
-      if (position.x < otherPos.x) {
-        velocity.x_value = -0.5f;
-      } else {
-        velocity.x_value = 0.5f;
-      }
+      // if (position.x < otherPos.x)
+      // {
+      //   velocity.x_value = -0.5f;
+      // }
+      // else
+      // {
+      //   velocity.x_value = 0.5f;
+      // }
 
-      if (position.y < otherPos.y) {
-        velocity.y_value = -0.5f;
-      } else {
-        velocity.y_value = 0.5f;
-      }
+      // if (position.y < otherPos.y)
+      // {
+      //   velocity.y_value = -0.5f;
+      // }
+      // else
+      // {
+      //   velocity.y_value = 0.5f;
+      // }
 
-      context.Update<example.Velocity>(velocity);
-      context.Update<example.Position>(position);
+      velocity.x_value = -velocity.x_value * 0.5f;
+      velocity.y_value = -velocity.y_value * 0.5f;
+
+      context.Update(velocity);
+      context.Update(position);
     }
   }
 }

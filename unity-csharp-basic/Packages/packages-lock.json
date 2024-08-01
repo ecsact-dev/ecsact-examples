@@ -298,13 +298,14 @@
       "url": "https://packages.unity.com"
     },
     "dev.ecsact.unity": {
-      "version": "file:C:/Users/Austin/Documents/programming/ecsact/ecsact_unity",
+      "version": "https://github.com/ecsact-dev/ecsact_unity.git",
       "depth": 0,
-      "source": "local",
+      "source": "git",
       "dependencies": {
         "com.unity.editorcoroutines": "1.0.0",
         "com.unity.visualscripting": "1.7.8"
-      }
+      },
+      "hash": "2e89ba67158f40a30721a69f7c1f6fac16c82d69"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

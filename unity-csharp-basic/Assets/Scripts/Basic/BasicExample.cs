@@ -1,50 +1,54 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
+using TMPro;
 using UnityEngine;
 
-public class BasicExample : MonoBehaviour {
+public class BasicExample : MonoBehaviour
+{
 
   List<System.Action> cleanUpFns = new();
 
+  public TMP_Text textCounter;
   int entityId;
 
-  void Start() {
+  void Start()
+  {
 
+    // Callbacks from the Ecsact Runtime used to change state in Unity
     cleanUpFns.AddRange(new[] {
-      // Callback that's invoked upon adding a component
       Ecsact.Defaults.Runtime.OnInitComponent<example.Example>(
           (entity, component) => {
-            Debug.Log("Example component added");
-            Debug.Log(component.example_value);
+            textCounter.text = component.example_value.ToString();
           }),
-      // Callback that's invoked on the update of a component
       Ecsact.Defaults.Runtime.OnUpdateComponent<example.Example>(
-          (entity, component) => { Debug.Log(component.example_value); }),
-      // Callback that's invoked on the removal of a component
+          (entity, component) => {
+            textCounter.text = component.example_value.ToString();
+           }),
+
       Ecsact.Defaults.Runtime.OnRemoveComponent<example.ToBeRemoved>(
           (entity, component) => { Debug.Log("Component removed"); }),
-      // Callback that's invoked when an entity is created
       Ecsact.Defaults.Runtime.OnEntityCreated(
           (entityId, placeholderId) => { Debug.Log("Entity created"); })
     });
 
     // Declare an Example component type
-    var exampleComponent = new example.Example {
-      example_value = 5,
+    var exampleComponent = new example.Example
+    {
+      example_value = 0,
     };
 
     // Declare a ToBeRemoved component type
-    var removeComponent = new example.ToBeRemoved {};
+    var removeComponent = new example.ToBeRemoved { };
 
-    // Create an entity and add inital components
+    // Create an entity and add an initial components list
     Ecsact.Defaults.Runner.executionOptions.CreateEntity()
         .AddComponent(exampleComponent)
         .AddComponent(removeComponent);
   }
 
-  void OnDestroy() {
-    foreach (var cleanUpFn in cleanUpFns) {
+  void OnDestroy()
+  {
+    foreach (var cleanUpFn in cleanUpFns)
+    {
       cleanUpFn();
     }
   }
