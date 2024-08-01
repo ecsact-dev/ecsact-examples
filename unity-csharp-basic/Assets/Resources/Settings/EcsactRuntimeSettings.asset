@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useVisualScriptingEvents: 1
   runner: 0
-  deltaTime: 32
   defaultRegistry:
     registryName: Default Registry
     updateMethod: 2
