@@ -24,24 +24,6 @@ public class CollisionSystem : MonoBehaviour
       position.x = position.prev_x;
       position.y = position.prev_y;
 
-      // if (position.x < otherPos.x)
-      // {
-      //   velocity.x_value = -0.5f;
-      // }
-      // else
-      // {
-      //   velocity.x_value = 0.5f;
-      // }
-
-      // if (position.y < otherPos.y)
-      // {
-      //   velocity.y_value = -0.5f;
-      // }
-      // else
-      // {
-      //   velocity.y_value = 0.5f;
-      // }
-
       velocity.x_value = -velocity.x_value * 0.5f;
       velocity.y_value = -velocity.y_value * 0.5f;
 
