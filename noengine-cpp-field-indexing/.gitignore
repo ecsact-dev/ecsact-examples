@@ -1,0 +1,6 @@
+bazel-*
+*.bazel.lock
+user.bazelrc
+/external
+/.cache
+

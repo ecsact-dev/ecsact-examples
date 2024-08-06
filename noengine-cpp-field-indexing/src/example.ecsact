@@ -1,0 +1,107 @@
+main package example;
+
+component Health { f32 value; }
+component Position { f32 x; f32 y; }
+
+component Region { i32 x1; i32 y1; i32 x2; i32 y2; }
+component WithinRegion {
+    Region.x1 region_x1;
+    Region.y1 region_y1;
+    Region.x2 region_x2;
+    Region.y2 region_y2;
+}
+
+component InfluenceZone { f32 size; }
+component WithinInfluenceZone {
+  Position.x origin_x;
+  Position.y origin_y;
+  InfluenceZone.size radius;
+}
+
+component Tree;
+component Person { i32 seed; }
+component EvacuationProbe;
+
+component OnFire { f32 fuel; }
+component FireExtinguished;
+
+system SpreadFire {
+  readwrite OnFire;
+  readonly WithinInfluenceZone with (origin_x, origin_y, radius) {
+    adds OnFire;
+  }
+}
+
+system FireDamage {
+  readwrite OnFire;
+  readwrite Health;
+}
+
+system FireDiminish {
+  readwrite OnFire;
+  adds FireExtinguished;
+}
+
+system FireExtinguish {
+  include FireExtinguished;
+  removes OnFire;
+}
+
+action AddRegion {
+  i32 new_region_x1;
+  i32 new_region_y1;
+  i32 new_region_x2;
+  i32 new_region_y2;
+
+  include EvacuationProbe;
+  readwrite Position;
+
+  generates {
+    required Region;
+  }
+}
+
+system PersonMovementBehaviour {
+  readwrite Position;
+}
+
+system CalcWithinRegionParent(lazy) {
+  readonly Region;
+  system CalcWithinRegion {
+    readwrite WithinRegion;
+    readonly Position;
+  }
+}
+
+action EvacuateRegion {
+  i32 mouse_x;
+  i32 mouse_y;
+
+  include EvacuationProbe;
+  readwrite Position;
+}
+
+system StartEvacuation {
+  include EvacuationProbe;
+  readonly Position;
+  readonly WithinRegion;
+  notify onchange WithinRegion;
+}
+
+system Evacuate {
+  include EvacuationProbe;
+  readonly WithinRegion with (region_x1, region_y1, region_x2, region_y2) {
+    readwrite Position;
+    readwrite Health;
+  }
+}
+
+system RenderPeople {
+  include Person;
+  readonly Position;
+}
+
+system RenderEvacuationProbe {
+  include EvacuationProbe;
+  readonly Position;
+}
