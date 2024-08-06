@@ -9,7 +9,8 @@ class FEcsactEditorModule : public IModuleInterface {
 	FDelegateHandle SourcesWatchHandle;
 
 public:
-	using FOnExitDelegate = TDelegate<void(int32, FString, FString)>;
+	using FOnExitDelegate = TDelegate<void(int32)>;
+	using FOnReceiveLine = TDelegate<void(FString)>;
 
 private:
 	auto OnEditorInitialized(double Duration) -> void;
@@ -21,6 +22,7 @@ private:
 public:
 	auto SpawnEcsactCli( //
 		const TArray<FString>& Args,
+		FOnReceiveLine         OnReceiveLine,
 		FOnExitDelegate        OnExit
 	) -> void;
 

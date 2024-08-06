@@ -35,6 +35,7 @@ static auto GetAllEcsactFiles() -> TArray<FString> {
 
 auto FEcsactEditorModule::SpawnEcsactCli(
 	const TArray<FString>& Args,
+	FOnReceiveLine         OnReceiveLine,
 	FOnExitDelegate        OnExit
 ) -> void {
 	check(OnExit.IsBound());
@@ -47,21 +48,60 @@ auto FEcsactEditorModule::SpawnEcsactCli(
 	AsyncTask(
 		ENamedThreads::BackgroundThreadPriority,
 		[=, OnExit = std::move(OnExit)] {
-			auto exit_code = int32{};
-			auto std_out = FString{};
-			auto std_err = FString{};
-			FPlatformProcess::ExecProcess(
+			void* PipeWriteChild;
+			void* PipeReadChild;
+			void* PipeWriteParent;
+			void* PipeReadParent;
+			FPlatformProcess::CreatePipe(PipeReadParent, PipeWriteChild, false);
+			FPlatformProcess::CreatePipe(PipeReadChild, PipeWriteParent, true);
+
+			auto proc_id = uint32{};
+			auto proc_handle = FPlatformProcess::CreateProc(
 				TEXT("ecsact"),
 				*args_str,
-				&exit_code,
-				&std_out,
-				&std_err,
+				false,
+				true,
+				true,
+				&proc_id,
+				0,
 				nullptr,
-				true
+				PipeWriteChild,
+				PipeReadChild
 			);
 
+			auto read_buf = FString{};
+			auto read_line = [&]() -> FString {
+				read_buf += FPlatformProcess::ReadPipe(PipeReadParent);
+				auto nl_index = int32{};
+				if(read_buf.FindChar(TCHAR('\n'), nl_index)) {
+					auto line = read_buf.Mid(0, nl_index);
+					read_buf = read_buf.Mid(nl_index + 1);
+					return line;
+				}
+				return "";
+			};
+
+			for(auto line = read_line();
+					!line.IsEmpty() || FPlatformProcess::IsProcRunning(proc_handle);
+					line = read_line()) {
+				if(line.IsEmpty()) {
+					continue;
+				}
+
+				AsyncTask(ENamedThreads::GameThread, [=] {
+					OnReceiveLine.Execute(line);
+				});
+			}
+
+			auto exit_code = int32{};
+			FPlatformProcess::GetProcReturnCode(proc_handle, &exit_code);
+
+			FPlatformProcess::ClosePipe(PipeReadChild, PipeWriteParent);
+			FPlatformProcess::ClosePipe(PipeReadParent, PipeWriteChild);
+			FPlatformProcess::CloseProc(proc_handle);
+
 			AsyncTask(ENamedThreads::GameThread, [=, OnExit = std::move(OnExit)] {
-				OnExit.Execute(exit_code, std_out, std_err);
+				OnExit.Execute(exit_code);
 			});
 		}
 	);
@@ -151,20 +191,21 @@ auto FEcsactEditorModule::RunCodegen() -> void {
 
 	SpawnEcsactCli(
 		args,
-		FOnExitDelegate::CreateLambda(
-			[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
-				if(ExitCode == 0) {
-					UE_LOG(EcsactEditor, Log, TEXT("Ecsact codegen success"));
-				} else {
-					UE_LOG(
-						EcsactEditor,
-						Error,
-						TEXT("Ecsact codegen failed with exit code %i"),
-						ExitCode
-					);
-				}
+		FOnReceiveLine::CreateLambda([](FString Line) {
+			UE_LOG(EcsactEditor, Log, TEXT("%s"), *Line);
+		}),
+		FOnExitDelegate::CreateLambda([](int32 ExitCode) -> void {
+			if(ExitCode == 0) {
+				UE_LOG(EcsactEditor, Log, TEXT("Ecsact codegen success"));
+			} else {
+				UE_LOG(
+					EcsactEditor,
+					Error,
+					TEXT("Ecsact codegen failed with exit code %i"),
+					ExitCode
+				);
 			}
-		)
+		})
 	);
 }
 
@@ -178,7 +219,7 @@ auto FEcsactEditorModule::RunBuild() -> void {
 	auto ecsact_files = GetAllEcsactFiles();
 	auto args = TArray<FString>{
 		"build",
-		// "--format=json",
+		"--format=json",
 		"--recipe=rt_entt",
 		"-o",
 		ecsact_runtime_path,
@@ -188,22 +229,21 @@ auto FEcsactEditorModule::RunBuild() -> void {
 
 	SpawnEcsactCli(
 		args,
-		FOnExitDelegate::CreateLambda(
-			[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
-				if(ExitCode == 0) {
-					UE_LOG(EcsactEditor, Log, TEXT("Ecsact build success"));
-				} else {
-					UE_LOG(
-						EcsactEditor,
-						Error,
-						TEXT("Ecsact build failed with exit code %i"),
-						ExitCode
-					);
-					UE_LOG(EcsactEditor, Error, TEXT("%s"), *StdErr);
-					UE_LOG(EcsactEditor, Error, TEXT("%s"), *StdOut);
-				}
+		FOnReceiveLine::CreateLambda([](FString Line) {
+			UE_LOG(EcsactEditor, Log, TEXT("%s"), *Line);
+		}),
+		FOnExitDelegate::CreateLambda([](int32 ExitCode) -> void {
+			if(ExitCode == 0) {
+				UE_LOG(EcsactEditor, Log, TEXT("Ecsact build success"));
+			} else {
+				UE_LOG(
+					EcsactEditor,
+					Error,
+					TEXT("Ecsact build failed with exit code %i"),
+					ExitCode
+				);
 			}
-		)
+		})
 	);
 }
 
@@ -228,25 +268,26 @@ auto FEcsactEditorModule::SupportsDynamicReloading() -> bool {
 }
 
 auto FEcsactEditorModule::OnEditorInitialized(double Duration) -> void {
-	SpawnEcsactCli(
-		{TEXT("--version")},
-		FOnExitDelegate::CreateLambda(
-			[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
-				if(ExitCode == 0) {
-					UE_LOG(EcsactEditor, Warning, TEXT("Ecsact Version: %s"), *StdOut);
-				} else {
-					UE_LOG(
-						EcsactEditor,
-						Error,
-						TEXT("Ecsact CLI exited with code %i while trying to get version: "
-								 "%s"),
-						ExitCode,
-						*StdErr
-					);
-				}
-			}
-		)
-	);
+	// SpawnEcsactCli(
+	// 	{TEXT("--version")},
+	// 	FOnExitDelegate::CreateLambda(
+	// 		[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
+	// 			if(ExitCode == 0) {
+	// 				UE_LOG(EcsactEditor, Warning, TEXT("Ecsact Version: %s"), *StdOut);
+	// 			} else {
+	// 				UE_LOG(
+	// 					EcsactEditor,
+	// 					Error,
+	// 					TEXT("Ecsact CLI exited with code %i while trying to get version:
+	// "
+	// 							 "%s"),
+	// 					ExitCode,
+	// 					*StdErr
+	// 				);
+	// 			}
+	// 		}
+	// 	)
+	// );
 
 	RunCodegen();
 	RunBuild();

@@ -8,8 +8,6 @@ AEntitySpawner::AEntitySpawner() {
 
 void AEntitySpawner::BeginPlay() {
 	Super::BeginPlay();
-
-	auto vel = example::Velocity{};
 }
 
 void AEntitySpawner::Tick(float DeltaTime) {
