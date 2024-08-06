@@ -25,6 +25,7 @@ public:
 	) -> void;
 
 	auto RunCodegen() -> void;
+	auto RunBuild() -> void;
 
 	auto StartupModule() -> void override;
 	auto ShutdownModule() -> void override;

@@ -1,6 +1,6 @@
+#include "EntitySpawner.h"
 #include "ecsact/runtime/core.hh"
 #include "Example.ecsact.hh"
-#include "EntitySpawner.h"
 
 AEntitySpawner::AEntitySpawner() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -8,6 +8,8 @@ AEntitySpawner::AEntitySpawner() {
 
 void AEntitySpawner::BeginPlay() {
 	Super::BeginPlay();
+
+	auto vel = example::Velocity{};
 }
 
 void AEntitySpawner::Tick(float DeltaTime) {

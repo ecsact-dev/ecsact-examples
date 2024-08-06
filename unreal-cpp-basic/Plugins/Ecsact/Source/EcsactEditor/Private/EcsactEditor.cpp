@@ -133,6 +133,7 @@ auto FEcsactEditorModule::OnProjectSourcesChanged(
 		);
 
 		RunCodegen();
+		RunBuild();
 	}
 }
 
@@ -142,6 +143,9 @@ auto FEcsactEditorModule::RunCodegen() -> void {
 		"codegen",
 		"--format=json",
 		"--plugin=cpp_header",
+		"--plugin=systems_header",
+		"--plugin=cpp_systems_header",
+		"--plugin=cpp_systems_source",
 	};
 	args.Append(ecsact_files);
 
@@ -158,6 +162,45 @@ auto FEcsactEditorModule::RunCodegen() -> void {
 						TEXT("Ecsact codegen failed with exit code %i"),
 						ExitCode
 					);
+				}
+			}
+		)
+	);
+}
+
+auto FEcsactEditorModule::RunBuild() -> void {
+	auto ecsact_runtime_path = FPaths::Combine(
+		FPaths::ProjectDir(),
+		TEXT("Binaries/Win64/EcsactRuntime.dll")
+	);
+	auto temp_dir = FPaths::CreateTempFilename(TEXT("EcsactBuild"));
+
+	auto ecsact_files = GetAllEcsactFiles();
+	auto args = TArray<FString>{
+		"build",
+		// "--format=json",
+		"--recipe=rt_entt",
+		"-o",
+		ecsact_runtime_path,
+		"--temp=" + temp_dir,
+	};
+	args.Append(ecsact_files);
+
+	SpawnEcsactCli(
+		args,
+		FOnExitDelegate::CreateLambda(
+			[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
+				if(ExitCode == 0) {
+					UE_LOG(EcsactEditor, Log, TEXT("Ecsact build success"));
+				} else {
+					UE_LOG(
+						EcsactEditor,
+						Error,
+						TEXT("Ecsact build failed with exit code %i"),
+						ExitCode
+					);
+					UE_LOG(EcsactEditor, Error, TEXT("%s"), *StdErr);
+					UE_LOG(EcsactEditor, Error, TEXT("%s"), *StdOut);
 				}
 			}
 		)
@@ -206,6 +249,7 @@ auto FEcsactEditorModule::OnEditorInitialized(double Duration) -> void {
 	);
 
 	RunCodegen();
+	RunBuild();
 }
 
 auto FEcsactEditorModule::OnEcsactSettingsModified() -> bool {
