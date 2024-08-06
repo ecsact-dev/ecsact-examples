@@ -7,23 +7,15 @@ DECLARE_LOG_CATEGORY_EXTERN(EcsactEditor, Log, All);
 
 class FEcsactEditorModule : public IModuleInterface {
 public:
-	using FOnExitDelegate = TDelegate<void(int32, FString)>;
+	using FOnExitDelegate = TDelegate<void(int32, FString, FString)>;
 
 private:
-	auto EcsactCliProcTimerHandle(
-		FProcHandle                     ProcHandle,
-		TSharedRef<class FTimerManager> TimerManager,
-		void*                           ReadPipe,
-		void*                           WritePipe,
-		FString                         Output,
-		FOnExitDelegate                 OnExit
-	) -> void;
-
 	auto OnEditorInitialized(double Duration) -> void;
+	auto OnEcsactSettingsModified() -> bool;
 
 public:
 	auto SpawnEcsactCli( //
-		const TCHAR*    Args,
+		const FString&  Args,
 		FOnExitDelegate OnExit
 	) -> void;
 	auto StartupModule() -> void override;
