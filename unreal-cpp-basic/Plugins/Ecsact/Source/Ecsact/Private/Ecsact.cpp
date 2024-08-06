@@ -1,8 +1,8 @@
+#include "Ecsact.h"
 #include "CoreGlobals.h"
 #include "HAL/PlatformProcess.h"
 #include "Misc/Paths.h"
 #include "ecsact/runtime.h"
-#include "Ecsact.h"
 
 #define LOCTEXT_NAMESPACE "FEcsactModule"
 
@@ -40,9 +40,10 @@ auto FEcsactModule::LoadEcsactRuntime() -> void {
 		return;
 	}
 
-#define LOAD_ECSACT_FN(fn, UNUSED_PARAM) \
-	fn = (decltype(fn)                     \
-	)FPlatformProcess::GetDllExport(EcsactRuntimeHandle, TEXT(#fn))
+#define LOAD_ECSACT_FN(fn, UNUSED_PARAM)                           \
+	fn = reinterpret_cast<decltype(fn)>(                             \
+		FPlatformProcess::GetDllExport(EcsactRuntimeHandle, TEXT(#fn)) \
+	)
 	FOR_EACH_ECSACT_API_FN(LOAD_ECSACT_FN);
 #undef LOAD_ECSACT_FN
 }

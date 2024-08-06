@@ -6,18 +6,26 @@
 DECLARE_LOG_CATEGORY_EXTERN(EcsactEditor, Log, All);
 
 class FEcsactEditorModule : public IModuleInterface {
+	FDelegateHandle SourcesWatchHandle;
+
 public:
 	using FOnExitDelegate = TDelegate<void(int32, FString, FString)>;
 
 private:
 	auto OnEditorInitialized(double Duration) -> void;
 	auto OnEcsactSettingsModified() -> bool;
+	auto OnProjectSourcesChanged( //
+		const TArray<struct FFileChangeData>& FileChanges
+	) -> void;
 
 public:
 	auto SpawnEcsactCli( //
-		const FString&  Args,
-		FOnExitDelegate OnExit
+		const TArray<FString>& Args,
+		FOnExitDelegate        OnExit
 	) -> void;
+
+	auto RunCodegen() -> void;
+
 	auto StartupModule() -> void override;
 	auto ShutdownModule() -> void override;
 	auto PreUnloadCallback() -> void override;
