@@ -1,0 +1,3 @@
+[submodule "unreal-cpp-basic/Plugins/Ecsact"]
+	path = unreal-cpp-basic/Plugins/Ecsact
+	url = https://github.com/ecsact-dev/ecsact_unreal
