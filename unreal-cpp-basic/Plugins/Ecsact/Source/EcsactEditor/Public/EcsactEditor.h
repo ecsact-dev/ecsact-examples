@@ -18,6 +18,7 @@ private:
 	auto OnProjectSourcesChanged( //
 		const TArray<struct FFileChangeData>& FileChanges
 	) -> void;
+	auto OnReceiveEcsactCliJsonMessage(FString Json) -> void;
 
 public:
 	auto SpawnEcsactCli( //

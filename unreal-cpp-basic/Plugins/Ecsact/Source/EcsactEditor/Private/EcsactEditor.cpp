@@ -9,6 +9,7 @@
 #include "FileHelpers.h"
 #include "DirectoryWatcherModule.h"
 #include "IDirectoryWatcher.h"
+#include "Json.h"
 #include "EcsactSettings.h"
 
 #define LOCTEXT_NAMESPACE "FEcsactEditorModule"
@@ -191,8 +192,8 @@ auto FEcsactEditorModule::RunCodegen() -> void {
 
 	SpawnEcsactCli(
 		args,
-		FOnReceiveLine::CreateLambda([](FString Line) {
-			UE_LOG(EcsactEditor, Log, TEXT("%s"), *Line);
+		FOnReceiveLine::CreateLambda([this](FString Line) {
+			OnReceiveEcsactCliJsonMessage(Line);
 		}),
 		FOnExitDelegate::CreateLambda([](int32 ExitCode) -> void {
 			if(ExitCode == 0) {
@@ -229,8 +230,8 @@ auto FEcsactEditorModule::RunBuild() -> void {
 
 	SpawnEcsactCli(
 		args,
-		FOnReceiveLine::CreateLambda([](FString Line) {
-			UE_LOG(EcsactEditor, Log, TEXT("%s"), *Line);
+		FOnReceiveLine::CreateLambda([this](FString Line) {
+			OnReceiveEcsactCliJsonMessage(Line);
 		}),
 		FOnExitDelegate::CreateLambda([](int32 ExitCode) -> void {
 			if(ExitCode == 0) {
@@ -268,29 +269,56 @@ auto FEcsactEditorModule::SupportsDynamicReloading() -> bool {
 }
 
 auto FEcsactEditorModule::OnEditorInitialized(double Duration) -> void {
-	// SpawnEcsactCli(
-	// 	{TEXT("--version")},
-	// 	FOnExitDelegate::CreateLambda(
-	// 		[](int32 ExitCode, FString StdOut, FString StdErr) -> void {
-	// 			if(ExitCode == 0) {
-	// 				UE_LOG(EcsactEditor, Warning, TEXT("Ecsact Version: %s"), *StdOut);
-	// 			} else {
-	// 				UE_LOG(
-	// 					EcsactEditor,
-	// 					Error,
-	// 					TEXT("Ecsact CLI exited with code %i while trying to get version:
-	// "
-	// 							 "%s"),
-	// 					ExitCode,
-	// 					*StdErr
-	// 				);
-	// 			}
-	// 		}
-	// 	)
-	// );
-
 	RunCodegen();
 	RunBuild();
+}
+
+auto FEcsactEditorModule::OnReceiveEcsactCliJsonMessage(FString Json) -> void {
+	auto json_object = TSharedPtr<FJsonObject>{};
+	auto reader = TJsonReaderFactory<>::Create(Json);
+
+	if(FJsonSerializer::Deserialize(reader, json_object) &&
+		 json_object.IsValid()) {
+		auto message_type = json_object->GetStringField(TEXT("type"));
+
+		if(message_type == "info") {
+			UE_LOG(
+				EcsactEditor,
+				Log,
+				TEXT("%s"),
+				*json_object->GetStringField(TEXT("content"))
+			);
+		} else if(message_type == "error") {
+			UE_LOG(
+				EcsactEditor,
+				Error,
+				TEXT("%s"),
+				*json_object->GetStringField(TEXT("content"))
+			);
+		} else if(message_type == "warning") {
+			UE_LOG(
+				EcsactEditor,
+				Warning,
+				TEXT("%s"),
+				*json_object->GetStringField(TEXT("content"))
+			);
+		} else {
+			UE_LOG(
+				EcsactEditor,
+				Warning,
+				TEXT("Unhandled Message (%s): %s"),
+				*message_type,
+				*Json
+			);
+		}
+	} else {
+		UE_LOG(
+			EcsactEditor,
+			Error,
+			TEXT("Failed to parse JSON message: %s"),
+			*Json
+		);
+	}
 }
 
 auto FEcsactEditorModule::OnEcsactSettingsModified() -> bool {
