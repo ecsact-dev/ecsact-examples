@@ -4,6 +4,13 @@
 #include "UObject/NoExportTypes.h"
 #include "EcsactSettings.generated.h"
 
+UENUM()
+enum class EEcsactBuildReportFilter : uint8 {
+	None,
+	ErrorOnly,
+	ErrorsAndWarnings,
+};
+
 UCLASS(Config = Ecsact, DefaultConfig)
 
 class UEcsactSettings : public UObject {
@@ -11,6 +18,9 @@ class UEcsactSettings : public UObject {
 
 public:
 	UEcsactSettings();
+
+	UPROPERTY(EditAnywhere, Config, Category = Ecsact)
+	EEcsactBuildReportFilter BuildReportFilter;
 
 	UPROPERTY(EditAnywhere, Config, Category = Ecsact)
 	TArray<FString> Recipes;

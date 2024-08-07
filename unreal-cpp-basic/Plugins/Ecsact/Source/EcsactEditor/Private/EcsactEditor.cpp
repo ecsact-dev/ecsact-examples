@@ -211,10 +211,11 @@ auto FEcsactEditorModule::RunCodegen() -> void {
 }
 
 auto FEcsactEditorModule::RunBuild() -> void {
-	auto ecsact_runtime_path = FPaths::Combine(
-		FPaths::ProjectDir(),
-		TEXT("Binaries/Win64/EcsactRuntime.dll")
-	);
+	const auto* settings = GetDefault<UEcsactSettings>();
+	auto        ecsact_runtime_path = FPaths::Combine(
+    FPaths::ProjectDir(),
+    TEXT("Binaries/Win64/EcsactRuntime.dll")
+  );
 	auto temp_dir = FPaths::CreateTempFilename(TEXT("EcsactBuild"));
 
 	auto ecsact_files = GetAllEcsactFiles();
@@ -226,6 +227,18 @@ auto FEcsactEditorModule::RunBuild() -> void {
 		ecsact_runtime_path,
 		"--temp=" + temp_dir,
 	};
+
+	switch(settings->BuildReportFilter) {
+		case EEcsactBuildReportFilter::None:
+			break;
+		case EEcsactBuildReportFilter::ErrorOnly:
+			args.Push("--report_filter=error_only");
+			break;
+		case EEcsactBuildReportFilter::ErrorsAndWarnings:
+			args.Push("--report_filter=errors_and_warnings");
+			break;
+	}
+
 	args.Append(ecsact_files);
 
 	SpawnEcsactCli(
@@ -299,6 +312,45 @@ auto FEcsactEditorModule::OnReceiveEcsactCliJsonMessage(FString Json) -> void {
 			UE_LOG(
 				EcsactEditor,
 				Warning,
+				TEXT("%s"),
+				*json_object->GetStringField(TEXT("content"))
+			);
+		} else if(message_type == "subcommand_start") {
+			UE_LOG(
+				EcsactEditor,
+				Log,
+				TEXT("subcommand(%i): %s"),
+				json_object->GetIntegerField(TEXT("id")),
+				*json_object->GetStringField(TEXT("executable"))
+			);
+		} else if(message_type == "subcommand_end") {
+			UE_LOG(
+				EcsactEditor,
+				Log,
+				TEXT("subcommand(%i): exit code %i"),
+				json_object->GetIntegerField(TEXT("id")),
+				json_object->GetIntegerField(TEXT("exit_code"))
+			);
+		} else if(message_type == "subcommand_stdout") {
+			UE_LOG(
+				EcsactEditor,
+				Log,
+				TEXT("subcommand(%i): %s"),
+				json_object->GetIntegerField(TEXT("id")),
+				*json_object->GetStringField(TEXT("line"))
+			);
+		} else if(message_type == "subcommand_stderr") {
+			UE_LOG(
+				EcsactEditor,
+				Error,
+				TEXT("subcommand(%i): %s"),
+				json_object->GetIntegerField(TEXT("id")),
+				*json_object->GetStringField(TEXT("line"))
+			);
+		} else if(message_type == "success") {
+			UE_LOG(
+				EcsactEditor,
+				Log,
 				TEXT("%s"),
 				*json_object->GetStringField(TEXT("content"))
 			);
