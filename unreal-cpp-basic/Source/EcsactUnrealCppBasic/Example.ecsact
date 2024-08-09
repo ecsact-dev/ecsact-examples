@@ -1,0 +1,10 @@
+main package example;
+
+component Position {
+	f32 x;
+	f32 y;
+}
+
+system Gravity {
+	readwrite Position;
+}
