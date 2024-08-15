@@ -5,6 +5,10 @@ component Position {
 	f32 y;
 }
 
+component Velocity {
+	f32 x;
+}
+
 system Gravity {
 	readwrite Position;
 }
