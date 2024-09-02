@@ -1,15 +1,37 @@
 #include "EntitySpawner.h"
-#include "ecsact/runtime/core.hh"
-#include "Example.ecsact.hh"
+#include "Engine/World.h"
 
-AEntitySpawner::AEntitySpawner() {
-	PrimaryActorTick.bCanEverTick = true;
+auto UEntitySpawner::RunnerStart_Implementation(UEcsactRunner* Runner) -> void {
 }
 
-void AEntitySpawner::BeginPlay() {
-	Super::BeginPlay();
+auto UEntitySpawner::RunnerStop_Implementation(UEcsactRunner* Runner) -> void {
+	EntityActors.Empty();
 }
 
-void AEntitySpawner::Tick(float DeltaTime) {
-	Super::Tick(DeltaTime);
+auto UEntitySpawner::InitPosition_Implementation(
+	int32            Entity,
+	FExamplePosition Position
+) -> void {
+	auto spawn_pos = FVector{Position.X, Position.Y, Position.Z};
+	auto actor = GWorld->SpawnActor(EntityActorClass.Get(), &spawn_pos);
+	EntityActors.Add(Entity, actor);
+}
+
+auto UEntitySpawner::UpdatePosition_Implementation(
+	int32            Entity,
+	FExamplePosition Position
+) -> void {
+	auto actor = EntityActors.FindRef(Entity);
+	if(actor) {
+	}
+}
+
+auto UEntitySpawner::RemovePosition_Implementation(
+	int32            Entity,
+	FExamplePosition Position
+) -> void {
+	auto actor = EntityActors.FindRef(Entity);
+	if(actor) {
+		EntityActors.Remove(Entity);
+	}
 }

@@ -1,14 +1,18 @@
 main package example;
 
-component Position {
-	f32 x;
-	f32 y;
-}
-
-component Velocity {
-	f32 x;
-}
+component Position { f32 x; f32 y; f32 z; }
+component Velocity { f32 x; f32 y; f32 z; }
 
 system Gravity {
+	readwrite Velocity;
+}
+
+system FloorBounce {
+	readonly Position;
+	readwrite Velocity;
+}
+
+system ApplyVelocity {
+	readonly Velocity;
 	readwrite Position;
 }

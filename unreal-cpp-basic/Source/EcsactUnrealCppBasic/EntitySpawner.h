@@ -1,25 +1,35 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Templates/SubclassOf.h"
+#include "Example__ecsact__ue.h"
 #include "EntitySpawner.generated.h"
 
 UCLASS()
 
-class ECSACTUNREALCPPBASIC_API AEntitySpawner : public AActor {
+class ECSACTUNREALCPPBASIC_API UEntitySpawner
+	: public UExampleEcsactRunnerSubsystem {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this actor's properties
-	AEntitySpawner();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	TMap<int32, AActor*> EntityActors;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadonly)
+	TSubclassOf<class AActor> EntityActorClass;
+
+	auto RunnerStart_Implementation(UEcsactRunner* Runner) -> void override;
+	auto RunnerStop_Implementation(UEcsactRunner* Runner) -> void override;
+
+	auto InitPosition_Implementation( //
+		int32            Entity,
+		FExamplePosition Position
+	) -> void override;
+	auto UpdatePosition_Implementation( //
+		int32            Entity,
+		FExamplePosition Position
+	) -> void override;
+	auto RemovePosition_Implementation( //
+		int32            Entity,
+		FExamplePosition Position
+	) -> void override;
 };
