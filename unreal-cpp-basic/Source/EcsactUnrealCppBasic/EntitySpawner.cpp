@@ -23,6 +23,7 @@ auto UEntitySpawner::UpdatePosition_Implementation(
 ) -> void {
 	auto actor = EntityActors.FindRef(Entity);
 	if(actor) {
+		actor->SetActorLocation(FVector(Position.X, Position.Y, Position.Z));
 	}
 }
 
