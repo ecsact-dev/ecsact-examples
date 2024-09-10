@@ -14,6 +14,9 @@ class ECSACTUNREALCPPBASIC_API UEntitySpawner
 	TMap<int32, AActor*> EntityActors;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	static void CreateEntitySpawnPoint();
+
 	UPROPERTY(EditAnywhere, BlueprintReadonly)
 	TSubclassOf<class AActor> EntityActorClass;
 
