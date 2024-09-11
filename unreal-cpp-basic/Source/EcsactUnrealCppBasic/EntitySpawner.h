@@ -5,7 +5,7 @@
 #include "Example__ecsact__ue.h"
 #include "EntitySpawner.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 
 class ECSACTUNREALCPPBASIC_API UEntitySpawner
 	: public UExampleEcsactRunnerSubsystem {
@@ -13,12 +13,29 @@ class ECSACTUNREALCPPBASIC_API UEntitySpawner
 
 	TMap<int32, AActor*> EntityActors;
 
+	UPROPERTY(EditAnywhere)
+	class UWorld* EntitySpawnerWorld;
+
+	auto OnPreWorldInitialization( //
+		UWorld*,
+		const UWorld::InitializationValues
+	) -> void;
+	auto OnPostWorldCleanup( //
+		UWorld*,
+		bool bSessionEnded,
+		bool bCleanupResources
+	) -> void;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	static void CreateEntitySpawnPoint();
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly)
 	TSubclassOf<class AActor> EntityActorClass;
+
+	UEntitySpawner();
+
+	auto GetWorld() const -> class UWorld* override;
 
 	auto RunnerStart_Implementation(UEcsactRunner* Runner) -> void override;
 	auto RunnerStop_Implementation(UEcsactRunner* Runner) -> void override;

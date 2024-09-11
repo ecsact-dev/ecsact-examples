@@ -16,6 +16,44 @@ auto UEntitySpawner::CreateEntitySpawnPoint() -> void {
 		.Finish();
 }
 
+UEntitySpawner::UEntitySpawner() {
+	// In this example we're assuming the entities are spawned on the first world
+	// that is initialized. In a real application you may have a specific world
+	// you want entities to be spawned.
+	FWorldDelegates::OnPreWorldInitialization.AddUObject(
+		this,
+		&ThisClass::OnPreWorldInitialization
+	);
+	FWorldDelegates::OnPostWorldCleanup.AddUObject(
+		this,
+		&ThisClass::OnPostWorldCleanup
+	);
+}
+
+auto UEntitySpawner::OnPreWorldInitialization( //
+	UWorld*                            World,
+	const UWorld::InitializationValues IV
+) -> void {
+	if(EntitySpawnerWorld == nullptr) {
+		EntitySpawnerWorld = World;
+	}
+}
+
+auto UEntitySpawner::OnPostWorldCleanup( //
+	UWorld* World,
+	bool    bSessionEnded,
+	bool    bCleanupResources
+) -> void {
+	if(EntitySpawnerWorld == World) {
+		EntitySpawnerWorld = nullptr;
+	}
+}
+
+auto UEntitySpawner::GetWorld() const -> UWorld* {
+	check(EntitySpawnerWorld != nullptr);
+	return EntitySpawnerWorld;
+}
+
 auto UEntitySpawner::RunnerStart_Implementation(UEcsactRunner* Runner) -> void {
 }
 
@@ -29,7 +67,7 @@ auto UEntitySpawner::InitPosition_Implementation(
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Init Position!"));
 	auto spawn_pos = FVector{Position.X, Position.Y, Position.Z};
-	auto actor = GWorld->SpawnActor(EntityActorClass.Get(), &spawn_pos);
+	auto actor = GetWorld()->SpawnActor(EntityActorClass.Get(), &spawn_pos);
 	EntityActors.Add(Entity, actor);
 }
 
