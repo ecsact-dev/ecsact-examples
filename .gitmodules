@@ -1,3 +1,6 @@
 [submodule "unreal-cpp-net-fps/Plugins/Ecsact"]
 	path = unreal-cpp-net-fps/Plugins/Ecsact
 	url = https://github.com/ecsact-dev/ecsact_unreal
+[submodule "unreal-cpp-net-fps/Plugins/EcsactNet"]
+	path = unreal-cpp-net-fps/Plugins/EcsactNet
+	url = https://github.com/seaube/ecsact-net-unreal
