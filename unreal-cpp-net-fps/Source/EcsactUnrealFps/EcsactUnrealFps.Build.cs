@@ -14,6 +14,8 @@ public class EcsactUnrealFps : ModuleRules {
 			"InputCore",
 			"EnhancedInput",
 			"Ecsact",
+			"EcsactNet",
+			"EcsactNetWasm",
 		});
 	}
 }
