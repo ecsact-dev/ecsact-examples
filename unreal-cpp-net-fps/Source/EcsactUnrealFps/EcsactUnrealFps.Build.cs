@@ -16,6 +16,7 @@ public class EcsactUnrealFps : ModuleRules {
 			"Ecsact",
 			"EcsactNet",
 			"EcsactNetWasm",
+			"EcsactNetEditor",
 		});
 	}
 }
