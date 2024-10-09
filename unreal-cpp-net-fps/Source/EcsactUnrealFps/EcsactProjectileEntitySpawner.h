@@ -11,7 +11,13 @@ class UEcsactProjectileEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 
 	TMap<int32, AActor*> ProjectileActors;
 
+	auto CreateInitialEntities(class UEcsactRunner* Runner) -> void;
+
 public:
+	auto RunnerStart_Implementation( //
+		class UEcsactRunner* Runner
+	) -> void override;
+
 	auto InitProjectile_Implementation( //
 		int32                 Entity,
 		FExampleFpsProjectile Projectile
