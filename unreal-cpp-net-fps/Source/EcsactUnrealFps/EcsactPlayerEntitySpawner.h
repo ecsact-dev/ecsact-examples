@@ -12,8 +12,6 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	TArray<class AEcsactUnrealFpsPlayerController*>      PendingControllers = {};
 	TMap<int32, class AEcsactUnrealFpsPlayerController*> AssignedControllers = {};
 
-	auto OnAsyncConnected() -> void;
-	auto CreateInitialEntities() -> void;
 	auto SetupController(
 		int32                                   Entity,
 		class AEcsactUnrealFpsPlayerController* Controller

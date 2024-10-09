@@ -10,43 +10,6 @@
 auto UEcsactPlayerEntitySpawner::RunnerStart_Implementation( //
 	UEcsactRunner* Runner
 ) -> void {
-	// NOTE: This isn't how you'd usually connect to an async runner. Instead you
-	// should have some kind of UI or bootup sequence for your users. For
-	// demonstration purposes this is simple, but only works with the references
-	// async implementation.
-	auto async_runner = Cast<UEcsactAsyncRunner>(Runner);
-	if(async_runner != nullptr) {
-		using FAsyncRequestDoneCallback =
-			IEcsactAsyncRunnerEvents::FAsyncRequestDoneCallback;
-		async_runner->Connect(
-			"good",
-			FAsyncRequestDoneCallback::CreateUObject(
-				this,
-				&ThisClass::OnAsyncConnected
-			)
-		);
-	} else {
-		CreateInitialEntities();
-	}
-}
-
-auto UEcsactPlayerEntitySpawner::OnAsyncConnected() -> void {
-	CreateInitialEntities();
-}
-
-auto UEcsactPlayerEntitySpawner::CreateInitialEntities() -> void {
-	auto runner = GetRunner();
-
-	// NOTE: For demonstration purposes only we're creating an entity for the
-	// player right away. In a real multiplayer game your players will likely not
-	// have permission to just create entities at will. Instead they will already
-	// be created for them and any entity creation at runtime would occur during a
-	// generator system of backend function. Refer to your Ecsact async
-	// implemtnation for details.
-	runner->CreateEntity()
-		.AddComponent(example::fps::Player{})
-		.AddComponent(example::fps::Position{})
-		.AddComponent(example::fps::Rotation{});
 }
 
 auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
