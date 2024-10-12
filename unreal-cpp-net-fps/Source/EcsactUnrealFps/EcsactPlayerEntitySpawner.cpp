@@ -18,10 +18,19 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 ) -> void {
 	auto& controller = AssignedControllers.Add(Entity);
 
-	if(!PendingControllers.IsEmpty()) {
+	while(!PendingControllers.IsEmpty()) {
 		controller = PendingControllers.Pop();
-		SetupController(Entity, controller.Get());
+		if(controller.IsValid()) {
+			SetupController(Entity, controller.Get());
+			return;
+		}
 	}
+
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("No pending player controller was available for init player")
+	);
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
@@ -63,12 +72,13 @@ auto UEcsactPlayerEntitySpawner::AddPlayerController( //
 ) -> void {
 	check(Controller);
 	for(auto& entry : AssignedControllers) {
-		if(entry.Value == nullptr) {
+		if(!entry.Value.IsValid()) {
 			entry.Value = Controller;
 			SetupController(entry.Key, Controller);
 			return;
 		}
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Adding pending player controller"));
 	PendingControllers.Add(Controller);
 }
