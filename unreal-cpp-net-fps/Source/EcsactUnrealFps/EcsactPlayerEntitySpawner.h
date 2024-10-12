@@ -9,8 +9,10 @@ UCLASS()
 class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT
 
-	TArray<class AEcsactUnrealFpsPlayerController*>      PendingControllers = {};
-	TMap<int32, class AEcsactUnrealFpsPlayerController*> AssignedControllers = {};
+	TArray<TWeakObjectPtr<class AEcsactUnrealFpsPlayerController>>
+		PendingControllers = {};
+	TMap<int32, TWeakObjectPtr<class AEcsactUnrealFpsPlayerController>>
+		AssignedControllers = {};
 
 	auto SetupController(
 		int32                                   Entity,

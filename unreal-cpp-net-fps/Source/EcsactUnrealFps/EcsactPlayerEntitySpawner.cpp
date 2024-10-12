@@ -20,7 +20,7 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 
 	if(!PendingControllers.IsEmpty()) {
 		controller = PendingControllers.Pop();
-		SetupController(Entity, controller);
+		SetupController(Entity, controller.Get());
 	}
 }
 
