@@ -1,0 +1,27 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.4",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "EcsactUnrealFps",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	],
+	"PostBuildSteps": {
+		"Win64": [
+			"pwsh $(ProjectDir)\\BuildSystemImpls.ps1 $(ProjectDir) $(ProjectDir)\\Binaries\\SystemImpls.wasm"
+		]
+	}
+}
