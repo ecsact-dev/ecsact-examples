@@ -26,17 +26,23 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 		}
 	}
 
-	UE_LOG(
-		LogTemp,
-		Warning,
-		TEXT("No pending player controller was available for init player")
+	UE_LOG(LogTemp, Warning, TEXT("Spawning Player"));
+
+	auto* actor = GetWorld()->SpawnActor<AActor>(
+		ProxyPlayerClass,
+		SpawnLocation,
+		SpawnRotator
 	);
+
+	check(actor);
+	PlayerEntities.Add(Entity, actor);
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
 	int32             Entity,
 	FExampleFpsPlayer Player
 ) -> void {
+	PlayerEntities.Remove(Entity);
 	// TODO
 }
 
@@ -81,4 +87,31 @@ auto UEcsactPlayerEntitySpawner::AddPlayerController( //
 
 	UE_LOG(LogTemp, Warning, TEXT("Adding pending player controller"));
 	PendingControllers.Add(Controller);
+}
+
+auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
+	int32               Entity,
+	FExampleFpsPosition Position
+) -> void {
+	auto ActorWeakPtr = PlayerEntities.Find(Entity);
+
+	if(!ActorWeakPtr) {
+		return;
+	}
+
+	if(ActorWeakPtr->IsValid()) {
+		auto* actor = ActorWeakPtr->Get();
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("Entity %i Pos %f %f %f"),
+			Entity,
+			Position.X,
+			Position.Y,
+			Position.Z
+		);
+		actor->SetActorLocation(FVector{Position.X, Position.Y, Position.Z});
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("Invalid weak ptr oh no!"));
+	}
 }

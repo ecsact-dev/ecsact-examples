@@ -19,6 +19,8 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 		class AEcsactUnrealFpsPlayerController* Controller
 	) -> void;
 
+	TMap<int32, TWeakObjectPtr<AActor>> PlayerEntities;
+
 public:
 	auto RunnerStart_Implementation( //
 		class UEcsactRunner* Runner
@@ -33,6 +35,19 @@ public:
 		FExampleFpsPlayer Player
 	) -> void override;
 
+	auto UpdatePosition_Implementation( //
+		int32               Entity,
+		FExampleFpsPosition Position
+	) -> void override;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProxyPlayerClass;
+
+	UPROPERTY(EditAnywhere)
+	FVector SpawnLocation;
+
+	UPROPERTY(EditAnywhere)
+	FRotator SpawnRotator;
 	/**
 	 * Adds a player controller that will be considered when an entity with a
 	 * player tag is created
