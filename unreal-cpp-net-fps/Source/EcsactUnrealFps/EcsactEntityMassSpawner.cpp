@@ -6,7 +6,6 @@
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "InstancedStruct.h"
-#include ""
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
@@ -22,7 +21,17 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	for(int i = 0; i < count; i++) {
 		runner->CreateEntity()
 			.AddComponent(example::fps::Position{})
-			.AddComponent(example::fps::MassEntity{});
+			.AddComponent(example::fps::MassEntity{})
+			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
+				[](auto entity) {
+					UE_LOG(
+						LogTemp,
+						Warning,
+						TEXT("Created mass entity %i"),
+						static_cast<int>(entity)
+					);
+				}
+			));
 	}
 }
 
