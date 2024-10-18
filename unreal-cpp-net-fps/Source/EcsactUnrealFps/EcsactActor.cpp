@@ -4,6 +4,7 @@
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "EcsactUnrealFps.ecsact.hh"
+#include "EcsactActorSyncSubsystem.h"
 #include "Logging/LogMacros.h"
 #include "Logging/LogVerbosity.h"
 
@@ -18,6 +19,10 @@ auto UEcsactActor::GetEntityId() const -> ecsact_entity_id {
 
 auto UEcsactActor::OnEntityCreated(ecsact_entity_id CreatedEntityId) -> void {
 	EntityId = CreatedEntityId;
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+	auto actor_sync = runner->GetSubsystem<UEcsactActorSyncSubsystem>();
+	actor_sync->RegisterEcsactActor(CreatedEntityId, this);
 }
 
 auto UEcsactActor::BeginPlay() -> void {
@@ -30,6 +35,15 @@ auto UEcsactActor::BeginPlay() -> void {
 	GetWorld()
 		->GetTimerManager()
 		.SetTimer(TimerHandle, this, &ThisClass::TimeDelayWorkaround, delay, false);
+}
+
+auto UEcsactActor::BeginDestroy() -> void {
+	auto runner = EcsactUnrealExecution::Runner();
+	if(runner.IsValid() && EntityId != ECSACT_INVALID_ID(entity)) {
+		auto actor_sync = runner->GetSubsystem<UEcsactActorSyncSubsystem>();
+		actor_sync->DeregisterEcsactActor(EntityId, this);
+	}
+	Super::BeginDestroy();
 }
 
 auto UEcsactActor::TimeDelayWorkaround() -> void {

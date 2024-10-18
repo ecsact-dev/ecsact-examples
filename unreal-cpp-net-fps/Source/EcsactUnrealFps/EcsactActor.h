@@ -30,6 +30,7 @@ public:
 
 	auto GetEntityId() const -> ecsact_entity_id;
 	auto BeginPlay() -> void override;
+	auto BeginDestroy() -> void override;
 
 	auto IsComponentTickEnabled() const -> bool override;
 
