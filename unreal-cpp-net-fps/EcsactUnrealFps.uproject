@@ -17,9 +17,26 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "MassGameplay",
+			"Enabled": true
+		},
+		{
+			"Name": "MassEntity",
+			"Enabled": true
+		},
+		{
+			"Name": "MassCrowd",
+			"Enabled": true
+		},
+		{
+			"Name": "MassAI",
+			"Enabled": true
 		}
 	],
-	"PostBuildSteps": {
+	"PostBuildSteps":
+	{
 		"Win64": [
 			"pwsh $(ProjectDir)\\BuildSystemImpls.ps1 $(ProjectDir) $(ProjectDir)\\Binaries\\SystemImpls.wasm"
 		]

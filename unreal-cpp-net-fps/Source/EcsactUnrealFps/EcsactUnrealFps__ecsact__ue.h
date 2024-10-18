@@ -53,6 +53,14 @@ struct FExampleFpsPosition {
 	
 };
 
+USTRUCT(BlueprintType)
+struct FExampleFpsMassentity {
+	GENERATED_BODY()
+	
+	static FExampleFpsMassentity FromEcsactComponentData(const void*);
+	
+};
+
 UCLASS(Abstract, Blueprintable, meta = (DisplayName = "Ecsact Runner Package Subsystem (example.fps)"))
 class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT
@@ -72,6 +80,9 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPosition(int32 Entity, const void* Component);
 	void RawUpdatePosition(int32 Entity, const void* Component);
 	void RawRemovePosition(int32 Entity, const void* Component);
+	void RawInitMassentity(int32 Entity, const void* Component);
+	void RawUpdateMassentity(int32 Entity, const void* Component);
+	void RawRemoveMassentity(int32 Entity, const void* Component);
 	
 protected:
 	void InitComponentRaw(ecsact_entity_id, ecsact_component_id, const void*) override;
@@ -117,5 +128,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Position"))
 	void RemovePosition(int32 Entity, FExampleFpsPosition Position);
 	virtual void RemovePosition_Implementation(int32 Entity, FExampleFpsPosition Position);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.MassEntity"))
+	void InitMassentity(int32 Entity, FExampleFpsMassentity Massentity);
+	virtual void InitMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.MassEntity"))
+	void UpdateMassentity(int32 Entity, FExampleFpsMassentity Massentity);
+	virtual void UpdateMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.MassEntity"))
+	void RemoveMassentity(int32 Entity, FExampleFpsMassentity Massentity);
+	virtual void RemoveMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
 	
 };

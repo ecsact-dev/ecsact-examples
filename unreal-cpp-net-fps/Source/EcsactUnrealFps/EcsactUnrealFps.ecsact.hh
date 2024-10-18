@@ -38,9 +38,15 @@ struct Position {
 	float z;
 	auto operator<=>(const example::fps::Position&) const = default;
 };
+struct MassEntity {
+	static constexpr bool transient = false;
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_component_id>(5);
+	auto operator<=>(const example::fps::MassEntity&) const = default;
+};
 struct Fire {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(5);
+	static constexpr auto id = static_cast<ecsact_action_id>(6);
 	struct context;
 	static void impl(context&);
 	int32_t player_id;
