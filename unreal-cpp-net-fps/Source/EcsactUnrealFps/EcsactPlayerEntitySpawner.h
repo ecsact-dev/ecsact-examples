@@ -19,9 +19,9 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 		class AEcsactUnrealFpsPlayerController* Controller
 	) -> void;
 
+public:
 	TMap<int32, TWeakObjectPtr<AActor>> PlayerEntities;
 
-public:
 	auto RunnerStart_Implementation( //
 		class UEcsactRunner* Runner
 	) -> void override;

@@ -28,14 +28,14 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 
 	UE_LOG(LogTemp, Warning, TEXT("Spawning Player"));
 
-	auto* actor = GetWorld()->SpawnActor<AActor>(
+	auto* Actor = GetWorld()->SpawnActor<AActor>(
 		ProxyPlayerClass,
 		SpawnLocation,
 		SpawnRotator
 	);
 
-	check(actor);
-	PlayerEntities.Add(Entity, actor);
+	check(Actor);
+	PlayerEntities.Add(Entity, Actor);
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
@@ -70,6 +70,7 @@ auto UEcsactPlayerEntitySpawner::SetupController(
 	check(pawn);
 	// TODO: no cast please
 	pawn->CharacterEntity = static_cast<ecsact_entity_id>(Entity);
+	PlayerEntities.Add(Entity, pawn);
 	Controller->Possess(pawn);
 }
 
@@ -93,6 +94,11 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
+	auto result = AssignedControllers.Find(Entity);
+
+	if(result) {
+		return;
+	}
 	auto ActorWeakPtr = PlayerEntities.Find(Entity);
 
 	if(!ActorWeakPtr) {
@@ -101,17 +107,17 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 
 	if(ActorWeakPtr->IsValid()) {
 		auto* actor = ActorWeakPtr->Get();
-		UE_LOG(
-			LogTemp,
-			Error,
-			TEXT("Entity %i Pos %f %f %f"),
-			Entity,
-			Position.X,
-			Position.Y,
-			Position.Z
-		);
+		// UE_LOG(
+		// 	LogTemp,
+		// 	Error,
+		// 	TEXT("Entity %i Pos %f %f %f"),
+		// 	Entity,
+		// 	Position.X,
+		// 	Position.Y,
+		// 	Position.Z
+		// );
 		actor->SetActorLocation(FVector{Position.X, Position.Y, Position.Z});
 	} else {
-		UE_LOG(LogTemp, Warning, TEXT("Invalid weak ptr oh no!"));
+		UE_LOG(LogTemp, Warning, TEXT("The found player controller is invalid"));
 	}
 }

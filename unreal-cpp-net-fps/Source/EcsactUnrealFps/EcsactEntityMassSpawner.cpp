@@ -2,10 +2,10 @@
 
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
 #include "MassSpawnerSubsystem.h"
+#include "MassEntitySubsystem.h"
 #include "MassEntityTemplateRegistry.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
-#include "InstancedStruct.h"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
@@ -46,6 +46,9 @@ auto UEcsactEntityMassSpawner::InitMassentity_Implementation(
 	auto& EntityTemplate =
 		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
 	auto MassSpawner = world->GetSubsystem<UMassSpawnerSubsystem>();
+	auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
+
+	const auto& EntityManager = MassEntity->GetEntityManager();
 
 	MassSpawner->SpawnEntities(EntityTemplate, 1, EntityHandles);
 }

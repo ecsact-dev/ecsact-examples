@@ -72,13 +72,13 @@ auto UEcsactProjectileEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	UE_LOG(
-		LogTemp,
-		Error,
-		TEXT("Entity %i Pos %f %f %f"),
-		Entity,
-		Position.X,
-		Position.Y,
-		Position.Z
-	);
+	// UE_LOG(
+	// 	LogTemp,
+	// 	Error,
+	// 	TEXT("Entity %i Pos %f %f %f"),
+	// 	Entity,
+	// 	Position.X,
+	// 	Position.Y,
+	// 	Position.Z
+	// );
 }
