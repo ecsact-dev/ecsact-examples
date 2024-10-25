@@ -20,10 +20,17 @@ struct Player {
 	int32_t player_id;
 	auto operator<=>(const example::fps::Player&) const = default;
 };
-struct Rotation {
+struct Firing {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(3);
+	int32_t last_fire_tick;
+	auto operator<=>(const example::fps::Firing&) const = default;
+};
+struct Rotation {
+	static constexpr bool transient = false;
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_component_id>(4);
 	float pitch;
 	float yaw;
 	float roll;
@@ -32,19 +39,32 @@ struct Rotation {
 struct Position {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(4);
+	static constexpr auto id = static_cast<ecsact_component_id>(5);
 	float x;
 	float y;
 	float z;
 	auto operator<=>(const example::fps::Position&) const = default;
 };
-struct Fire {
+struct StartFiring {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(5);
+	static constexpr auto id = static_cast<ecsact_action_id>(6);
 	struct context;
 	static void impl(context&);
 	int32_t player_id;
-	auto operator<=>(const example::fps::Fire&) const = default;
+	auto operator<=>(const example::fps::StartFiring&) const = default;
+};
+struct StopFiring {
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_action_id>(7);
+	struct context;
+	static void impl(context&);
+	int32_t player_id;
+	auto operator<=>(const example::fps::StopFiring&) const = default;
+};
+struct Fire {
+	static constexpr auto id = static_cast<ecsact_system_id>(8);
+	struct context;
+	static void impl(context&);
 };
 
 }// namespace example::fps

@@ -26,6 +26,16 @@ struct FExampleFpsPlayer {
 };
 
 USTRUCT(BlueprintType)
+struct FExampleFpsFiring {
+	GENERATED_BODY()
+	
+	static FExampleFpsFiring FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LastFireTick;
+	
+};
+
+USTRUCT(BlueprintType)
 struct FExampleFpsRotation {
 	GENERATED_BODY()
 	
@@ -66,6 +76,9 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPlayer(int32 Entity, const void* Component);
 	void RawUpdatePlayer(int32 Entity, const void* Component);
 	void RawRemovePlayer(int32 Entity, const void* Component);
+	void RawInitFiring(int32 Entity, const void* Component);
+	void RawUpdateFiring(int32 Entity, const void* Component);
+	void RawRemoveFiring(int32 Entity, const void* Component);
 	void RawInitRotation(int32 Entity, const void* Component);
 	void RawUpdateRotation(int32 Entity, const void* Component);
 	void RawRemoveRotation(int32 Entity, const void* Component);
@@ -99,6 +112,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Player"))
 	void RemovePlayer(int32 Entity, FExampleFpsPlayer Player);
 	virtual void RemovePlayer_Implementation(int32 Entity, FExampleFpsPlayer Player);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Firing"))
+	void InitFiring(int32 Entity, FExampleFpsFiring Firing);
+	virtual void InitFiring_Implementation(int32 Entity, FExampleFpsFiring Firing);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.Firing"))
+	void UpdateFiring(int32 Entity, FExampleFpsFiring Firing);
+	virtual void UpdateFiring_Implementation(int32 Entity, FExampleFpsFiring Firing);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Firing"))
+	void RemoveFiring(int32 Entity, FExampleFpsFiring Firing);
+	virtual void RemoveFiring_Implementation(int32 Entity, FExampleFpsFiring Firing);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Rotation"))
 	void InitRotation(int32 Entity, FExampleFpsRotation Rotation);
 	virtual void InitRotation_Implementation(int32 Entity, FExampleFpsRotation Rotation);

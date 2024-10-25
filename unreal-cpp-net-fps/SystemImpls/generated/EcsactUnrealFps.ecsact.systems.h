@@ -6,6 +6,14 @@
 
 
 ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__StartFiring")
+void example__fps__StartFiring(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__StopFiring")
+void example__fps__StopFiring(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
 ECSACT_EXPORT("example__fps__Fire")
 void example__fps__Fire(struct ecsact_system_execution_context*);
 

@@ -8,6 +8,11 @@ FExampleFpsPlayer FExampleFpsPlayer::FromEcsactComponentData(const void* compone
 	result.PlayerId = static_cast<const example::fps::Player*>(component_data)->player_id;
 	return result;
 }
+FExampleFpsFiring FExampleFpsFiring::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsFiring{};
+	result.LastFireTick = static_cast<const example::fps::Firing*>(component_data)->last_fire_tick;
+	return result;
+}
 FExampleFpsRotation FExampleFpsRotation::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsRotation{};
 	result.Pitch = static_cast<const example::fps::Rotation*>(component_data)->pitch;
@@ -23,21 +28,24 @@ FExampleFpsPosition FExampleFpsPosition::FromEcsactComponentData(const void* com
 	return result;
 }
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 5);
-	UpdateComponentFns.Init(nullptr, 5);
-	RemoveComponentFns.Init(nullptr, 5);
+	InitComponentFns.Init(nullptr, 6);
+	UpdateComponentFns.Init(nullptr, 6);
+	RemoveComponentFns.Init(nullptr, 6);
 	InitComponentFns[1] = &ThisClass::RawInitProjectile;
 	UpdateComponentFns[1] = &ThisClass::RawUpdateProjectile;
 	RemoveComponentFns[1] = &ThisClass::RawRemoveProjectile;
 	InitComponentFns[2] = &ThisClass::RawInitPlayer;
 	UpdateComponentFns[2] = &ThisClass::RawUpdatePlayer;
 	RemoveComponentFns[2] = &ThisClass::RawRemovePlayer;
-	InitComponentFns[3] = &ThisClass::RawInitRotation;
-	UpdateComponentFns[3] = &ThisClass::RawUpdateRotation;
-	RemoveComponentFns[3] = &ThisClass::RawRemoveRotation;
-	InitComponentFns[4] = &ThisClass::RawInitPosition;
-	UpdateComponentFns[4] = &ThisClass::RawUpdatePosition;
-	RemoveComponentFns[4] = &ThisClass::RawRemovePosition;
+	InitComponentFns[3] = &ThisClass::RawInitFiring;
+	UpdateComponentFns[3] = &ThisClass::RawUpdateFiring;
+	RemoveComponentFns[3] = &ThisClass::RawRemoveFiring;
+	InitComponentFns[4] = &ThisClass::RawInitRotation;
+	UpdateComponentFns[4] = &ThisClass::RawUpdateRotation;
+	RemoveComponentFns[4] = &ThisClass::RawRemoveRotation;
+	InitComponentFns[5] = &ThisClass::RawInitPosition;
+	UpdateComponentFns[5] = &ThisClass::RawUpdatePosition;
+	RemoveComponentFns[5] = &ThisClass::RawRemovePosition;
 	
 }
 
@@ -70,6 +78,15 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdatePlayer(int32 entity, const void*
 }
 void UExampleFpsEcsactRunnerSubsystem::RawRemovePlayer(int32 entity, const void* component) {
 	RemovePlayer(entity, FExampleFpsPlayer::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitFiring(int32 entity, const void* component) {
+	InitFiring(entity, FExampleFpsFiring::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateFiring(int32 entity, const void* component) {
+	UpdateFiring(entity, FExampleFpsFiring::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveFiring(int32 entity, const void* component) {
+	RemoveFiring(entity, FExampleFpsFiring::FromEcsactComponentData(component));
 }
 void UExampleFpsEcsactRunnerSubsystem::RawInitRotation(int32 entity, const void* component) {
 	InitRotation(entity, FExampleFpsRotation::FromEcsactComponentData(component));
@@ -110,6 +127,18 @@ void UExampleFpsEcsactRunnerSubsystem::UpdatePlayer_Implementation(int32 Entity,
 }
 
 void UExampleFpsEcsactRunnerSubsystem::RemovePlayer_Implementation(int32 Entity, FExampleFpsPlayer Player) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitFiring_Implementation(int32 Entity, FExampleFpsFiring Firing) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateFiring_Implementation(int32 Entity, FExampleFpsFiring Firing) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveFiring_Implementation(int32 Entity, FExampleFpsFiring Firing) {
 	
 }
 

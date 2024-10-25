@@ -5,8 +5,8 @@
 # system such as bazel, cmake, zig, etc.
 
 param (
-	[Parameter(Mandatory)] $ProjectDir,
-	[Parameter(Mandatory)] $WasmOutputFilePath
+	[string] $ProjectDir = ".",
+	[string] $WasmOutputFilePath = "Binaries/SystemImpls.wasm"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,6 +51,7 @@ emcc -std=c++20 --no-entry -I"$EcsactInc" -I"SystemImpls/generated" `
 	-s ERROR_ON_UNDEFINED_SYMBOLS=0 `
 	-s WASM=1 `
 	-s STANDALONE_WASM=1 `
+	-fwasm-exceptions `
 	-s PURE_WASI=1 `
 	-O3 `
 	-Wno-js-compiler `

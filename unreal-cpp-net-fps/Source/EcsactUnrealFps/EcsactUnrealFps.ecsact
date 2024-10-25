@@ -2,18 +2,34 @@ main package example.fps;
 
 component Projectile;
 component Player { i32 player_id; }
+component Firing { i32 last_fire_tick; }
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
-action Fire {
+action StartFiring {
 	i32 player_id;
 	readonly Player;
+	stream_toggle Position;
+	stream_toggle Rotation;
+	adds Firing;
+}
+
+action StopFiring {
+	i32 player_id;
+	readonly Player;
+	stream_toggle Position;
+	stream_toggle Rotation;
+	removes Firing;
+}
+
+system Fire {
+	readwrite Player;
 	readwrite Position;
 	readwrite Rotation;
 
 	generates {
-		requires Projectile;
-		requires Position;
-		requires Rotation;
+		required Projectile;
+		required Position;
+		required Rotation;
 	}
 }

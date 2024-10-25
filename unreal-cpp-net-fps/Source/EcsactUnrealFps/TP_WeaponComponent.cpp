@@ -37,7 +37,7 @@ void UTP_WeaponComponent::Fire() {
 
 	auto runner = EcsactUnrealExecution::Runner().Get();
 
-	runner->PushAction(example::fps::Fire{pc->PlayerId});
+	runner->PushAction(example::fps::StartFiring{pc->PlayerId});
 
 	// Try and fire a projectile
 	// if(ProjectileClass != nullptr) {
