@@ -22,7 +22,8 @@ UTP_WeaponComponent::UTP_WeaponComponent() {
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
-void UTP_WeaponComponent::Fire() {
+void UTP_WeaponComponent::StartFiring() {
+	UE_LOG(LogTemp, Warning, TEXT("StartFiring()"));
 	if(Character == nullptr || Character->GetController() == nullptr) {
 		return;
 	}
@@ -38,55 +39,24 @@ void UTP_WeaponComponent::Fire() {
 	auto runner = EcsactUnrealExecution::Runner().Get();
 
 	runner->PushAction(example::fps::StartFiring{pc->PlayerId});
+}
 
-	// Try and fire a projectile
-	// if(ProjectileClass != nullptr) {
-	// 	UWorld* const World = GetWorld();
-	// 	if(World != nullptr) {
-	// 		APlayerController* PlayerController =
-	// 			Cast<APlayerController>(Character->GetController());
-	// 		const FRotator SpawnRotation =
-	// 			PlayerController->PlayerCameraManager->GetCameraRotation();
-	// 		// MuzzleOffset is in camera space, so transform it to world space
-	// before
-	// 		// offsetting from the character location to find the final muzzle
-	// 		// position
-	// 		const FVector SpawnLocation = GetOwner()->GetActorLocation() +
-	// 			SpawnRotation.RotateVector(MuzzleOffset);
-	//
-	// 		// Set Spawn Collision Handling Override
-	// 		FActorSpawnParameters ActorSpawnParams;
-	// 		ActorSpawnParams.SpawnCollisionHandlingOverride =
-	// 			ESpawnActorCollisionHandlingMethod::
-	// 				AdjustIfPossibleButDontSpawnIfColliding;
-	//
-	// 		// Spawn the projectile at the muzzle
-	// 		World->SpawnActor<AEcsactUnrealFpsProjectile>(
-	// 			ProjectileClass,
-	// 			SpawnLocation,
-	// 			SpawnRotation,
-	// 			ActorSpawnParams
-	// 		);
-	// 	}
-	// }
+void UTP_WeaponComponent::StopFiring() {
+	UE_LOG(LogTemp, Warning, TEXT("StopFiring()"));
+	if(Character == nullptr || Character->GetController() == nullptr) {
+		return;
+	}
+	if(Character->CharacterEntity == ECSACT_INVALID_ID(entity)) {
+		return;
+	}
 
-	// Try and play the sound if specified
-	// if(FireSound != nullptr) {
-	// 	UGameplayStatics::PlaySoundAtLocation(
-	// 		this,
-	// 		FireSound,
-	// 		Character->GetActorLocation()
-	// 	);
-	// }
+	auto pc = Cast<AEcsactUnrealFpsPlayerController>(Character->GetController());
+	if(!pc) {
+		return;
+	}
 
-	// Try and play a firing animation if specified
-	// if(FireAnimation != nullptr) {
-	// 	// Get the animation object for the arms mesh
-	// 	UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
-	// 	if(AnimInstance != nullptr) {
-	// 		AnimInstance->Montage_Play(FireAnimation, 1.f);
-	// 	}
-	// }
+	auto runner = EcsactUnrealExecution::Runner().Get();
+	runner->PushAction(example::fps::StopFiring{pc->PlayerId});
 }
 
 bool UTP_WeaponComponent::AttachWeapon(
@@ -129,12 +99,18 @@ bool UTP_WeaponComponent::AttachWeapon(
 
 		if(UEnhancedInputComponent* EnhancedInputComponent =
 				 Cast<UEnhancedInputComponent>(PlayerController->InputComponent)) {
-			// Fire
 			EnhancedInputComponent->BindAction(
 				FireAction,
-				ETriggerEvent::Triggered,
+				ETriggerEvent::Started,
 				this,
-				&UTP_WeaponComponent::Fire
+				&UTP_WeaponComponent::StartFiring
+			);
+
+			EnhancedInputComponent->BindAction(
+				FireAction,
+				ETriggerEvent::Completed,
+				this,
+				&UTP_WeaponComponent::StopFiring
 			);
 		}
 	}

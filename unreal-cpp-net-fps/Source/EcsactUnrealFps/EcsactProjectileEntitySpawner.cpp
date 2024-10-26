@@ -1,4 +1,5 @@
 #include "EcsactProjectileEntitySpawner.h"
+#include "EcsactUnrealFpsProjectile.h"
 #include "EcsactUnreal/EcsactAsyncRunner.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "UObject/ConstructorHelpers.h"
@@ -42,24 +43,23 @@ auto UEcsactProjectileEntitySpawner::InitProjectile_Implementation(
 	check(world);
 	auto spawn_params = FActorSpawnParameters{};
 	spawn_params.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	static auto projectile_class = //
-		ConstructorHelpers::FClassFinder<AActor>{
-			TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonProjectile"),
-		};
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	auto pos = FVector{};
 	auto rot = FRotator{};
 	auto projectile = world->SpawnActor( //
-		projectile_class.Class.Get(),
+		ProjectileClass,
 		&pos,
 		&rot,
 		spawn_params
 	);
-	ProjectileActors.Add(Entity, projectile);
 
-	UE_LOG(LogTemp, Warning, TEXT("Spawning Projectile!"));
+	if(projectile) {
+		ProjectileActors.Add(Entity, projectile);
+		UE_LOG(LogTemp, Warning, TEXT("Spawning Projectile!"));
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("Failed to spawn projectile"));
+	}
 }
 
 auto UEcsactProjectileEntitySpawner::RemoveProjectile_Implementation( //
@@ -75,7 +75,7 @@ auto UEcsactProjectileEntitySpawner::UpdatePosition_Implementation( //
 	UE_LOG(
 		LogTemp,
 		Error,
-		TEXT("Entity %i Pos %f %f %f"),
+		TEXT("Projectile Entity %i Pos %f %f %f"),
 		Entity,
 		Position.X,
 		Position.Y,

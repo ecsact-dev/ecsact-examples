@@ -19,10 +19,6 @@ class ECSACTUNREALFPS_API UTP_WeaponComponent : public USkeletalMeshComponent {
 	GENERATED_BODY()
 
 public:
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AEcsactUnrealFpsProjectile> ProjectileClass;
-
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	USoundBase* FireSound;
@@ -60,16 +56,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool AttachWeapon(AEcsactUnrealFpsCharacter* TargetCharacter);
 
-	/** Make the weapon Fire a Projectile */
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void Fire();
-
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
+	void StartFiring();
+	void StopFiring();
+
 	/** The Character holding this weapon*/
 	AEcsactUnrealFpsCharacter* Character;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Templates/SubclassOf.h"
 #include "EcsactUnrealFps__ecsact__ue.h"
 #include "EcsactProjectileEntitySpawner.generated.h"
 
@@ -14,6 +15,10 @@ class UEcsactProjectileEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	auto CreateInitialEntities(class UEcsactRunner* Runner) -> void;
 
 public:
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AEcsactUnrealFpsProjectile> ProjectileClass;
+
 	auto RunnerStart_Implementation( //
 		class UEcsactRunner* Runner
 	) -> void override;
