@@ -81,14 +81,6 @@ void FFollowPlayer::MoveToPlayerPosition(FStateTreeExecutionContext& Context
 	auto&       MoveTarget = Context.GetExternalData(MoveTargetHandle);
 	const auto& TransformFragment = Context.GetExternalData(TransformHandle);
 	const auto& PlayerPosition = InstanceData.PlayerPosition;
-	UE_LOG(
-		LogTemp,
-		Log,
-		TEXT("Move to Position %f %f %f"),
-		PlayerPosition.X,
-		PlayerPosition.Y,
-		PlayerPosition.Z
-	);
 
 	MoveTarget.Center = PlayerPosition;
 	MoveTarget.SlackRadius = 50.f;

@@ -23,6 +23,11 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	auto runner = EcsactUnrealExecution::Runner();
 	check(runner.IsValid());
 	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("AEcsactUnrealFpsPlayerController::BeginPlay()")
+	);
 	if(player_spawner) {
 		player_spawner->AddPlayerController(this);
 	} else {

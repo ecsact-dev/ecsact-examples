@@ -18,6 +18,12 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 ) -> void {
 	auto& controller = AssignedControllers.Add(Entity);
 
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("Looking for available controller for entity %i"),
+		Entity
+	);
 	while(!PendingControllers.IsEmpty()) {
 		controller = PendingControllers.Pop();
 		if(controller.IsValid()) {
@@ -26,7 +32,12 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Spawning Player"));
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("No controller found for entity %i. adding proxy actor instead."),
+		Entity
+	);
 
 	auto* Actor = GetWorld()->SpawnActor<AActor>(
 		ProxyPlayerClass,
@@ -50,6 +61,8 @@ auto UEcsactPlayerEntitySpawner::SetupController(
 	int32                             Entity,
 	AEcsactUnrealFpsPlayerController* Controller
 ) -> void {
+	UE_LOG(LogTemp, Warning, TEXT("Setup Controller (Entity=%i)"), Entity);
+
 	check(Controller);
 	auto spawn_params = FActorSpawnParameters{};
 	spawn_params.SpawnCollisionHandlingOverride =
