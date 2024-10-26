@@ -103,6 +103,14 @@ auto UEcsactPlayerEntitySpawner::AddPlayerController( //
 	PendingControllers.Add(Controller);
 }
 
+auto UEcsactPlayerEntitySpawner::RemovePlayerController( //
+	class AEcsactUnrealFpsPlayerController* Controller
+) -> void {
+	check(Controller);
+	UE_LOG(LogTemp, Warning, TEXT("Removing pending player controller"));
+	PendingControllers.Remove(Controller);
+}
+
 auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position

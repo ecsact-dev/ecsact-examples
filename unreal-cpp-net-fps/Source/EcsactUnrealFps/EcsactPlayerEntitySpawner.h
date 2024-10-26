@@ -55,4 +55,8 @@ public:
 	auto AddPlayerController( //
 		class AEcsactUnrealFpsPlayerController* Controller
 	) -> void;
+
+	auto RemovePlayerController( //
+		class AEcsactUnrealFpsPlayerController* Controller
+	) -> void;
 };

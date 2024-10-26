@@ -34,3 +34,18 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 		UE_LOG(LogTemp, Error, TEXT("Player Spawner is not ready"));
 	}
 }
+
+void AEcsactUnrealFpsPlayerController::BeginDestroy() {
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("AEcsactUnrealFpsPlayerController::BeginDestroy()")
+	);
+	if(player_spawner) {
+		player_spawner->RemovePlayerController(this);
+	}
+	Super::BeginDestroy();
+}

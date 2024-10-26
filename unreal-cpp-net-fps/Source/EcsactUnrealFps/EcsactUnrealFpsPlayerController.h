@@ -23,11 +23,13 @@ protected:
 	UInputMappingContext* InputMappingContext;
 
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
 public:
 	// TODO: set this per-player
 	/**
-	 * This player ID gets passed to Ecsact when executing actions by this player controller
+	 * This player ID gets passed to Ecsact when executing actions by this player
+	 * controller
 	 */
 	int32 PlayerId = 0;
 };
