@@ -3,8 +3,14 @@
 #include "MassRequirements.h"
 #include "MassSignalSubsystem.h"
 #include "MassStateTreeFragments.h"
+#include "MassCommonFragments.h"
 #include "MassExecutionContext.h"
 #include "MassStateTreeTypes.h"
+#include "EcsactUnreal/EcsactExecution.h"
+#include "EcsactUnreal/EcsactRunner.h"
+#include "../Fragments/EcsactFragments.h"
+#include "../EcsactUnrealFps.ecsact.hh"
+#include "UObject/UnrealNames.h"
 
 void UTickProcessor::ConfigureQueries() {
 	EntityQuery.AddSubsystemRequirement<UMassSignalSubsystem>(
@@ -13,6 +19,10 @@ void UTickProcessor::ConfigureQueries() {
 	EntityQuery.RegisterWithProcessor(*this);
 	EntityQuery.AddRequirement<FMassStateTreeInstanceFragment>(
 		EMassFragmentAccess::None
+	);
+	EntityQuery.AddRequirement<FTransformFragment>(EMassFragmentAccess::ReadOnly);
+	EntityQuery.AddRequirement<FEcsactEntityFragment>(
+		EMassFragmentAccess::ReadOnly
 	);
 }
 
@@ -32,6 +42,32 @@ void UTickProcessor::Execute(
 				UE::Mass::Signals::StateTreeActivate,
 				Entities
 			);
+
+			auto runner = EcsactUnrealExecution::Runner();
+			if(!runner.IsValid()) {
+				return;
+			}
+
+			const auto& TransformFragments =
+				Context.GetFragmentView<FTransformFragment>();
+
+			const auto& EntityFragments =
+				Context.GetFragmentView<FEcsactEntityFragment>();
+
+			for(int i = 0; i < TransformFragments.Num(); ++i) {
+				const auto& TransformLoc =
+					TransformFragments[i].GetTransform().GetLocation();
+				const auto& Entity = EntityFragments[i].GetId();
+
+				runner->Stream(
+					Entity,
+					example::fps::Position{
+						.x = static_cast<float>(TransformLoc.X),
+						.y = static_cast<float>(TransformLoc.Y),
+						.z = static_cast<float>(TransformLoc.Z),
+					}
+				);
+			}
 		}
 	);
 }

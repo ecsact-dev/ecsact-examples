@@ -1,11 +1,13 @@
 #include "EcsactEntityMassSpawner.h"
 
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
+#include "MassEntityTemplate.h"
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
 #include "MassEntityTemplateRegistry.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
+#include "Fragments/EcsactFragments.h"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
@@ -43,12 +45,26 @@ auto UEcsactEntityMassSpawner::InitMassentity_Implementation(
 
 	UWorld* world = GetWorld();
 
-	auto& EntityTemplate =
+	const FMassEntityTemplate& EntityTemplate =
 		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
+
+	FMassEntityTemplate EntityTemplateCopy = EntityTemplate;
+
 	auto MassSpawner = world->GetSubsystem<UMassSpawnerSubsystem>();
 	auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
 
-	const auto& EntityManager = MassEntity->GetEntityManager();
+	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
 
 	MassSpawner->SpawnEntities(EntityTemplate, 1, EntityHandles);
+	for(auto& EntityHandle : EntityHandles) {
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactEntityFragment::StaticStruct(),
+			[Entity](void* fragment, const UScriptStruct& FragmentType) {
+				FEcsactEntityFragment* EntityFragment =
+					static_cast<FEcsactEntityFragment*>(fragment);
+				EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
+			}
+		);
+	}
 }
