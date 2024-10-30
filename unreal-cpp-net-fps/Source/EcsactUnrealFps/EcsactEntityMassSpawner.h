@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <tuple>
+#include <optional>
+
 #include "CoreMinimal.h"
 #include "MassEntityConfigAsset.h"
 #include "EcsactUnrealFps__ecsact__ue.h"
@@ -24,12 +27,25 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 
 	TArray<FMassEntityHandle> EntityHandles;
 
+	using EntityPoolT = std::tuple<
+		std::optional<FExampleFpsMassentity>,
+		std::optional<FExampleFpsPosition>>;
+
+	// NOTE: Temporary until more general solution is implemented
+	TMap<ecsact_entity_id, EntityPoolT> EntityPools;
+
+	void Spawn(ecsact_entity_id Entity, const FExampleFpsPosition& Position);
+
 public:
-	UFUNCTION(BlueprintCallable)
-	void CreateMassEntities(int count);
+	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
 
 	auto InitMassentity_Implementation( //
 		int32                 Entity,
 		FExampleFpsMassentity MassEntity
+	) -> void override;
+
+	auto InitPosition_Implementation( //
+		int32               Entity,
+		FExampleFpsPosition Position
 	) -> void override;
 };
