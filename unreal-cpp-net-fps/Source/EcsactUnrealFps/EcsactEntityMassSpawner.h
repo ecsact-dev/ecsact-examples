@@ -23,9 +23,7 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 	UPROPERTY(EditAnywhere)
 	TArray<UMassEntitySpawnDataGeneratorBase*> SpawnDataGenerators;
 
-	TMap<ecsact_entity_id, FMassEntityHandle> MassEntities;
-
-	TArray<FMassEntityHandle> EntityHandles;
+	TMap<ecsact_entity_id, TArray<FMassEntityHandle>> MassEntities;
 
 	using EntityPoolT = std::tuple<
 		std::optional<FExampleFpsMassentity>,
@@ -39,12 +37,20 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 public:
 	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool StreamEntities;
+
 	auto InitMassentity_Implementation( //
 		int32                 Entity,
 		FExampleFpsMassentity MassEntity
 	) -> void override;
 
 	auto InitPosition_Implementation( //
+		int32               Entity,
+		FExampleFpsPosition Position
+	) -> void override;
+
+	auto UpdatePosition_Implementation( //
 		int32               Entity,
 		FExampleFpsPosition Position
 	) -> void override;

@@ -17,6 +17,7 @@ public class EcsactUnrealFps : ModuleRules {
 			"EcsactNet",
 			"EcsactNetWasm",
 			"EcsactNetEditor",
+			"StructUtils",
 			"MassSpawner","MassAIBehavior", "StateTreeModule", "MassNavigation", "NavigationSystem", "MassEntity", "MassCommon", "MassSignals"
 		});
 	}

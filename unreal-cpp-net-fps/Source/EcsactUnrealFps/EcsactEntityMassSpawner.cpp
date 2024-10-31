@@ -11,6 +11,7 @@
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "Fragments/EcsactFragments.h"
+#include "UObject/UnrealNames.h"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
@@ -95,6 +96,32 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	Spawn(EcsactEntity, Position);
 }
 
+auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
+	int32               Entity,
+	FExampleFpsPosition Position
+) -> void {
+	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
+	if(MassEntities.Contains(EcsactEntity)) {
+		auto EntityHandles =
+			*MassEntities.Find(static_cast<ecsact_entity_id>(Entity));
+
+		UWorld* world = GetWorld();
+
+		auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
+		FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
+
+		auto vec = FVector{Position.X, Position.Y, Position.Z};
+
+		for(auto EntityHandle : EntityHandles) {
+			auto* TransformFragment =
+				EntityManager.GetFragmentDataPtr<FTransformFragment>(EntityHandle);
+
+			auto Transform = FTransform(vec);
+			TransformFragment->SetTransform(Transform);
+		}
+	}
+}
+
 auto UEcsactEntityMassSpawner::Spawn(
 	ecsact_entity_id           Entity,
 	const FExampleFpsPosition& Position
@@ -104,6 +131,8 @@ auto UEcsactEntityMassSpawner::Spawn(
 
 	const FMassEntityTemplate& EntityTemplate =
 		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
+
+	FMassEntityTemplate EcsactTemplate = EntityTemplate;
 
 	auto MassSpawner = world->GetSubsystem<UMassSpawnerSubsystem>();
 	auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
@@ -126,10 +155,7 @@ auto UEcsactEntityMassSpawner::Spawn(
 		auto* TransformFragment =
 			EntityManager.GetFragmentDataPtr<FTransformFragment>(EntityHandle);
 
-		auto vec = FVector{};
-		vec.X = Position.X;
-		vec.Y = Position.Y;
-		vec.Z = Position.Z;
+		auto vec = FVector{Position.X, Position.Y, Position.Z};
 
 		UE_LOG(
 			LogTemp,
@@ -140,8 +166,28 @@ auto UEcsactEntityMassSpawner::Spawn(
 		);
 		auto Transform = FTransform(vec);
 		TransformFragment->SetTransform(Transform);
+
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactEntityFragment::StaticStruct(),
+			[Entity](void* fragment, const UScriptStruct& FragmentType) {
+				FEcsactEntityFragment* EntityFragment =
+					static_cast<FEcsactEntityFragment*>(fragment);
+				EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
+			}
+		);
+
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactPositionFragment::StaticStruct(),
+			[&vec](void* fragment, const UScriptStruct& FragmentType) {
+				FEcsactPositionFragment* PositionFragment =
+					static_cast<FEcsactPositionFragment*>(fragment);
+				PositionFragment->SetPosition(vec);
+			}
+		);
 	}
-	EntityHandles += NewEntityHandles;
+	MassEntities.Add(Entity, NewEntityHandles);
 
 	EntityPools.Remove(Entity);
 }
