@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ecsact/runtime/common.h"
 #include "EcsactUnrealFpsProjectile.generated.h"
 
 class USphereComponent;
@@ -28,7 +29,11 @@ class AEcsactUnrealFpsProjectile : public AActor {
 	UProjectileMovementComponent* ProjectileMovement;
 
 public:
+	ecsact_entity_id Entity = ECSACT_INVALID_ID(entity);
+
 	AEcsactUnrealFpsProjectile();
+
+	auto BeginDestroy() -> void override;
 
 	/** called when projectile hits something */
 	UFUNCTION()

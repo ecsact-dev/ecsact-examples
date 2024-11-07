@@ -16,6 +16,8 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 	int32             Entity,
 	FExampleFpsPlayer Player
 ) -> void {
+	UE_LOG(LogTemp, Warning, TEXT("InitPlayer!"));
+
 	auto& controller = AssignedControllers.Add(Entity);
 
 	while(!PendingControllers.IsEmpty()) {

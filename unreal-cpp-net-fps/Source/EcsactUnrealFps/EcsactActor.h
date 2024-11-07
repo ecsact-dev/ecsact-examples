@@ -13,10 +13,8 @@ UCLASS(
 class UEcsactActor : public USceneComponent {
 	GENERATED_BODY()
 	ecsact_entity_id EntityId = ECSACT_INVALID_ID(entity);
-	FTimerHandle     TimerHandle;
 
 	auto OnEntityCreated(ecsact_entity_id CreatedEntityId) -> void;
-	auto TimeDelayWorkaround() -> void;
 
 public:
 	UEcsactActor();

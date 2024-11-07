@@ -1,13 +1,15 @@
 #include "EcsactProjectileEntitySpawner.h"
+#include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFpsProjectile.h"
 #include "EcsactUnreal/EcsactAsyncRunner.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/World.h"
 
-auto UEcsactProjectileEntitySpawner::CreateInitialEntities( //
-	UEcsactRunner* Runner
-) -> void {
+auto UEcsactProjectileEntitySpawner::CreateInitialEntities() -> void {
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+
 	UE_LOG(LogTemp, Log, TEXT("Create Initial Entities"));
 
 	// NOTE: For demonstration purposes only we're creating an entity for the
@@ -16,10 +18,13 @@ auto UEcsactProjectileEntitySpawner::CreateInitialEntities( //
 	// be created for them and any entity creation at runtime would occur during a
 	// generator system of backend function. Refer to your Ecsact async
 	// implemtnation for details.
-	Runner->CreateEntity()
+	runner->CreateEntity()
 		.AddComponent(example::fps::Player{})
 		.AddComponent(example::fps::Position{})
-		.AddComponent(example::fps::Rotation{});
+		.AddComponent(example::fps::Rotation{})
+		.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda([](auto entity) {
+			UE_LOG(LogTemp, Warning, TEXT("Initial entity created %i"), entity);
+		}));
 }
 
 auto UEcsactProjectileEntitySpawner::RunnerStart_Implementation( //
@@ -27,11 +32,11 @@ auto UEcsactProjectileEntitySpawner::RunnerStart_Implementation( //
 ) -> void {
 	auto async_runner = Cast<UEcsactAsyncRunner>(Runner);
 	if(async_runner) {
-		async_runner->OnConnect(TDelegate<void()>::CreateLambda([this, Runner] {
-			CreateInitialEntities(Runner);
+		async_runner->OnConnect(TDelegate<void()>::CreateLambda([this] {
+			CreateInitialEntities();
 		}));
 	} else {
-		CreateInitialEntities(Runner);
+		CreateInitialEntities();
 	}
 }
 
@@ -47,14 +52,15 @@ auto UEcsactProjectileEntitySpawner::InitProjectile_Implementation(
 
 	auto pos = FVector{};
 	auto rot = FRotator{};
-	auto projectile = world->SpawnActor( //
+	auto projectile = world->SpawnActor<AEcsactUnrealFpsProjectile>( //
 		ProjectileClass,
-		&pos,
-		&rot,
+		pos,
+		rot,
 		spawn_params
 	);
 
 	if(projectile) {
+		projectile->Entity = static_cast<ecsact_entity_id>(Entity);
 		ProjectileActors.Add(Entity, projectile);
 		UE_LOG(LogTemp, Warning, TEXT("Spawning Projectile!"));
 	} else {
@@ -72,6 +78,10 @@ auto UEcsactProjectileEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
+	if(!ProjectileActors.Contains(Entity)) {
+		return;
+	}
+
 	UE_LOG(
 		LogTemp,
 		Error,

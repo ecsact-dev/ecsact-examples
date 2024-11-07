@@ -1,6 +1,6 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "EcsactUnrealFpsProjectile.h"
+#include "EcsactUnreal/EcsactExecution.h"
+#include "EcsactUnreal/EcsactRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -51,4 +51,20 @@ void AEcsactUnrealFpsProjectile::OnHit(
 
 		Destroy();
 	}
+}
+
+auto AEcsactUnrealFpsProjectile::BeginDestroy() -> void {
+	if(Entity != ECSACT_INVALID_ID(entity)) {
+		auto runner = EcsactUnrealExecution::Runner();
+		if(runner.IsValid()) {
+			UE_LOG(LogTemp, Error, TEXT("Destroying projectile entity"));
+			runner.Get()->DestroyEntity(Entity);
+		} else {
+			UE_LOG(LogTemp, Error, TEXT("Cannot destroy. Runner invalid."));
+		}
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("Cannot destroy. Entity invalid"));
+	}
+
+	Super::BeginDestroy();
 }

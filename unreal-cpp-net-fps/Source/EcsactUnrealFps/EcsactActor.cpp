@@ -28,25 +28,6 @@ auto UEcsactActor::OnEntityCreated(ecsact_entity_id CreatedEntityId) -> void {
 auto UEcsactActor::BeginPlay() -> void {
 	Super::BeginPlay();
 
-	// HACK: Need to get signal when runner is ready
-	// HACK: there is a bug with either the ecsact unreal integration where only 1
-	// entity is created or a bug with async reference where it only considers 1
-	auto delay = static_cast<float>(FMath::RandRange(500, 1500)) / 1000.f;
-	GetWorld()
-		->GetTimerManager()
-		.SetTimer(TimerHandle, this, &ThisClass::TimeDelayWorkaround, delay, false);
-}
-
-auto UEcsactActor::BeginDestroy() -> void {
-	auto runner = EcsactUnrealExecution::Runner();
-	if(runner.IsValid() && EntityId != ECSACT_INVALID_ID(entity)) {
-		auto actor_sync = runner->GetSubsystem<UEcsactActorSyncSubsystem>();
-		actor_sync->DeregisterEcsactActor(EntityId, this);
-	}
-	Super::BeginDestroy();
-}
-
-auto UEcsactActor::TimeDelayWorkaround() -> void {
 	auto runner = EcsactUnrealExecution::Runner();
 	auto comp_loc = GetComponentLocation();
 	auto comp_rot = GetComponentRotation();
@@ -65,6 +46,15 @@ auto UEcsactActor::TimeDelayWorkaround() -> void {
 			this,
 			&ThisClass::OnEntityCreated
 		));
+}
+
+auto UEcsactActor::BeginDestroy() -> void {
+	auto runner = EcsactUnrealExecution::Runner();
+	if(runner.IsValid() && EntityId != ECSACT_INVALID_ID(entity)) {
+		auto actor_sync = runner->GetSubsystem<UEcsactActorSyncSubsystem>();
+		actor_sync->DeregisterEcsactActor(EntityId, this);
+	}
+	Super::BeginDestroy();
 }
 
 auto UEcsactActor::IsComponentTickEnabled() const -> bool {
