@@ -4,6 +4,15 @@ FExampleFpsPlayer FExampleFpsPlayer::FromEcsactComponentData(const void* compone
 	result.PlayerId = static_cast<const example::fps::Player*>(component_data)->player_id;
 	return result;
 }
+FExampleFpsPusher FExampleFpsPusher::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsPusher{};
+	result.CooldownRemaining = static_cast<const example::fps::Pusher*>(component_data)->cooldown_remaining;
+	return result;
+}
+FExampleFpsPusherexpired FExampleFpsPusherexpired::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsPusherexpired{};
+	return result;
+}
 FExampleFpsRotation FExampleFpsRotation::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsRotation{};
 	result.Pitch = static_cast<const example::fps::Rotation*>(component_data)->pitch;
@@ -47,33 +56,39 @@ FExampleFpsRemovepushingtag FExampleFpsRemovepushingtag::FromEcsactComponentData
 	return result;
 }
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 12);
-	UpdateComponentFns.Init(nullptr, 12);
-	RemoveComponentFns.Init(nullptr, 12);
+	InitComponentFns.Init(nullptr, 16);
+	UpdateComponentFns.Init(nullptr, 16);
+	RemoveComponentFns.Init(nullptr, 16);
 	InitComponentFns[1] = &ThisClass::RawInitPlayer;
 	UpdateComponentFns[1] = &ThisClass::RawUpdatePlayer;
 	RemoveComponentFns[1] = &ThisClass::RawRemovePlayer;
-	InitComponentFns[2] = &ThisClass::RawInitRotation;
-	UpdateComponentFns[2] = &ThisClass::RawUpdateRotation;
-	RemoveComponentFns[2] = &ThisClass::RawRemoveRotation;
-	InitComponentFns[3] = &ThisClass::RawInitPosition;
-	UpdateComponentFns[3] = &ThisClass::RawUpdatePosition;
-	RemoveComponentFns[3] = &ThisClass::RawRemovePosition;
-	InitComponentFns[4] = &ThisClass::RawInitMassentity;
-	UpdateComponentFns[4] = &ThisClass::RawUpdateMassentity;
-	RemoveComponentFns[4] = &ThisClass::RawRemoveMassentity;
-	InitComponentFns[5] = &ThisClass::RawInitVelocity;
-	UpdateComponentFns[5] = &ThisClass::RawUpdateVelocity;
-	RemoveComponentFns[5] = &ThisClass::RawRemoveVelocity;
-	InitComponentFns[6] = &ThisClass::RawInitPushing;
-	UpdateComponentFns[6] = &ThisClass::RawUpdatePushing;
-	RemoveComponentFns[6] = &ThisClass::RawRemovePushing;
-	InitComponentFns[7] = &ThisClass::RawInitToggle;
-	UpdateComponentFns[7] = &ThisClass::RawUpdateToggle;
-	RemoveComponentFns[7] = &ThisClass::RawRemoveToggle;
-	InitComponentFns[11] = &ThisClass::RawInitRemovepushingtag;
-	UpdateComponentFns[11] = &ThisClass::RawUpdateRemovepushingtag;
-	RemoveComponentFns[11] = &ThisClass::RawRemoveRemovepushingtag;
+	InitComponentFns[2] = &ThisClass::RawInitPusher;
+	UpdateComponentFns[2] = &ThisClass::RawUpdatePusher;
+	RemoveComponentFns[2] = &ThisClass::RawRemovePusher;
+	InitComponentFns[3] = &ThisClass::RawInitPusherexpired;
+	UpdateComponentFns[3] = &ThisClass::RawUpdatePusherexpired;
+	RemoveComponentFns[3] = &ThisClass::RawRemovePusherexpired;
+	InitComponentFns[4] = &ThisClass::RawInitRotation;
+	UpdateComponentFns[4] = &ThisClass::RawUpdateRotation;
+	RemoveComponentFns[4] = &ThisClass::RawRemoveRotation;
+	InitComponentFns[5] = &ThisClass::RawInitPosition;
+	UpdateComponentFns[5] = &ThisClass::RawUpdatePosition;
+	RemoveComponentFns[5] = &ThisClass::RawRemovePosition;
+	InitComponentFns[6] = &ThisClass::RawInitMassentity;
+	UpdateComponentFns[6] = &ThisClass::RawUpdateMassentity;
+	RemoveComponentFns[6] = &ThisClass::RawRemoveMassentity;
+	InitComponentFns[7] = &ThisClass::RawInitVelocity;
+	UpdateComponentFns[7] = &ThisClass::RawUpdateVelocity;
+	RemoveComponentFns[7] = &ThisClass::RawRemoveVelocity;
+	InitComponentFns[8] = &ThisClass::RawInitPushing;
+	UpdateComponentFns[8] = &ThisClass::RawUpdatePushing;
+	RemoveComponentFns[8] = &ThisClass::RawRemovePushing;
+	InitComponentFns[9] = &ThisClass::RawInitToggle;
+	UpdateComponentFns[9] = &ThisClass::RawUpdateToggle;
+	RemoveComponentFns[9] = &ThisClass::RawRemoveToggle;
+	InitComponentFns[15] = &ThisClass::RawInitRemovepushingtag;
+	UpdateComponentFns[15] = &ThisClass::RawUpdateRemovepushingtag;
+	RemoveComponentFns[15] = &ThisClass::RawRemoveRemovepushingtag;
 	
 }
 
@@ -97,6 +112,24 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdatePlayer(int32 entity, const void*
 }
 void UExampleFpsEcsactRunnerSubsystem::RawRemovePlayer(int32 entity, const void* component) {
 	RemovePlayer(entity, FExampleFpsPlayer::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitPusher(int32 entity, const void* component) {
+	InitPusher(entity, FExampleFpsPusher::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdatePusher(int32 entity, const void* component) {
+	UpdatePusher(entity, FExampleFpsPusher::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemovePusher(int32 entity, const void* component) {
+	RemovePusher(entity, FExampleFpsPusher::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitPusherexpired(int32 entity, const void* component) {
+	InitPusherexpired(entity, FExampleFpsPusherexpired::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdatePusherexpired(int32 entity, const void* component) {
+	UpdatePusherexpired(entity, FExampleFpsPusherexpired::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemovePusherexpired(int32 entity, const void* component) {
+	RemovePusherexpired(entity, FExampleFpsPusherexpired::FromEcsactComponentData(component));
 }
 void UExampleFpsEcsactRunnerSubsystem::RawInitRotation(int32 entity, const void* component) {
 	InitRotation(entity, FExampleFpsRotation::FromEcsactComponentData(component));
@@ -170,6 +203,30 @@ void UExampleFpsEcsactRunnerSubsystem::UpdatePlayer_Implementation(int32 Entity,
 }
 
 void UExampleFpsEcsactRunnerSubsystem::RemovePlayer_Implementation(int32 Entity, FExampleFpsPlayer Player) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitPusher_Implementation(int32 Entity, FExampleFpsPusher Pusher) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdatePusher_Implementation(int32 Entity, FExampleFpsPusher Pusher) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemovePusher_Implementation(int32 Entity, FExampleFpsPusher Pusher) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitPusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdatePusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemovePusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired) {
 	
 }
 

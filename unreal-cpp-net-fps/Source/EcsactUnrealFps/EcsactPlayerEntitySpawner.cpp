@@ -167,3 +167,17 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 		UE_LOG(LogTemp, Warning, TEXT("The found player controller is invalid"));
 	}
 }
+
+auto UEcsactPlayerEntitySpawner::InitPusher_Implementation( //
+	int32             Entity,
+	FExampleFpsPusher Pusher
+) -> void {
+	UE_LOG(LogTemp, Warning, TEXT("Init Pusher"));
+}
+
+auto UEcsactPlayerEntitySpawner::RemovePusher_Implementation( //
+	int32             Entity,
+	FExampleFpsPusher Pusher
+) -> void {
+	UE_LOG(LogTemp, Warning, TEXT("Remove Pusher"));
+}

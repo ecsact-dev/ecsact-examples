@@ -42,6 +42,16 @@ public:
 		FExampleFpsPosition Position
 	) -> void override;
 
+	auto InitPusher_Implementation( //
+		int32             Entity,
+		FExampleFpsPusher Pusher
+	) -> void override;
+
+	auto RemovePusher_Implementation( //
+		int32             Entity,
+		FExampleFpsPusher Pusher
+	) -> void override;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProxyPlayerClass;
 

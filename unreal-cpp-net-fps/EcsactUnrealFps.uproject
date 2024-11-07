@@ -35,7 +35,7 @@
 			"Enabled": true
 		}
 	],
-	"PostBuildSteps":
+	"PreBuildSteps":
 	{
 		"Win64": [
 			"pwsh $(ProjectDir)\\BuildSystemImpls.ps1 $(ProjectDir) $(ProjectDir)\\Binaries\\SystemImpls.wasm"

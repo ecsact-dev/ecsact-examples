@@ -18,6 +18,24 @@ struct FExampleFpsPlayer {
 };
 
 USTRUCT(BlueprintType)
+struct FExampleFpsPusher {
+	GENERATED_BODY()
+	
+	static FExampleFpsPusher FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CooldownRemaining;
+	
+};
+
+USTRUCT(BlueprintType)
+struct FExampleFpsPusherexpired {
+	GENERATED_BODY()
+	
+	static FExampleFpsPusherexpired FromEcsactComponentData(const void*);
+	
+};
+
+USTRUCT(BlueprintType)
 struct FExampleFpsRotation {
 	GENERATED_BODY()
 	
@@ -111,6 +129,12 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPlayer(int32 Entity, const void* Component);
 	void RawUpdatePlayer(int32 Entity, const void* Component);
 	void RawRemovePlayer(int32 Entity, const void* Component);
+	void RawInitPusher(int32 Entity, const void* Component);
+	void RawUpdatePusher(int32 Entity, const void* Component);
+	void RawRemovePusher(int32 Entity, const void* Component);
+	void RawInitPusherexpired(int32 Entity, const void* Component);
+	void RawUpdatePusherexpired(int32 Entity, const void* Component);
+	void RawRemovePusherexpired(int32 Entity, const void* Component);
 	void RawInitRotation(int32 Entity, const void* Component);
 	void RawUpdateRotation(int32 Entity, const void* Component);
 	void RawRemoveRotation(int32 Entity, const void* Component);
@@ -150,6 +174,24 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Player"))
 	void RemovePlayer(int32 Entity, FExampleFpsPlayer Player);
 	virtual void RemovePlayer_Implementation(int32 Entity, FExampleFpsPlayer Player);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Pusher"))
+	void InitPusher(int32 Entity, FExampleFpsPusher Pusher);
+	virtual void InitPusher_Implementation(int32 Entity, FExampleFpsPusher Pusher);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.Pusher"))
+	void UpdatePusher(int32 Entity, FExampleFpsPusher Pusher);
+	virtual void UpdatePusher_Implementation(int32 Entity, FExampleFpsPusher Pusher);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Pusher"))
+	void RemovePusher(int32 Entity, FExampleFpsPusher Pusher);
+	virtual void RemovePusher_Implementation(int32 Entity, FExampleFpsPusher Pusher);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.PusherExpired"))
+	void InitPusherexpired(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
+	virtual void InitPusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.PusherExpired"))
+	void UpdatePusherexpired(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
+	virtual void UpdatePusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.PusherExpired"))
+	void RemovePusherexpired(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
+	virtual void RemovePusherexpired_Implementation(int32 Entity, FExampleFpsPusherexpired Pusherexpired);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Rotation"))
 	void InitRotation(int32 Entity, FExampleFpsRotation Rotation);
 	virtual void InitRotation_Implementation(int32 Entity, FExampleFpsRotation Rotation);

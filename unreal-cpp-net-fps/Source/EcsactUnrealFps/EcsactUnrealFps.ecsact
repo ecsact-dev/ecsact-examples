@@ -1,6 +1,8 @@
 main package example.fps;
 
 component Player { i32 player_id; }
+component Pusher { f32 cooldown_remaining; }
+component PusherExpired;
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
@@ -28,6 +30,16 @@ system RemoveToggle {
 	removes Toggle;
 }
 
+system PusherExpireChecker {
+	readwrite Pusher;
+	adds PusherExpired;
+}
+
+system PusherApplyExpired {
+	include PusherExpired;
+	removes Pusher;
+}
+
 action Push {
 	i32 player_id;
 	i16 radius;
@@ -38,6 +50,7 @@ action Push {
 
 	readonly Player;
 	readonly Position;
+	adds Pusher;
 	
 	system PushEntities {
 		include MassEntity;

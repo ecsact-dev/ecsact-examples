@@ -32,6 +32,9 @@ $Sources = @(
 	"$ProjectDir/SystemImpls/EcsactSystemImpls.cpp"
 )
 
+
+$GeneratedOutDir ="$ProjectDir/SystemImpls/generated"
+
 # TODO: don't hard set generated sources
 $GeneratedSources = @(
 	"$ProjectDir/SystemImpls/generated/EcsactUnrealFps.ecsact.systems.cc"
@@ -44,7 +47,7 @@ ecsact codegen $EcsactFiles `
 	--plugin=systems_header `
 	--plugin=cpp_systems_header `
 	--plugin=cpp_systems_source `
-	--outdir=SystemImpls/generated
+	--outdir=$GeneratedOutDir
 
 # NOTE: PURE_WASI=1 removes emscripten_* functions that are not compatible with the Ecsact SI Wasm host
 emcc -std=c++20 --no-entry -I"$EcsactInc" -I"SystemImpls/generated" `
