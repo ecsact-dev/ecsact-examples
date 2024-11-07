@@ -8,14 +8,6 @@
 
 
 USTRUCT(BlueprintType)
-struct FExampleFpsProjectile {
-	GENERATED_BODY()
-	
-	static FExampleFpsProjectile FromEcsactComponentData(const void*);
-	
-};
-
-USTRUCT(BlueprintType)
 struct FExampleFpsPlayer {
 	GENERATED_BODY()
 	
@@ -116,9 +108,6 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	TArray<void(ThisClass::*)(int32, const void*)> InitComponentFns;
 	TArray<void(ThisClass::*)(int32, const void*)> UpdateComponentFns;
 	TArray<void(ThisClass::*)(int32, const void*)> RemoveComponentFns;
-	void RawInitProjectile(int32 Entity, const void* Component);
-	void RawUpdateProjectile(int32 Entity, const void* Component);
-	void RawRemoveProjectile(int32 Entity, const void* Component);
 	void RawInitPlayer(int32 Entity, const void* Component);
 	void RawUpdatePlayer(int32 Entity, const void* Component);
 	void RawRemovePlayer(int32 Entity, const void* Component);
@@ -152,15 +141,6 @@ protected:
 	
 public:
 	UExampleFpsEcsactRunnerSubsystem();
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Projectile"))
-	void InitProjectile(int32 Entity, FExampleFpsProjectile Projectile);
-	virtual void InitProjectile_Implementation(int32 Entity, FExampleFpsProjectile Projectile);
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.Projectile"))
-	void UpdateProjectile(int32 Entity, FExampleFpsProjectile Projectile);
-	virtual void UpdateProjectile_Implementation(int32 Entity, FExampleFpsProjectile Projectile);
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Projectile"))
-	void RemoveProjectile(int32 Entity, FExampleFpsProjectile Projectile);
-	virtual void RemoveProjectile_Implementation(int32 Entity, FExampleFpsProjectile Projectile);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Player"))
 	void InitPlayer(int32 Entity, FExampleFpsPlayer Player);
 	virtual void InitPlayer_Implementation(int32 Entity, FExampleFpsPlayer Player);

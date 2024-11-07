@@ -1,24 +1,10 @@
 main package example.fps;
 
-component Projectile;
 component Player { i32 player_id; }
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
 component MassEntity;
-
-action Fire {
-	i32 player_id;
-	readonly Player;
-	readwrite Position;
-	readwrite Rotation;
-
-	generates {
-		requires Projectile;
-		requires Position;
-		requires Rotation;
-	}
-}
 
 component Velocity {
 	f32 x;
