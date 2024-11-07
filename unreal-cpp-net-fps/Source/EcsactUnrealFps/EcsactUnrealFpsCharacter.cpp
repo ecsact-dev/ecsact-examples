@@ -7,7 +7,6 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "EcsactUnreal/EcsactExecution.h"
-#include "EcsactUnrealFpsProjectile.h"
 #include "Engine/LocalPlayer.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -34,17 +33,6 @@ AEcsactUnrealFpsCharacter::AEcsactUnrealFpsCharacter() {
 		FVector(-10.f, 0.f, 60.f)
 	);
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-
-	// Create a mesh component that will be used when being viewed from a '1st
-	// person' view (when controlling this pawn)
-	Mesh1P =
-		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
-	// Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	PushDetectionSphere =
 		CreateDefaultSubobject<USphereComponent>(TEXT("Push Detection Sphere"));
@@ -111,15 +99,6 @@ void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 		);
 		return;
 	}
-
-	// Jumping
-	eic->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-	eic->BindAction(
-		JumpAction,
-		ETriggerEvent::Completed,
-		this,
-		&ACharacter::StopJumping
-	);
 
 	// Moving
 	eic->BindAction(
