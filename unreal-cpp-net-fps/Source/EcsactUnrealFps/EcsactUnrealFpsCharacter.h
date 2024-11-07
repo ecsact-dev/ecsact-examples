@@ -23,6 +23,12 @@ UCLASS(config = Game)
 class AEcsactUnrealFpsCharacter : public ACharacter {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere, Category = Camera)
+	FVector CameraOffset;
+
+	UPROPERTY(EditAnywhere, Category = Camera)
+	FRotator CameraRotation;
+
 	/** First person camera */
 	UPROPERTY(
 		VisibleAnywhere,
@@ -76,24 +82,12 @@ protected:
 	);
 
 public:
-	/** Look Input Action */
-	UPROPERTY(
-		EditAnywhere,
-		BlueprintReadOnly,
-		Category = Input,
-		meta = (AllowPrivateAccess = "true")
-	)
-	class UInputAction* LookAction;
-
 	// TODO: Use some kind of entity actor component
 	ecsact_entity_id CharacterEntity = ECSACT_INVALID_ID(entity);
 
 protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
 
 	void Push(const FInputActionValue& Value);
 

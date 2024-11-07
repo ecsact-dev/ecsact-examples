@@ -29,10 +29,9 @@ AEcsactUnrealFpsCharacter::AEcsactUnrealFpsCharacter() {
 	FirstPersonCameraComponent =
 		CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCameraComponent->SetRelativeLocation( // position the camera
-		FVector(-10.f, 0.f, 60.f)
-	);
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FirstPersonCameraComponent->bUsePawnControlRotation = false;
+	FirstPersonCameraComponent->SetUsingAbsoluteRotation(true);
+	FirstPersonCameraComponent->SetUsingAbsoluteLocation(true);
 
 	PushDetectionSphere =
 		CreateDefaultSubobject<USphereComponent>(TEXT("Push Detection Sphere"));
@@ -57,6 +56,11 @@ void AEcsactUnrealFpsCharacter::BeginPlay() {
 
 void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
+
+	FirstPersonCameraComponent->SetWorldLocationAndRotationNoPhysics(
+		GetActorLocation() + CameraOffset,
+		CameraRotation
+	);
 
 	if(CharacterEntity != ECSACT_INVALID_ID(entity)) {
 		auto runner = EcsactUnrealExecution::Runner().Get();
@@ -100,28 +104,11 @@ void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 		return;
 	}
 
-	// Moving
 	eic->BindAction(
 		MoveAction,
 		ETriggerEvent::Triggered,
 		this,
 		&AEcsactUnrealFpsCharacter::Move
-	);
-
-	// Looking
-	eic->BindAction(
-		LookAction,
-		ETriggerEvent::Triggered,
-		this,
-		&AEcsactUnrealFpsCharacter::Look
-	);
-
-	// Looking
-	eic->BindAction(
-		PushAction,
-		ETriggerEvent::Triggered,
-		this,
-		&AEcsactUnrealFpsCharacter::Push
 	);
 }
 
@@ -131,19 +118,14 @@ void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
 
 	if(Controller != nullptr) {
 		// add movement
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
-	}
-}
+		AddMovementInput(FVector::ForwardVector, MovementVector.Y);
+		AddMovementInput(FVector::RightVector, MovementVector.X);
 
-void AEcsactUnrealFpsCharacter::Look(const FInputActionValue& Value) {
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
+		auto rotation =
+			FVector{MovementVector.X, -MovementVector.Y, GetActorLocation().Z}
+				.ToOrientationRotator();
 
-	if(Controller != nullptr) {
-		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
+		Controller->SetControlRotation(rotation);
 	}
 }
 
