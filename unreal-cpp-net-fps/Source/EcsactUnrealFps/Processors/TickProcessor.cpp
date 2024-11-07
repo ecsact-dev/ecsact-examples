@@ -28,7 +28,9 @@ void UTickProcessor::ConfigureQueries() {
 	EntityQuery.AddRequirement<FEcsactPositionFragment>(
 		EMassFragmentAccess::ReadOnly
 	);
-	EntityQuery.AddConstSharedRequirement<FEcsactStreamingFragment>();
+	EntityQuery.AddRequirement<FEcsactStreamFragment>(
+		EMassFragmentAccess::ReadOnly
+	);
 }
 
 void UTickProcessor::Execute(
@@ -42,8 +44,6 @@ void UTickProcessor::Execute(
 			UMassSignalSubsystem& SignalSubsystem =
 				Context.GetMutableSubsystemChecked<UMassSignalSubsystem>();
 
-			UE_LOG(LogTemp, Warning, TEXT("Process running"));
-
 			const auto& Entities = Context.GetEntities();
 			SignalSubsystem.SignalEntities(
 				UE::Mass::Signals::StateTreeActivate,
@@ -55,17 +55,21 @@ void UTickProcessor::Execute(
 				return;
 			}
 
-			const auto& StreamingFragment =
-				Context.GetConstSharedFragment<FEcsactStreamingFragment>();
+			const auto& StreamFragments =
+				Context.GetFragmentView<FEcsactStreamFragment>();
 
 			const auto& EntityFragments =
 				Context.GetFragmentView<FEcsactEntityFragment>();
 
-			if(StreamingFragment.ShouldStream) {
-				const auto& TransformFragments =
-					Context.GetFragmentView<FTransformFragment>();
+			auto TransformFragments =
+				Context.GetMutableFragmentView<FTransformFragment>();
+			const auto& PositionFragments =
+				Context.GetFragmentView<FEcsactPositionFragment>();
 
-				for(int i = 0; i < TransformFragments.Num(); ++i) {
+			for(int i = 0; i < TransformFragments.Num(); ++i) {
+				const bool ShouldStream = StreamFragments[i].ShouldStream();
+
+				if(ShouldStream) {
 					const auto& TransformLoc =
 						TransformFragments[i].GetTransform().GetLocation();
 					const auto& Entity = EntityFragments[i].GetId();
@@ -78,15 +82,9 @@ void UTickProcessor::Execute(
 							.z = static_cast<float>(TransformLoc.Z),
 						}
 					);
-				}
-			} else {
-				const auto& PositionFragments =
-					Context.GetFragmentView<FEcsactPositionFragment>();
+				} else {
+					UE_LOG(LogTemp, Log, TEXT("Stream turned off!"));
 
-				auto TransformFragments =
-					Context.GetMutableFragmentView<FTransformFragment>();
-
-				for(int i = 0; i < TransformFragments.Num(); ++i) {
 					auto&       Transform = TransformFragments[i];
 					const auto& Position = PositionFragments[i].GetPosition();
 

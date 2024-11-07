@@ -18,4 +18,6 @@ protected:
 
 	UPROPERTY(Category = "Streaming", EditAnywhere)
 	FEcsactStreamingFragment Streaming;
+
+	// Add listener to change streaming value
 };

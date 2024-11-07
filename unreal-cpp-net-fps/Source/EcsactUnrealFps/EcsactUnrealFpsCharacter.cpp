@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFpsProjectile.h"
 #include "Engine/LocalPlayer.h"
@@ -13,6 +14,8 @@
 #include "InputActionValue.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "EcsactUnrealFps.ecsact.hh"
+#include "EcsactEntityMassSpawner.h"
+#include "MassCommonFragments.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -42,10 +45,26 @@ AEcsactUnrealFpsCharacter::AEcsactUnrealFpsCharacter() {
 	Mesh1P->CastShadow = false;
 	// Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	PushDetectionSphere =
+		CreateDefaultSubobject<USphereComponent>(TEXT("Push Detection Sphere"));
+	PushDetectionSphere->InitSphereRadius(300.f);
+	PushDetectionSphere->SetupAttachment(RootComponent);
+	PushDetectionSphere->SetCollisionProfileName("OverlapAllDynamic");
 }
 
 void AEcsactUnrealFpsCharacter::BeginPlay() {
 	Super::BeginPlay();
+
+	// PushDetectionSphere->OnComponentBeginOverlap.AddDynamic(
+	// 	this,
+	// 	&AEcsactUnrealFpsCharacter::OnActorBeginOverlap
+	// );
+	//
+	// PushDetectionSphere->OnComponentEndOverlap.AddDynamic(
+	// 	this,
+	// 	&AEcsactUnrealFpsCharacter::OnActorEndOverlap
+	// );
 }
 
 void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
@@ -117,6 +136,14 @@ void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 		this,
 		&AEcsactUnrealFpsCharacter::Look
 	);
+
+	// Looking
+	eic->BindAction(
+		PushAction,
+		ETriggerEvent::Triggered,
+		this,
+		&AEcsactUnrealFpsCharacter::Push
+	);
 }
 
 void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
@@ -139,4 +166,34 @@ void AEcsactUnrealFpsCharacter::Look(const FInputActionValue& Value) {
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AEcsactUnrealFpsCharacter::Push(const FInputActionValue& Value) {
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+
+	auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
+
+	MassSpawner->Push();
+}
+
+void AEcsactUnrealFpsCharacter::OnOverlapBegin(
+	UPrimitiveComponent* OverlappedComp,
+	AActor*              OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32                OtherBodyIndex,
+	bool                 bFromSweep,
+	const FHitResult&    SweepResult
+) {
+	if(!OtherActor || OtherActor == this) {
+		return;
+	}
+}
+
+void AEcsactUnrealFpsCharacter::OnOverlapEnd(
+	UPrimitiveComponent* OverlappedComp,
+	AActor*              OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32                OtherBodyIndex
+) {
 }

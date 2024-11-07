@@ -46,6 +46,25 @@ struct ECSACTUNREALFPS_API FEcsactStreamingFragment
 
 USTRUCT()
 
+struct ECSACTUNREALFPS_API FEcsactStreamFragment : public FMassFragment {
+	GENERATED_BODY() // nolint
+
+	FEcsactStreamFragment() = default;
+
+	bool ShouldStream() const {
+		return should_stream;
+	}
+
+	void SetStream(const bool ShouldStream) {
+		should_stream = ShouldStream;
+	}
+
+private:
+	bool should_stream;
+};
+
+USTRUCT()
+
 struct ECSACTUNREALFPS_API FEcsactPositionFragment : public FMassFragment {
 	GENERATED_BODY() // nolint
 

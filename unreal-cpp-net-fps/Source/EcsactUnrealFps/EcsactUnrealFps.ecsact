@@ -19,3 +19,76 @@ action Fire {
 		requires Rotation;
 	}
 }
+
+component Velocity {
+	f32 x;
+	f32 y;
+	f32 z;
+}
+
+component Pushing {
+	i16 tick_count;
+	i16 force_x;
+	i16 force_y;
+	i16 force_z;
+}
+
+component Toggle {
+	i8 streaming;
+}
+
+system RemoveToggle {
+	include MassEntity;
+	removes Toggle;
+}
+
+action Push {
+	i32 player_id;
+	i16 radius;
+	i16 tick_count;
+	i16 force_x;
+	i16 force_y;
+	i16 force_z;
+
+	readonly Player;
+	readonly Position;
+	
+	system PushEntities {
+		include MassEntity;
+		readonly Position;
+		adds Pushing;
+		adds Toggle;
+	}
+}
+
+component RemovePushingTag;
+
+system ApplyPush {
+	include MassEntity;
+	readwrite Pushing;
+	readwrite Velocity;
+}
+
+system ApplyVelocity {
+	readwrite Position;
+	readonly Velocity;
+}
+
+system ApplyDrag {
+	readwrite Velocity;
+	readonly Pushing;
+	adds RemovePushingTag;
+	adds Toggle;
+}
+
+system TogglePushedEntities {
+	stream_toggle Position;
+	readonly Toggle;
+}
+
+system RemovePushing {
+	include MassEntity;
+	removes RemovePushingTag;
+	removes Pushing;
+}
+

@@ -1,5 +1,6 @@
 #include "EcsactEntityMassSpawner.h"
 
+#include "MassMovementFragments.h"
 #include "Math/Vector.h"
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
@@ -11,6 +12,7 @@
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "Fragments/EcsactFragments.h"
+#include "EcsactUnrealFps.ecsact.hh"
 #include "UObject/UnrealNames.h"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
@@ -20,7 +22,7 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	UE_LOG(
 		LogTemp,
 		Warning,
-		TEXT("CreateMassEntities, creating {} entities"),
+		TEXT("CreateMassEntities, creating %i entities"),
 		count
 	);
 
@@ -43,6 +45,7 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 				.z = 0
 			})
 			.AddComponent(example::fps::MassEntity{})
+			.AddComponent(example::fps::Velocity{})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
 				[](auto entity) {
 					UE_LOG(
@@ -132,8 +135,6 @@ auto UEcsactEntityMassSpawner::Spawn(
 	const FMassEntityTemplate& EntityTemplate =
 		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
 
-	FMassEntityTemplate EcsactTemplate = EntityTemplate;
-
 	auto MassSpawner = world->GetSubsystem<UMassSpawnerSubsystem>();
 	auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
 
@@ -186,8 +187,76 @@ auto UEcsactEntityMassSpawner::Spawn(
 				PositionFragment->SetPosition(vec);
 			}
 		);
+
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactStreamFragment::StaticStruct(),
+			[this](void* fragment, const UScriptStruct& FragmentType) {
+				FEcsactStreamFragment* PositionFragment =
+					static_cast<FEcsactStreamFragment*>(fragment);
+				PositionFragment->SetStream(StreamEntities);
+			}
+		);
 	}
 	MassEntities.Add(Entity, NewEntityHandles);
 
 	EntityPools.Remove(Entity);
+}
+
+auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
+	int32             Entity,
+	FExampleFpsToggle Toggle
+) -> void {
+	UE_LOG(LogTemp, Log, TEXT("INIT TOGGLE 1st"));
+	if(!StreamEntities) {
+		return;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("INIT TOGGLE"));
+
+	UWorld* world = GetWorld();
+	auto    MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
+
+	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
+
+	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
+
+	if(!MassEntities.Contains(EcsactEntity)) {
+		UE_LOG(LogTemp, Error, TEXT("Unknown Entity not found (Mass Spawner)"));
+		return;
+	}
+
+	auto EntityHandles = *MassEntities.Find(EcsactEntity);
+
+	for(auto EntityHandle : EntityHandles) {
+		auto* StreamFragent =
+			EntityManager.GetFragmentDataPtr<FEcsactStreamFragment>(EntityHandle);
+		auto Streaming = static_cast<bool>(Toggle.Streaming);
+
+		UE_LOG(LogTemp, Log, TEXT("Toggling Streaming to %i"), Streaming);
+		StreamFragent->SetStream(static_cast<bool>(Streaming));
+	}
+}
+
+auto UEcsactEntityMassSpawner::Push() -> void {
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+	UE_LOG(LogTemp, Warning, TEXT("Push!"));
+
+	UWorld* world = GetWorld();
+	auto    MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
+
+	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
+
+	auto PushValue = FVector{20000, 20000, 5000};
+
+	auto PushAction = example::fps::Push{
+		.player_id = 0,
+		.radius = 500,
+		.tick_count = 5,
+		.force_x = 500,
+		.force_y = 500,
+		.force_z = 0,
+	};
+	runner->PushAction(PushAction);
 }

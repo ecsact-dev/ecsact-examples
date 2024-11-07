@@ -26,10 +26,34 @@ FExampleFpsMassentity FExampleFpsMassentity::FromEcsactComponentData(const void*
 	auto result = FExampleFpsMassentity{};
 	return result;
 }
+FExampleFpsVelocity FExampleFpsVelocity::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsVelocity{};
+	result.X = static_cast<const example::fps::Velocity*>(component_data)->x;
+	result.Y = static_cast<const example::fps::Velocity*>(component_data)->y;
+	result.Z = static_cast<const example::fps::Velocity*>(component_data)->z;
+	return result;
+}
+FExampleFpsPushing FExampleFpsPushing::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsPushing{};
+	result.TickCount = static_cast<const example::fps::Pushing*>(component_data)->tick_count;
+	result.ForceX = static_cast<const example::fps::Pushing*>(component_data)->force_x;
+	result.ForceY = static_cast<const example::fps::Pushing*>(component_data)->force_y;
+	result.ForceZ = static_cast<const example::fps::Pushing*>(component_data)->force_z;
+	return result;
+}
+FExampleFpsToggle FExampleFpsToggle::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsToggle{};
+	result.Streaming = static_cast<const example::fps::Toggle*>(component_data)->streaming;
+	return result;
+}
+FExampleFpsRemovepushingtag FExampleFpsRemovepushingtag::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsRemovepushingtag{};
+	return result;
+}
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 6);
-	UpdateComponentFns.Init(nullptr, 6);
-	RemoveComponentFns.Init(nullptr, 6);
+	InitComponentFns.Init(nullptr, 15);
+	UpdateComponentFns.Init(nullptr, 15);
+	RemoveComponentFns.Init(nullptr, 15);
 	InitComponentFns[1] = &ThisClass::RawInitProjectile;
 	UpdateComponentFns[1] = &ThisClass::RawUpdateProjectile;
 	RemoveComponentFns[1] = &ThisClass::RawRemoveProjectile;
@@ -45,6 +69,18 @@ UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
 	InitComponentFns[5] = &ThisClass::RawInitMassentity;
 	UpdateComponentFns[5] = &ThisClass::RawUpdateMassentity;
 	RemoveComponentFns[5] = &ThisClass::RawRemoveMassentity;
+	InitComponentFns[8] = &ThisClass::RawInitVelocity;
+	UpdateComponentFns[8] = &ThisClass::RawUpdateVelocity;
+	RemoveComponentFns[8] = &ThisClass::RawRemoveVelocity;
+	InitComponentFns[9] = &ThisClass::RawInitPushing;
+	UpdateComponentFns[9] = &ThisClass::RawUpdatePushing;
+	RemoveComponentFns[9] = &ThisClass::RawRemovePushing;
+	InitComponentFns[10] = &ThisClass::RawInitToggle;
+	UpdateComponentFns[10] = &ThisClass::RawUpdateToggle;
+	RemoveComponentFns[10] = &ThisClass::RawRemoveToggle;
+	InitComponentFns[14] = &ThisClass::RawInitRemovepushingtag;
+	UpdateComponentFns[14] = &ThisClass::RawUpdateRemovepushingtag;
+	RemoveComponentFns[14] = &ThisClass::RawRemoveRemovepushingtag;
 	
 }
 
@@ -105,6 +141,42 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdateMassentity(int32 entity, const v
 void UExampleFpsEcsactRunnerSubsystem::RawRemoveMassentity(int32 entity, const void* component) {
 	RemoveMassentity(entity, FExampleFpsMassentity::FromEcsactComponentData(component));
 }
+void UExampleFpsEcsactRunnerSubsystem::RawInitVelocity(int32 entity, const void* component) {
+	InitVelocity(entity, FExampleFpsVelocity::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateVelocity(int32 entity, const void* component) {
+	UpdateVelocity(entity, FExampleFpsVelocity::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveVelocity(int32 entity, const void* component) {
+	RemoveVelocity(entity, FExampleFpsVelocity::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitPushing(int32 entity, const void* component) {
+	InitPushing(entity, FExampleFpsPushing::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdatePushing(int32 entity, const void* component) {
+	UpdatePushing(entity, FExampleFpsPushing::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemovePushing(int32 entity, const void* component) {
+	RemovePushing(entity, FExampleFpsPushing::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitToggle(int32 entity, const void* component) {
+	InitToggle(entity, FExampleFpsToggle::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateToggle(int32 entity, const void* component) {
+	UpdateToggle(entity, FExampleFpsToggle::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveToggle(int32 entity, const void* component) {
+	RemoveToggle(entity, FExampleFpsToggle::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitRemovepushingtag(int32 entity, const void* component) {
+	InitRemovepushingtag(entity, FExampleFpsRemovepushingtag::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateRemovepushingtag(int32 entity, const void* component) {
+	UpdateRemovepushingtag(entity, FExampleFpsRemovepushingtag::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveRemovepushingtag(int32 entity, const void* component) {
+	RemoveRemovepushingtag(entity, FExampleFpsRemovepushingtag::FromEcsactComponentData(component));
+}
 void UExampleFpsEcsactRunnerSubsystem::InitProjectile_Implementation(int32 Entity, FExampleFpsProjectile Projectile) {
 	
 }
@@ -162,6 +234,54 @@ void UExampleFpsEcsactRunnerSubsystem::UpdateMassentity_Implementation(int32 Ent
 }
 
 void UExampleFpsEcsactRunnerSubsystem::RemoveMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitVelocity_Implementation(int32 Entity, FExampleFpsVelocity Velocity) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateVelocity_Implementation(int32 Entity, FExampleFpsVelocity Velocity) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveVelocity_Implementation(int32 Entity, FExampleFpsVelocity Velocity) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitPushing_Implementation(int32 Entity, FExampleFpsPushing Pushing) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdatePushing_Implementation(int32 Entity, FExampleFpsPushing Pushing) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemovePushing_Implementation(int32 Entity, FExampleFpsPushing Pushing) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitToggle_Implementation(int32 Entity, FExampleFpsToggle Toggle) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateToggle_Implementation(int32 Entity, FExampleFpsToggle Toggle) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveToggle_Implementation(int32 Entity, FExampleFpsToggle Toggle) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitRemovepushingtag_Implementation(int32 Entity, FExampleFpsRemovepushingtag Removepushingtag) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateRemovepushingtag_Implementation(int32 Entity, FExampleFpsRemovepushingtag Removepushingtag) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveRemovepushingtag_Implementation(int32 Entity, FExampleFpsRemovepushingtag Removepushingtag) {
 	
 }
 

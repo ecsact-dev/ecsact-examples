@@ -54,4 +54,11 @@ public:
 		int32               Entity,
 		FExampleFpsPosition Position
 	) -> void override;
+
+	auto InitToggle_Implementation( //
+		int32             Entity,
+		FExampleFpsToggle Toggle
+	) -> void override;
+
+	auto Push() -> void;
 };

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Components/SphereComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -58,12 +59,39 @@ class AEcsactUnrealFpsCharacter : public ACharacter {
 	)
 	UInputAction* MoveAction;
 
+	/** Push Input Action */
+	UPROPERTY(
+		EditAnywhere,
+		BlueprintReadOnly,
+		Category = Input,
+		meta = (AllowPrivateAccess = "true")
+	)
+	UInputAction* PushAction;
+
 public:
 	AEcsactUnrealFpsCharacter();
 
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void OnOverlapBegin(
+		UPrimitiveComponent* OverlappedComp,
+		AActor*              OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32                OtherBodyIndex,
+		bool                 bFromSweep,
+		const FHitResult&    SweepResult
+	);
+
+	UFUNCTION()
+	void OnOverlapEnd(
+		UPrimitiveComponent* OverlappedComp,
+		AActor*              OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32                OtherBodyIndex
+	);
 
 public:
 	/** Look Input Action */
@@ -84,6 +112,11 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void Push(const FInputActionValue& Value);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Detect")
+	USphereComponent* PushDetectionSphere;
 
 protected:
 	// APawn interface

@@ -9,4 +9,36 @@ ECSACT_EXTERN
 ECSACT_EXPORT("example__fps__Fire")
 void example__fps__Fire(struct ecsact_system_execution_context*);
 
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__Push")
+void example__fps__Push(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__Push__PushEntities")
+void example__fps__Push__PushEntities(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__ApplyPush")
+void example__fps__ApplyPush(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__ApplyVelocity")
+void example__fps__ApplyVelocity(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__ApplyDrag")
+void example__fps__ApplyDrag(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__TogglePushedEntities")
+void example__fps__TogglePushedEntities(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__RemovePushing")
+void example__fps__RemovePushing(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__RemoveToggle")
+void example__fps__RemoveToggle(struct ecsact_system_execution_context*);
+
 #endif // EXAMPLE__FPS_H
