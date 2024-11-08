@@ -1,5 +1,6 @@
 #include "TickProcessor.h"
 #include "MassArchetypeTypes.h"
+#include "MassProcessingTypes.h"
 #include "MassRequirements.h"
 #include "MassSignalSubsystem.h"
 #include "MassStateTreeFragments.h"
@@ -11,6 +12,10 @@
 #include "../Fragments/EcsactFragments.h"
 #include "../EcsactUnrealFps.ecsact.hh"
 #include "UObject/UnrealNames.h"
+
+UTickProcessor::UTickProcessor() {
+	ProcessingPhase = EMassProcessingPhase::PostPhysics;
+}
 
 void UTickProcessor::ConfigureQueries() {
 	EntityQuery.AddSubsystemRequirement<UMassSignalSubsystem>(
@@ -83,12 +88,30 @@ void UTickProcessor::Execute(
 						}
 					);
 				} else {
-					UE_LOG(LogTemp, Log, TEXT("Stream turned off!"));
-
-					auto&       Transform = TransformFragments[i];
+					auto&       Transform = TransformFragments[i].GetMutableTransform();
 					const auto& Position = PositionFragments[i].GetPosition();
 
-					Transform.SetTransform(FTransform{Position});
+					const auto& Location = Transform.GetLocation();
+
+					UE_LOG(
+						LogTemp,
+						Log,
+						TEXT("Current transform location: %f, %f, %f"),
+						Location.X,
+						Location.Y,
+						Location.Z
+					);
+
+					UE_LOG(
+						LogTemp,
+						Log,
+						TEXT("Setting position to %f, %f, %f"),
+						Position.X,
+						Position.Y,
+						Position.Z
+					);
+
+					Transform.SetLocation(FVector{Position});
 				}
 			}
 		}

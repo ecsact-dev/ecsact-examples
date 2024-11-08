@@ -74,6 +74,7 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 		velocity.z += pushing.force_z;
 
 		pushing.tick_count -= 1;
+		ctx.update(velocity);
 		ctx.update(pushing);
 	}
 }
@@ -101,6 +102,7 @@ auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 		ctx.add<Toggle>({.streaming = true});
 		ctx.add<RemovePushingTag>();
 	}
+	ctx.update(velocity);
 }
 
 auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {

@@ -41,7 +41,12 @@ void FFollowPlayer::ExitState(
 	const FStateTreeTransitionResult& Transition
 ) const {
 	UE_LOG(LogTemp, Log, TEXT("Exiting State"));
+	auto& MoveTarget = Context.GetExternalData(MoveTargetHandle);
 
+	MoveTarget.CreateNewAction(EMassMovementAction::Stand, *Context.GetWorld());
+	MoveTarget.Center = FVector{0, 0, 0};
+	MoveTarget.DistanceToGoal = 0;
+	MoveTarget.SlackRadius = 0.f;
 	FMassStateTreeTaskBase::ExitState(Context, Transition);
 }
 

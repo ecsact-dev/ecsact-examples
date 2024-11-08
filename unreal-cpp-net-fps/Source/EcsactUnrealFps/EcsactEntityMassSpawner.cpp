@@ -115,11 +115,18 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		auto vec = FVector{Position.X, Position.Y, Position.Z};
 
 		for(auto EntityHandle : EntityHandles) {
-			auto* TransformFragment =
-				EntityManager.GetFragmentDataPtr<FTransformFragment>(EntityHandle);
+			// UE_LOG(
+			// 	LogTemp,
+			// 	Log,
+			// 	TEXT("Ecsact Position updated to %f, %f, %f"),
+			// 	Position.X,
+			// 	Position.Y,
+			// 	Position.Z
+			// );
+			auto* EcsactPositionFragment =
+				EntityManager.GetFragmentDataPtr<FEcsactPositionFragment>(EntityHandle);
 
-			auto Transform = FTransform(vec);
-			TransformFragment->SetTransform(Transform);
+			EcsactPositionFragment->SetPosition(vec);
 		}
 	}
 }
@@ -241,19 +248,12 @@ auto UEcsactEntityMassSpawner::Push() -> void {
 	auto runner = EcsactUnrealExecution::Runner();
 	check(runner.IsValid());
 
-	UWorld* world = GetWorld();
-	auto    MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
-
-	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
-
-	auto PushValue = FVector{20000, 20000, 5000};
-
 	auto PushAction = example::fps::Push{
 		.player_id = 0,
 		.radius = 500,
-		.tick_count = 5,
-		.force_x = 500,
-		.force_y = 500,
+		.tick_count = 50,
+		.force_x = 250,
+		.force_y = 250,
 		.force_z = 0,
 	};
 	runner->PushAction(PushAction);

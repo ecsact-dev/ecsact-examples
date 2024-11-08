@@ -10,6 +10,7 @@ class ECSACTUNREALFPS_API UTickProcessor : public UMassProcessor {
 	GENERATED_BODY() // nolint
 
 protected:
+	UTickProcessor();
 	virtual void ConfigureQueries() override;
 	virtual void Execute(
 		FMassEntityManager&    EntityManager,
