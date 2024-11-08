@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,31 +6,28 @@
 #include "StateTreeEvaluatorBase.h"
 #include "StateTreeExecutionContext.h"
 #include "StateTreeExecutionTypes.h"
-#include "Engine/TimerHandle.h"
+#include "StateTreeLinker.h"
 #include "MassSignalSubsystem.h"
 
-#include "FollowPlayer.generated.h"
+#include "EcsactIdle.generated.h"
 
-struct FTransformFragment;
-struct FMassMoveTargetFragment;
 struct FEcsactStreamFragment;
 
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FFollowPlayerInstanceData {
+struct ECSACTUNREALFPS_API FEcsactIdleInstanceData {
 	GENERATED_BODY() // nolint
-	UPROPERTY(EditAnywhere, Category = Parameter) FVector PlayerPosition;
 };
 
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FFollowPlayer : public FMassStateTreeTaskBase {
+struct ECSACTUNREALFPS_API FEcsactIdle : public FMassStateTreeTaskBase {
 	GENERATED_BODY() // nolint
-
-	using FInstanceDataType = FFollowPlayerInstanceData;
+	//
+	using FInstanceDataType = FEcsactIdleInstanceData;
 
 	virtual const UStruct* GetInstanceDataType() const override {
-		return FFollowPlayerInstanceData::StaticStruct();
+		return FEcsactIdleInstanceData::StaticStruct();
 	}
 
 	virtual bool Link(FStateTreeLinker& Linker) override;
@@ -51,13 +47,7 @@ struct ECSACTUNREALFPS_API FFollowPlayer : public FMassStateTreeTaskBase {
 		const float                 DeltaTime
 	) const override;
 
-	void MoveToPlayerPosition(FStateTreeExecutionContext& Context) const;
-
 private:
-	TStateTreeExternalDataHandle<FMassMoveTargetFragment> MoveTargetHandle;
-	TStateTreeExternalDataHandle<FTransformFragment>      TransformHandle;
-	TStateTreeExternalDataHandle<UMassSignalSubsystem>  MassSignalSubsystemHandle;
 	TStateTreeExternalDataHandle<FEcsactStreamFragment> StreamFragmentHandle;
-
-	void OnWaitComplete();
+	TStateTreeExternalDataHandle<UMassSignalSubsystem>  MassSignalSubsystemHandle;
 };

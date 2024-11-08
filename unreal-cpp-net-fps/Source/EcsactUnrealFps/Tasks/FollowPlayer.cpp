@@ -17,7 +17,7 @@ EStateTreeRunStatus FFollowPlayer::EnterState(
 	FStateTreeExecutionContext&       Context,
 	const FStateTreeTransitionResult& Transition
 ) const {
-	UE_LOG(LogTemp, Log, TEXT("Entering State"));
+	UE_LOG(LogTemp, Log, TEXT("Entering Follow Player State"));
 
 	const auto& MassContext =
 		static_cast<FMassStateTreeExecutionContext&>(Context);
@@ -49,9 +49,13 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 	FStateTreeExecutionContext& Context,
 	const float                 DeltaTime
 ) const {
-	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
+	const auto& StreamingFragment = Context.GetExternalData(StreamFragmentHandle);
 
-	MoveToPlayerPosition(Context);
+	if(StreamingFragment.ShouldStream()) {
+		MoveToPlayerPosition(Context);
+	} else {
+		return EStateTreeRunStatus::Succeeded;
+	}
 
 	return EStateTreeRunStatus::Running;
 }
@@ -97,6 +101,7 @@ void FFollowPlayer::MoveToPlayerPosition(FStateTreeExecutionContext& Context
 }
 
 bool FFollowPlayer::Link(FStateTreeLinker& Linker) {
+	Linker.LinkExternalData(StreamFragmentHandle);
 	Linker.LinkExternalData(MoveTargetHandle);
 	Linker.LinkExternalData(TransformHandle);
 	Linker.LinkExternalData(MassSignalSubsystemHandle);

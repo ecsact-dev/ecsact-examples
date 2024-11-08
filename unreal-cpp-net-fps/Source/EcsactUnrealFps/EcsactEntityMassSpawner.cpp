@@ -13,7 +13,6 @@
 #include "EcsactUnreal/EcsactRunner.h"
 #include "Fragments/EcsactFragments.h"
 #include "EcsactUnrealFps.ecsact.hh"
-#include "UObject/UnrealNames.h"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
