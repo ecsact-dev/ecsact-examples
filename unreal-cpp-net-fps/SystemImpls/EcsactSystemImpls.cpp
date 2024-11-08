@@ -25,6 +25,11 @@ bool is_overlapping(
 auto example::fps::PusherExpireChecker::impl(context& ctx) -> void {
 	auto pusher = ctx.get<Pusher>();
 	pusher.cooldown_remaining -= 0.1f;
+	if(pusher.cooldown_remaining) {
+		ctx.add<PusherExpired>();
+	}
+
+	ctx.update(pusher);
 }
 
 auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
@@ -33,6 +38,7 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 
 auto example::fps::Push::impl(context& ctx) -> void {
 	// if(ctx.get<Player>().player_id == ctx.action().player_id) {
+	std::puts("Push (add pusher)\n");
 	ctx.add(Pusher{100.f});
 }
 
@@ -49,13 +55,15 @@ auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 
 	if(is_overlapping(radius, position, parent_pos)) {
 		std::puts("Found overlapping Entity, adding Pushing component!\n");
-		ctx.add<Pushing>(
-			{.tick_count = tick_count,
-			 .force_x = force_x,
-			 .force_y = force_y,
-			 .force_z = force_z}
-		);
+		ctx.add(Pushing{
+			.tick_count = tick_count,
+			.force_x = force_x,
+			.force_y = force_y,
+			.force_z = force_z,
+		});
 		ctx.add<Toggle>({.streaming = false});
+	} else {
+		std::puts("Entity too far away to push");
 	}
 }
 
