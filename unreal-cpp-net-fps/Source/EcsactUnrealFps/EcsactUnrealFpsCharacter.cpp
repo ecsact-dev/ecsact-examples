@@ -110,6 +110,13 @@ void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 		this,
 		&AEcsactUnrealFpsCharacter::Move
 	);
+
+	eic->BindAction(
+		PushAction,
+		ETriggerEvent::Triggered,
+		this,
+		&AEcsactUnrealFpsCharacter::Push
+	);
 }
 
 void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
