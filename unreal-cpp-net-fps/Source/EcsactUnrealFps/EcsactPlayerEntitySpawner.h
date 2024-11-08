@@ -24,6 +24,8 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 public:
 	TMap<int32, TWeakObjectPtr<AActor>> PlayerEntities;
 
+	auto GetPlayerPosition(ecsact_entity_id Entity) -> FVector;
+
 	auto RunnerStart_Implementation( //
 		class UEcsactRunner* Runner
 	) -> void override;
@@ -54,6 +56,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProxyPlayerClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PushEffectClass;
 
 	UPROPERTY(EditAnywhere)
 	FVector SpawnLocation;
