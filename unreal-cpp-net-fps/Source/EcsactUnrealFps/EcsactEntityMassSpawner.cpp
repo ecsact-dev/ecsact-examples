@@ -240,7 +240,6 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 auto UEcsactEntityMassSpawner::Push() -> void {
 	auto runner = EcsactUnrealExecution::Runner();
 	check(runner.IsValid());
-	UE_LOG(LogTemp, Warning, TEXT("Push!"));
 
 	UWorld* world = GetWorld();
 	auto    MassEntity = world->GetSubsystem<UMassEntitySubsystem>();

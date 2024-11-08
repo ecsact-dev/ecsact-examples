@@ -25,7 +25,7 @@ bool is_overlapping(
 auto example::fps::PusherExpireChecker::impl(context& ctx) -> void {
 	auto pusher = ctx.get<Pusher>();
 	pusher.cooldown_remaining -= 0.1f;
-	if(pusher.cooldown_remaining) {
+	if(pusher.cooldown_remaining < 0.f) {
 		ctx.add<PusherExpired>();
 	}
 
@@ -38,8 +38,7 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 
 auto example::fps::Push::impl(context& ctx) -> void {
 	// if(ctx.get<Player>().player_id == ctx.action().player_id) {
-	std::puts("Push (add pusher)\n");
-	ctx.add(Pusher{100.f});
+	ctx.add(Pusher{1.f});
 }
 
 auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
