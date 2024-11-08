@@ -24,6 +24,22 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 		.AddComponent(example::fps::Rotation{});
 }
 
+auto UEcsactPlayerEntitySpawner::GetPlayerPosition( //
+	ecsact_entity_id Entity
+) -> FVector {
+	auto controller = AssignedControllers.Find(static_cast<int32>(Entity));
+	if(controller && controller->IsValid()) {
+		return controller->Get()->GetPawn()->GetActorLocation();
+	}
+
+	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
+	if(proxy && proxy->IsValid()) {
+		return proxy->Get()->GetActorLocation();
+	}
+
+	return {};
+}
+
 auto UEcsactPlayerEntitySpawner::RunnerStart_Implementation( //
 	UEcsactRunner* Runner
 ) -> void {
@@ -173,6 +189,15 @@ auto UEcsactPlayerEntitySpawner::InitPusher_Implementation( //
 	FExampleFpsPusher Pusher
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Init Pusher"));
+
+	if(PushEffectClass) {
+		GetWorld()->SpawnActor<AActor>(
+			PushEffectClass,
+			GetPlayerPosition(static_cast<ecsact_entity_id>(Entity)),
+			{},
+			{}
+		);
+	}
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePusher_Implementation( //

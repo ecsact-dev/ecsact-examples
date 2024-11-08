@@ -25,7 +25,7 @@ component Toggle {
 	i8 streaming;
 }
 
-system RemoveToggle {
+system RemoveToggle(parallel: false) {
 	include MassEntity;
 	removes Toggle;
 }

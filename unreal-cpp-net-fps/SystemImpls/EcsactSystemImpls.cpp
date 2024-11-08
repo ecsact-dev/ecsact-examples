@@ -37,6 +37,7 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 }
 
 auto example::fps::Push::impl(context& ctx) -> void {
+	std::puts("  here! edited!  ");
 	// if(ctx.get<Player>().player_id == ctx.action().player_id) {
 	ctx.add(Pusher{1.f});
 }
@@ -53,7 +54,6 @@ auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 	const auto position = ctx.get<Position>();
 
 	if(is_overlapping(radius, position, parent_pos)) {
-		std::puts("Found overlapping Entity, adding Pushing component!\n");
 		ctx.add(Pushing{
 			.tick_count = tick_count,
 			.force_x = force_x,
@@ -61,18 +61,14 @@ auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 			.force_z = force_z,
 		});
 		ctx.add<Toggle>({.streaming = false});
-	} else {
-		std::puts("Entity too far away to push");
 	}
 }
 
 auto example::fps::ApplyPush::impl(context& ctx) -> void {
-	std::puts("In apply push\n");
 	auto pushing = ctx.get<Pushing>();
 	auto velocity = ctx.get<Velocity>();
 
 	if(pushing.tick_count > 0) {
-		std::puts("Applying force on push");
 		velocity.x += pushing.force_x;
 		velocity.y += pushing.force_y;
 		velocity.z += pushing.force_z;
@@ -83,7 +79,6 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 }
 
 auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
-	std::puts("Applying velocity");
 	const auto velocity = ctx.get<Velocity>();
 	auto       position = ctx.get<Position>();
 
@@ -95,7 +90,6 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 }
 
 auto example::fps::ApplyDrag::impl(context& ctx) -> void {
-	std::puts("Applying drag");
 	const auto pushing = ctx.get<Pushing>();
 	auto       velocity = ctx.get<Velocity>();
 
@@ -110,7 +104,6 @@ auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 }
 
 auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
-	std::puts("Toggling pushed entities");
 	const auto toggle = ctx.get<Toggle>();
 
 	ctx.stream_toggle<Position>(toggle.streaming);
