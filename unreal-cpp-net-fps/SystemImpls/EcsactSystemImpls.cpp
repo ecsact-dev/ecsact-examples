@@ -37,12 +37,18 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 }
 
 auto example::fps::Push::impl(context& ctx) -> void {
-	std::puts("  here! edited!  ");
-	// if(ctx.get<Player>().player_id == ctx.action().player_id) {
-	ctx.add(Pusher{1.f});
+	auto player_id = ctx.get<Player>().player_id;
+	if(player_id == ctx.action().player_id) {
+		ctx.add(Pusher{1.f});
+	}
 }
 
 auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
+	auto player_id = ctx._ctx.parent().get<Player>().player_id;
+	if(player_id != ctx._ctx.parent().action<Push>().player_id) {
+		return;
+	}
+
 	const auto parent_pos = ctx._ctx.parent().get<Position>();
 	const auto tick_count = ctx._ctx.parent().action<Push>().tick_count;
 	const auto radius = ctx._ctx.parent().action<Push>().radius;

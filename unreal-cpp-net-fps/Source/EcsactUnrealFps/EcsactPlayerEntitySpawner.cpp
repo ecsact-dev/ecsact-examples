@@ -1,5 +1,6 @@
 #include "EcsactPlayerEntitySpawner.h"
 #include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
+#include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFpsGameMode.h"
 #include "EcsactUnreal/EcsactAsyncRunner.h"
 #include "EcsactUnreal/EcsactSyncRunner.h"
@@ -19,7 +20,7 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	// generator system of backend function. Refer to your Ecsact async
 	// implemtnation for details.
 	Runner->CreateEntity()
-		.AddComponent(example::fps::Player{})
+		.AddComponent(example::fps::Player{LocallyControllerPlayerId})
 		.AddComponent(example::fps::Position{})
 		.AddComponent(example::fps::Rotation{});
 }
@@ -38,6 +39,22 @@ auto UEcsactPlayerEntitySpawner::GetPlayerPosition( //
 	}
 
 	return {};
+}
+
+auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
+	int32 NewPlayerId
+) -> void {
+	auto runner = EcsactUnrealExecution::Runner();
+	check(runner.IsValid());
+	auto self = runner->GetSubsystem<ThisClass>();
+	self->LocallyControllerPlayerId = NewPlayerId;
+
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("Setting new locally controlled player id %i"),
+		NewPlayerId
+	);
 }
 
 auto UEcsactPlayerEntitySpawner::RunnerStart_Implementation( //
@@ -59,17 +76,21 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 ) -> void {
 	auto& controller = AssignedControllers.Add(Entity);
 
-	UE_LOG(
-		LogTemp,
-		Warning,
-		TEXT("Looking for available controller for entity %i"),
-		Entity
-	);
-	while(!PendingControllers.IsEmpty()) {
-		controller = PendingControllers.Pop();
-		if(controller.IsValid()) {
-			SetupController(Entity, controller.Get());
-			return;
+	EntityPlayerStructs.FindOrAdd(Entity) = Player;
+
+	if(Player.PlayerId == LocallyControllerPlayerId) {
+		UE_LOG(
+			LogTemp,
+			Warning,
+			TEXT("Looking for available controller for entity %i"),
+			Entity
+		);
+		while(!PendingControllers.IsEmpty()) {
+			controller = PendingControllers.Pop();
+			if(controller.IsValid()) {
+				SetupController(Entity, Player, controller.Get());
+				return;
+			}
 		}
 	}
 
@@ -95,14 +116,22 @@ auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
 	FExampleFpsPlayer Player
 ) -> void {
 	PlayerEntities.Remove(Entity);
+	EntityPlayerStructs.Remove(Entity);
 	// TODO
 }
 
 auto UEcsactPlayerEntitySpawner::SetupController(
 	int32                             Entity,
+	FExampleFpsPlayer                 Player,
 	AEcsactUnrealFpsPlayerController* Controller
 ) -> void {
-	UE_LOG(LogTemp, Warning, TEXT("Setup Controller (Entity=%i)"), Entity);
+	UE_LOG(
+		LogTemp,
+		Warning,
+		TEXT("Setup Controller (Entity=%i PlayerId=%i)"),
+		Entity,
+		Player.PlayerId
+	);
 
 	check(Controller);
 	auto spawn_params = FActorSpawnParameters{};
@@ -124,6 +153,7 @@ auto UEcsactPlayerEntitySpawner::SetupController(
 	check(pawn);
 	// TODO: no cast please
 	pawn->CharacterEntity = static_cast<ecsact_entity_id>(Entity);
+	pawn->CharacterPlayerId = Player.PlayerId;
 	PlayerEntities.Add(Entity, pawn);
 	Controller->Possess(pawn);
 }
@@ -135,8 +165,15 @@ auto UEcsactPlayerEntitySpawner::AddPlayerController( //
 	for(auto& entry : AssignedControllers) {
 		if(!entry.Value.IsValid()) {
 			entry.Value = Controller;
-			SetupController(entry.Key, Controller);
-			return;
+			auto player = EntityPlayerStructs.FindChecked(entry.Key);
+			if(player.PlayerId == LocallyControllerPlayerId) {
+				SetupController(
+					entry.Key,
+					EntityPlayerStructs.FindChecked(entry.Key),
+					Controller
+				);
+				return;
+			}
 		}
 	}
 

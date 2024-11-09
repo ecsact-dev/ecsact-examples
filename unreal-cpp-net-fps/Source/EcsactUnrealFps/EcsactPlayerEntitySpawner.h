@@ -16,12 +16,21 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	TMap<int32, TWeakObjectPtr<class AEcsactUnrealFpsPlayerController>>
 		AssignedControllers = {};
 
+	TMap<int32, FExampleFpsPlayer> EntityPlayerStructs;
+
 	auto SetupController(
 		int32                                   Entity,
+		FExampleFpsPlayer                       Player,
 		class AEcsactUnrealFpsPlayerController* Controller
 	) -> void;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Ecsact Net Unreal Example")
+	static void SetLocalEcsactPlayerId(int32 NewPlayerId);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LocallyControllerPlayerId = 0;
+
 	TMap<int32, TWeakObjectPtr<AActor>> PlayerEntities;
 
 	auto GetPlayerPosition(ecsact_entity_id Entity) -> FVector;

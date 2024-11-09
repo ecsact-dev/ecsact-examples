@@ -60,5 +60,5 @@ public:
 		FExampleFpsToggle Toggle
 	) -> void override;
 
-	auto Push() -> void;
+	auto Push(int32 PlayerId) -> void;
 };

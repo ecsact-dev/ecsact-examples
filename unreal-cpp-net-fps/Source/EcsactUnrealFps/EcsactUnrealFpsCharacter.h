@@ -84,6 +84,7 @@ protected:
 public:
 	// TODO: Use some kind of entity actor component
 	ecsact_entity_id CharacterEntity = ECSACT_INVALID_ID(entity);
+	int32            CharacterPlayerId = -1;
 
 protected:
 	/** Called for movement input */

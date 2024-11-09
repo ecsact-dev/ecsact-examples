@@ -244,12 +244,12 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 	}
 }
 
-auto UEcsactEntityMassSpawner::Push() -> void {
+auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
 	auto runner = EcsactUnrealExecution::Runner();
 	check(runner.IsValid());
 
 	auto PushAction = example::fps::Push{
-		.player_id = 0,
+		.player_id = PlayerId,
 		.radius = 500,
 		.tick_count = 50,
 		.force_x = 250,

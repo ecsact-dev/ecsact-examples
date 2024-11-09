@@ -142,7 +142,7 @@ void AEcsactUnrealFpsCharacter::Push(const FInputActionValue& Value) {
 
 	auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
 
-	MassSpawner->Push();
+	MassSpawner->Push(CharacterPlayerId);
 }
 
 void AEcsactUnrealFpsCharacter::OnOverlapBegin(
