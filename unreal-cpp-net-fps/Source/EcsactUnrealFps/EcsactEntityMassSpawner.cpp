@@ -26,8 +26,8 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	);
 
 	for(int i = 0; i < count; i++) {
-		auto RandomPointX = FMath::RandRange(0, 4000);
-		auto RandomPointY = FMath::RandRange(0, 4000);
+		auto RandomPointX = FMath::RandRange(-2000, 2000);
+		auto RandomPointY = FMath::RandRange(-2000, 2000);
 
 		UE_LOG(
 			LogTemp,
@@ -115,14 +115,14 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		auto vec = FVector{Position.X, Position.Y, Position.Z};
 
 		for(auto EntityHandle : EntityHandles) {
-			// UE_LOG(
-			// 	LogTemp,
-			// 	Log,
-			// 	TEXT("Ecsact Position updated to %f, %f, %f"),
-			// 	Position.X,
-			// 	Position.Y,
-			// 	Position.Z
-			// );
+			UE_LOG(
+				LogTemp,
+				Warning,
+				TEXT("Ecsact Position updated to %f, %f, %f"),
+				Position.X,
+				Position.Y,
+				Position.Z
+			);
 			auto* EcsactPositionFragment =
 				EntityManager.GetFragmentDataPtr<FEcsactPositionFragment>(EntityHandle);
 
@@ -213,7 +213,6 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 	int32             Entity,
 	FExampleFpsToggle Toggle
 ) -> void {
-	UE_LOG(LogTemp, Log, TEXT("INIT TOGGLE 1st"));
 	if(!StreamEntities) {
 		return;
 	}
@@ -252,8 +251,8 @@ auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
 		.player_id = PlayerId,
 		.radius = 500,
 		.tick_count = 50,
-		.force_x = 250,
-		.force_y = 250,
+		.force_x = 50,
+		.force_y = 50,
 		.force_z = 0,
 	};
 	runner->PushAction(PushAction);

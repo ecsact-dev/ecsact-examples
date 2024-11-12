@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <stdexcept>
+#include <string>
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
@@ -75,9 +76,9 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 	auto velocity = ctx.get<Velocity>();
 
 	if(pushing.tick_count > 0) {
-		velocity.x += pushing.force_x;
-		velocity.y += pushing.force_y;
-		velocity.z += pushing.force_z;
+		velocity.x = pushing.force_x;
+		velocity.y = pushing.force_y;
+		velocity.z = pushing.force_z;
 
 		pushing.tick_count -= 1;
 		ctx.update(velocity);
@@ -88,6 +89,20 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 	const auto velocity = ctx.get<Velocity>();
 	auto       position = ctx.get<Position>();
+
+	// auto x = std::to_string(position.x);
+	// auto y = std::to_string(position.y);
+	// auto z = std::to_string(position.z);
+	//
+	// std::string position_str = ("Position: " + x + ", " + y + ", " + z + "\n");
+	//
+	// auto vel_x = std::to_string(velocity.x);
+	// auto vel_y = std::to_string(velocity.y);
+	// auto vel_z = std::to_string(velocity.z);
+	//
+	// std::string velocity_str =
+	// 	("Velocity: " + vel_x + ", " + vel_y + ", " + vel_z + "\n");
+	// std::puts(velocity_str.c_str());
 
 	position.x += velocity.x;
 	position.y += velocity.y;
