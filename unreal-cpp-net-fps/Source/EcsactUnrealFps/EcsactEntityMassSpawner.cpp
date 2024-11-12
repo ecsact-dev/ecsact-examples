@@ -15,8 +15,8 @@
 #include "EcsactUnrealFps.ecsact.hh"
 
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
-	auto runner = EcsactUnrealExecution::Runner();
-	check(runner.IsValid());
+	auto runner = GetRunner();
+	check(runner);
 
 	UE_LOG(
 		LogTemp,
@@ -244,8 +244,8 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
-	auto runner = EcsactUnrealExecution::Runner();
-	check(runner.IsValid());
+	auto runner = GetRunner();
+	check(runner);
 
 	auto PushAction = example::fps::Push{
 		.player_id = PlayerId,

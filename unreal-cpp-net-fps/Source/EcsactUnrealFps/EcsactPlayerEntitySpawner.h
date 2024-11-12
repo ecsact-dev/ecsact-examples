@@ -25,8 +25,15 @@ class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	) -> void;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Ecsact Net Unreal Example")
-	static void SetLocalEcsactPlayerId(int32 NewPlayerId);
+	UFUNCTION(
+		BlueprintCallable,
+		Category = "Ecsact Net Unreal Example",
+		Meta = (WorldContext = "WorldContext")
+	)
+	static void SetLocalEcsactPlayerId(
+		const UObject* WorldContext,
+		int32          NewPlayerId
+	);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LocallyControllerPlayerId = 0;

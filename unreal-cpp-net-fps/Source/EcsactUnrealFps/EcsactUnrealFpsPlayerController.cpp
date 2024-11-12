@@ -20,8 +20,8 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 		Subsystem->AddMappingContext(InputMappingContext, 0);
 	}
 
-	auto runner = EcsactUnrealExecution::Runner();
-	check(runner.IsValid());
+	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
+	check(runner);
 	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
 	UE_LOG(
 		LogTemp,
@@ -36,16 +36,19 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 }
 
 void AEcsactUnrealFpsPlayerController::BeginDestroy() {
-	auto runner = EcsactUnrealExecution::Runner();
-	if(runner.IsValid()) {
-		auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
-		UE_LOG(
-			LogTemp,
-			Warning,
-			TEXT("AEcsactUnrealFpsPlayerController::BeginDestroy()")
-		);
-		if(player_spawner) {
-			player_spawner->RemovePlayerController(this);
+	auto world = GetWorld();
+	if(world) {
+		auto runner = EcsactUnrealExecution::Runner(world).Get();
+		if(runner) {
+			auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
+			UE_LOG(
+				LogTemp,
+				Warning,
+				TEXT("AEcsactUnrealFpsPlayerController::BeginDestroy()")
+			);
+			if(player_spawner) {
+				player_spawner->RemovePlayerController(this);
+			}
 		}
 	}
 	Super::BeginDestroy();

@@ -65,10 +65,11 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 	return EStateTreeRunStatus::Running;
 }
 
-void FFollowPlayer::MoveToPlayerPosition(FStateTreeExecutionContext& Context
+void FFollowPlayer::MoveToPlayerPosition( //
+	FStateTreeExecutionContext& Context
 ) const {
-	auto runner = EcsactUnrealExecution::Runner();
-	check(runner.IsValid());
+	auto runner = EcsactUnrealExecution::Runner(Context.GetWorld()).Get();
+	check(runner);
 	auto PlayerSpawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
 	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 

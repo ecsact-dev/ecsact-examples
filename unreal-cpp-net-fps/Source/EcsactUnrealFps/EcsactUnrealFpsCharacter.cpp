@@ -63,7 +63,7 @@ void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
 	);
 
 	if(CharacterEntity != ECSACT_INVALID_ID(entity)) {
-		auto runner = EcsactUnrealExecution::Runner().Get();
+		auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
 		auto actor_pos = GetActorLocation();
 		auto actor_rot = GetActorRotation();
 		runner->Stream(
@@ -137,12 +137,12 @@ void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
 }
 
 void AEcsactUnrealFpsCharacter::Push(const FInputActionValue& Value) {
-	auto runner = EcsactUnrealExecution::Runner();
-	check(runner.IsValid());
+	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
 
-	auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
-
-	MassSpawner->Push(CharacterPlayerId);
+	if(runner) {
+		auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
+		MassSpawner->Push(CharacterPlayerId);
+	}
 }
 
 void AEcsactUnrealFpsCharacter::OnOverlapBegin(

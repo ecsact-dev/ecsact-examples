@@ -33,7 +33,7 @@ auto UEcsactActor::BeginPlay() -> void {
 }
 
 auto UEcsactActor::TimeDelayWorkaround() -> void {
-	auto runner = EcsactUnrealExecution::Runner();
+	auto runner = EcsactUnrealExecution::Runner(GetWorld());
 	auto comp_loc = GetComponentLocation();
 	auto comp_rot = GetComponentRotation();
 	runner->CreateEntity()
@@ -67,7 +67,7 @@ auto UEcsactActor::TickComponent(
 		return;
 	}
 
-	auto runner = EcsactUnrealExecution::Runner();
+	auto runner = EcsactUnrealExecution::Runner(GetWorld());
 	if(bStreamEcsactStreamData && runner.IsValid()) {
 		auto comp_loc = GetComponentLocation();
 		auto comp_rot = GetComponentRotation();

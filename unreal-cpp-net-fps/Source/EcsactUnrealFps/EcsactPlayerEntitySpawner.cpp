@@ -42,9 +42,12 @@ auto UEcsactPlayerEntitySpawner::GetPlayerPosition( //
 }
 
 auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
-	int32 NewPlayerId
+	const UObject* WorldContext,
+	int32          NewPlayerId
 ) -> void {
-	auto runner = EcsactUnrealExecution::Runner();
+	auto world = WorldContext->GetWorld();
+	check(world);
+	auto runner = EcsactUnrealExecution::Runner(world);
 	check(runner.IsValid());
 	auto self = runner->GetSubsystem<ThisClass>();
 	self->LocallyControllerPlayerId = NewPlayerId;

@@ -42,10 +42,15 @@ void UTickProcessor::Execute(
 	FMassEntityManager&    EntityManager,
 	FMassExecutionContext& Context
 ) {
+	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
+	if(!runner) {
+		return;
+	}
+
 	EntityQuery.ForEachEntityChunk(
 		EntityManager,
 		Context,
-		[](FMassExecutionContext& Context) {
+		[runner](FMassExecutionContext& Context) {
 			UMassSignalSubsystem& SignalSubsystem =
 				Context.GetMutableSubsystemChecked<UMassSignalSubsystem>();
 
@@ -54,11 +59,6 @@ void UTickProcessor::Execute(
 				UE::Mass::Signals::StateTreeActivate,
 				Entities
 			);
-
-			auto runner = EcsactUnrealExecution::Runner();
-			if(!runner.IsValid()) {
-				return;
-			}
 
 			const auto& StreamFragments =
 				Context.GetFragmentView<FEcsactStreamFragment>();
