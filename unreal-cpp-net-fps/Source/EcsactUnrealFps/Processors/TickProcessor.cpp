@@ -94,25 +94,25 @@ void UTickProcessor::Execute(
 
 					const auto& Location = Transform.GetLocation();
 
-					UE_LOG(
-						LogTemp,
-						Log,
-						TEXT("Current transform location of entity %i: %f, %f, %f"),
-						i,
-						Location.X,
-						Location.Y,
-						Location.Z
-					);
-
-					UE_LOG(
-						LogTemp,
-						Log,
-						TEXT("Setting position to entity %i: %f, %f, %f"),
-						i,
-						Position.X,
-						Position.Y,
-						Position.Z
-					);
+					// UE_LOG(
+					// 	LogTemp,
+					// 	Log,
+					// 	TEXT("Current transform location of entity %i: %f, %f, %f"),
+					// 	i,
+					// 	Location.X,
+					// 	Location.Y,
+					// 	Location.Z
+					// );
+					//
+					// UE_LOG(
+					// 	LogTemp,
+					// 	Log,
+					// 	TEXT("Setting position to entity %i: %f, %f, %f"),
+					// 	i,
+					// 	Position.X,
+					// 	Position.Y,
+					// 	Position.Z
+					// );
 
 					Transform.SetLocation(FVector{Position});
 				}
