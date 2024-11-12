@@ -74,11 +74,10 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 	int32             Entity,
 	FExampleFpsPlayer Player
 ) -> void {
-	auto& controller = AssignedControllers.Add(Entity);
-
 	EntityPlayerStructs.FindOrAdd(Entity) = Player;
 
 	if(Player.PlayerId == LocallyControllerPlayerId) {
+		auto& controller = AssignedControllers.Add(Entity);
 		UE_LOG(
 			LogTemp,
 			Warning,
