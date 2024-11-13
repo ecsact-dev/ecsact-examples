@@ -9,6 +9,15 @@ param (
 	[Parameter(Mandatory)] $WasmOutputFilePath
 )
 
+if (${env:UE-ZenSubprocessDataPath})
+{
+	Write-Host "Detected live coding enabled"
+	Write-Host "Skipping system impl re-build"
+	exit 0
+}
+
+Write-Output $env:UBT_COMPILE_LIVE_CODING
+
 $ErrorActionPreference = 'Stop'
 
 if(-not $env:EMSDK)
@@ -49,6 +58,8 @@ ecsact codegen $EcsactFiles `
 	--outdir=$GeneratedOutDir
 
 emcc -v
+
+mkdir -Force "$ProjectDir/Binaries" | Out-Null
 
 # NOTE: PURE_WASI=1 removes emscripten_* functions that are not compatible with the Ecsact SI Wasm host
 emcc -std=c++20 --no-entry -I"$EcsactInc" -I"SystemImpls/generated" `
