@@ -12,7 +12,7 @@
 #include "Ecsact/runtime/common.h"
 #include "EcsactEntityMassSpawner.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 
 class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT

@@ -4,7 +4,7 @@
 #include "EcsactUnrealFps__ecsact__ue.h"
 #include "EcsactPlayerEntitySpawner.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 
 class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT

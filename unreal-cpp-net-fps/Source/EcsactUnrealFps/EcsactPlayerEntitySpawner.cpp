@@ -103,14 +103,18 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 		Entity
 	);
 
-	auto* Actor = GetWorld()->SpawnActor<AActor>(
-		ProxyPlayerClass,
-		SpawnLocation,
-		SpawnRotator
-	);
+	if(ProxyPlayerClass) {
+		auto* Actor = GetWorld()->SpawnActor<AActor>(
+			ProxyPlayerClass,
+			SpawnLocation,
+			SpawnRotator
+		);
 
-	check(Actor);
-	PlayerEntities.Add(Entity, Actor);
+		check(Actor);
+		PlayerEntities.Add(Entity, Actor);
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("ProxyPlayerClass is unset"));
+	}
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(

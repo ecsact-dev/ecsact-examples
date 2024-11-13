@@ -1,6 +1,5 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "EcsactUnrealFpsPlayerController.h"
+
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "EcsactUnrealFps/EcsactPlayerEntitySpawner.h"
@@ -9,6 +8,12 @@
 
 void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	Super::BeginPlay();
+
+	auto runner = EcsactUnrealExecution::RunnerOrWarn(GetWorld()).Get();
+	if(!runner) {
+		UE_LOG(LogTemp, Warning, TEXT("NO RUNNER??????????????"));
+		return;
+	}
 
 	// get the enhanced input subsystem
 	auto* Subsystem =
@@ -20,8 +25,6 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 		Subsystem->AddMappingContext(InputMappingContext, 0);
 	}
 
-	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
-	check(runner);
 	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
 	UE_LOG(
 		LogTemp,
@@ -35,21 +38,26 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	}
 }
 
-void AEcsactUnrealFpsPlayerController::BeginDestroy() {
-	auto world = GetWorld();
-	if(world) {
-		auto runner = EcsactUnrealExecution::Runner(world).Get();
-		if(runner) {
-			auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
-			UE_LOG(
-				LogTemp,
-				Warning,
-				TEXT("AEcsactUnrealFpsPlayerController::BeginDestroy()")
-			);
-			if(player_spawner) {
-				player_spawner->RemovePlayerController(this);
-			}
+void AEcsactUnrealFpsPlayerController::EndPlay( //
+	const EEndPlayReason::Type Reason
+) {
+	switch(Reason) {
+		case EEndPlayReason::EndPlayInEditor:
+		case EEndPlayReason::Quit:
+			Super::EndPlay(Reason);
+			return;
+		case EEndPlayReason::Destroyed:
+		case EEndPlayReason::LevelTransition:
+		case EEndPlayReason::RemovedFromWorld:
+			break;
+	}
+
+	auto runner = EcsactUnrealExecution::RunnerOrWarn(GetWorld()).Get();
+	if(runner) {
+		auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
+		if(player_spawner) {
+			player_spawner->RemovePlayerController(this);
 		}
 	}
-	Super::BeginDestroy();
+	Super::EndPlay(Reason);
 }
