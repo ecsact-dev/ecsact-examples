@@ -1,0 +1,93 @@
+main package example.fps;
+
+component Player { i32 player_id; }
+component Pusher { f32 cooldown_remaining; }
+component PusherExpired;
+component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
+component Position(stream) { f32 x; f32 y; f32 z; }
+
+component MassEntity;
+
+component Velocity {
+	f32 x;
+	f32 y;
+	f32 z;
+}
+
+component Pushing {
+	i16 tick_count;
+	i16 force_x;
+	i16 force_y;
+	i16 force_z;
+}
+
+component Toggle {
+	i8 streaming;
+}
+
+system RemoveToggle(parallel: false) {
+	include MassEntity;
+	removes Toggle;
+}
+
+system PusherExpireChecker {
+	readwrite Pusher;
+	adds PusherExpired;
+}
+
+system PusherApplyExpired {
+	include PusherExpired;
+	removes Pusher;
+}
+
+action Push {
+	i32 player_id;
+	i16 radius;
+	i16 tick_count;
+	i16 force_x;
+	i16 force_y;
+	i16 force_z;
+
+	readonly Player;
+	readonly Position;
+	adds Pusher;
+	
+	system PushEntities {
+		include MassEntity;
+		readonly Position;
+		adds Pushing;
+		adds Toggle;
+	}
+}
+
+component RemovePushingTag;
+
+system ApplyPush {
+	include MassEntity;
+	readwrite Pushing;
+	readwrite Velocity;
+}
+
+system ApplyVelocity {
+	readwrite Position;
+	readonly Velocity;
+}
+
+system ApplyDrag {
+	readwrite Velocity;
+	readonly Pushing;
+	adds RemovePushingTag;
+	adds Toggle;
+}
+
+system TogglePushedEntities {
+	stream_toggle Position;
+	readonly Toggle;
+}
+
+system RemovePushing {
+	include MassEntity;
+	removes RemovePushingTag;
+	removes Pushing;
+}
+
