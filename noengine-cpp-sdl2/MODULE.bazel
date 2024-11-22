@@ -1,20 +1,23 @@
 module(name = "ecsact-examples-noengine-cpp-sdl2")
 
-bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "rules_cc", version = "0.1.0")
 bazel_dep(name = "sdl2")
+
 bazel_dep(name = "toolchains_llvm", version = "1.0.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
-bazel_dep(name = "ecsact_runtime", version = "0.6.2")
-bazel_dep(name = "bazel_skylib", version = "1.6.1")
-bazel_dep(name = "rules_ecsact", version = "0.5.2")
-bazel_dep(name = "ecsact_cli", version = "0.3.7")
-bazel_dep(name = "ecsact_lang_cpp", version = "0.4.1")
+
+bazel_dep(name = "ecsact_runtime", version = "0.7.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "rules_ecsact", version = "0.5.8")
+bazel_dep(name = "ecsact_cli", version = "0.3.19")
+bazel_dep(name = "ecsact_lang_cpp", version = "0.4.10")
 bazel_dep(name = "boost.dll", version = "1.83.0.bzl.2")
 bazel_dep(name = "boost.process", version = "1.83.0.bzl.2")
 bazel_dep(name = "platforms", version = "0.0.10")
-bazel_dep(name = "ecsact_rt_entt", version = "0.3.2")
+bazel_dep(name = "ecsact_rt_entt", version = "0.3.13")
 bazel_dep(name = "cute_c2")
 bazel_dep(name = "imgui")
+bazel_dep(name = "tracy", version = "0.11.1")
 
 archive_override(
     module_name = "cute_c2",
@@ -27,15 +30,17 @@ git_override(
     commit = "975821a9513e230601b358aea829b9659de13d11",
     remote = "https://github.com/zaucy/imgui.git",
 )
+
 git_override(
     module_name = "sdl2",
     commit = "2c8acf0e46f14ebbafe3ec9cc05d7ee4b6d7609f",
     remote = "https://github.com/zaucy/sdl.git",
 )
+
 git_override(
-    module_name = "ecsact_rt_entt",
-    commit = "5ed2115146a9f187dca3c0ff9f8c66fbea09bf23",
-    remote = "https://github.com/ecsact-dev/ecsact_rt_entt.git",
+    module_name = "tracy",
+    commit = "cc236c7d1cf57b7065dc2cb3faa6a9573b46481a",
+    remote = "git@github.com:seaube/tracy.git",
 )
 
 ecsact = use_extension("@rules_ecsact//ecsact:extensions.bzl", "ecsact", dev_dependency = True)
