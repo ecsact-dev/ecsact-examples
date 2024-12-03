@@ -5,13 +5,16 @@
 #include <algorithm>
 #include "cute_c2.h"
 #include "simulation_config.hh"
+#include "tracy/Tracy.hpp"
 
 constexpr auto push_pressure_strength = 1000.f;
 
 auto example::AlwaysRemoveColliding::impl(context& ctx) -> void {
+	ZoneScoped;
 }
 
 auto example::CollisionPressurePush::impl(context& ctx) -> void {
+	ZoneScoped;
 	auto vel = ctx.get<Velocity>();
 	auto colliding = ctx.get<Colliding>();
 
@@ -24,9 +27,11 @@ auto example::CollisionPressurePush::impl(context& ctx) -> void {
 }
 
 auto example::CollisionParent::impl(context& ctx) -> void {
+	ZoneScoped;
 }
 
 auto example::CollisionParent::Collision::impl(context& ctx) -> void {
+	ZoneScoped;
 	if(ctx._ctx.same(ctx._ctx.parent())) {
 		return;
 	}

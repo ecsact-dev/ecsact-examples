@@ -3,6 +3,7 @@
 #include <format>
 #include <SDL.h>
 #include <SDL_main.h>
+#include "tracy/Tracy.hpp"
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
@@ -85,6 +86,10 @@ auto main(int argc, char* argv[]) -> int {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return 1;
 	}
+
+#ifdef TRACY_MANUAL_LIFETIME
+	tracy::StartupProfiler();
+#endif
 
 	// TODO: Create codegen for this
 	ecsact_set_system_execution_impl(
@@ -271,6 +276,7 @@ auto main(int argc, char* argv[]) -> int {
 			ImGui::Render();
 			ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 			SDL_RenderPresent(renderer);
+			FrameMark;
 		} else if(event.type == SDL_WINDOWEVENT) {
 			if(event.window.type == SDL_WINDOWEVENT_RESIZED) {
 				SDL_GetWindowSize(win, &viewport_width, &viewport_height);
@@ -283,5 +289,8 @@ auto main(int argc, char* argv[]) -> int {
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 	SDL_Quit();
+#ifdef TRACY_MANUAL_LIFETIME
+	tracy::ShutdownProfiler();
+#endif
 	return 0;
 }
