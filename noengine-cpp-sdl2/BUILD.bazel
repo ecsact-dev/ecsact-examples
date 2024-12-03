@@ -20,7 +20,7 @@ ecsact_binary(
     recipes = [
         "@ecsact_rt_entt",
     ],
-    tracy = True,
+    # tracy = True,
 )
 
 cc_binary(

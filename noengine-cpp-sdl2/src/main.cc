@@ -87,8 +87,9 @@ auto main(int argc, char* argv[]) -> int {
 		return 1;
 	}
 
-	// TODO(Kelwan): Make Tracy conditional
+#ifdef TRACY_MANUAL_LIFETIME
 	tracy::StartupProfiler();
+#endif
 
 	// TODO: Create codegen for this
 	ecsact_set_system_execution_impl(
@@ -288,6 +289,8 @@ auto main(int argc, char* argv[]) -> int {
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 	SDL_Quit();
+#ifdef TRACY_MANUAL_LIFETIME
 	tracy::ShutdownProfiler();
+#endif
 	return 0;
 }
