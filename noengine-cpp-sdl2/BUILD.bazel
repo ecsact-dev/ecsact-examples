@@ -20,6 +20,7 @@ ecsact_binary(
     recipes = [
         "@ecsact_rt_entt",
     ],
+    tracy = True,
 )
 
 cc_binary(
@@ -52,6 +53,7 @@ cc_binary(
         "@ecsact_runtime//:core",
         "@ecsact_lang_cpp//:support",
         "@ecsact_lang_cpp//:execution_context",
+        "@tracy",
     ],
 )
 
