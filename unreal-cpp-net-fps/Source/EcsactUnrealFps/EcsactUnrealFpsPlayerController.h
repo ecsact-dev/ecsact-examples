@@ -24,7 +24,6 @@ protected:
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	// TODO: set this per-player
 	/**
 	 * This player ID gets passed to Ecsact when executing actions by this player
 	 * controller

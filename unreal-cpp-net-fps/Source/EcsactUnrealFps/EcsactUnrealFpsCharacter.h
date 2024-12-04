@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Logging/LogMacros.h"
+#include "GameFramework/Pawn.h"
+#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "ecsact/runtime/common.h"
 #include "EcsactUnrealFpsCharacter.generated.h"
 
@@ -14,13 +15,12 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+class UEcsactUnrealExampleMovementComponent;
 struct FInputActionValue;
-
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config = Game)
 
-class AEcsactUnrealFpsCharacter : public ACharacter {
+class AEcsactUnrealFpsCharacter : public APawn {
 	GENERATED_BODY()
 
 	float MoveDirX;
@@ -32,14 +32,34 @@ class AEcsactUnrealFpsCharacter : public ACharacter {
 	UPROPERTY(EditAnywhere, Category = Camera)
 	FRotator CameraRotation;
 
-	/** First person camera */
 	UPROPERTY(
 		VisibleAnywhere,
 		BlueprintReadOnly,
 		Category = Camera,
 		meta = (AllowPrivateAccess = "true")
 	)
-	UCameraComponent* FirstPersonCameraComponent;
+	UCameraComponent* CameraComponent;
+
+	UPROPERTY(
+		VisibleAnywhere,
+		BlueprintReadOnly,
+		meta = (AllowPrivateAccess = "true")
+	)
+	UCapsuleComponent* RootCollision;
+
+	UPROPERTY(
+		VisibleAnywhere,
+		BlueprintReadOnly,
+		meta = (AllowPrivateAccess = "true")
+	)
+	USkeletalMeshComponent* Mesh;
+
+	UPROPERTY(
+		VisibleAnywhere,
+		BlueprintReadOnly,
+		meta = (AllowPrivateAccess = "true")
+	)
+	UEcsactUnrealExampleMovementComponent* MovementComponent;
 
 	/** Move Input Action */
 	UPROPERTY(
@@ -103,14 +123,7 @@ protected:
 	USphereComponent* PushDetectionSphere;
 
 protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent
-	) override;
-	// End of APawn interface
-
-public:
-	/** Returns FirstPersonCameraComponent subobject **/
-	UCameraComponent* GetFirstPersonCameraComponent() const {
-		return FirstPersonCameraComponent;
-	}
+	virtual auto SetupPlayerInputComponent( //
+		UInputComponent* InputComponent
+	) -> void override;
 };

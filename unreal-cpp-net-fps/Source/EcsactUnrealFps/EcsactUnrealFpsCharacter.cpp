@@ -17,30 +17,38 @@
 #include "EcsactUnreal/EcsactRunner.h"
 #include "EcsactUnrealFps.ecsact.hh"
 #include "EcsactEntityMassSpawner.h"
+#include "EcsactUnrealExampleMovementComponent.h"
 #include "MassCommonFragments.h"
-
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
 // AEcsactUnrealFpsCharacter
 
 AEcsactUnrealFpsCharacter::AEcsactUnrealFpsCharacter() {
-	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	RootCollision =
+		CreateDefaultSubobject<UCapsuleComponent>(TEXT("Root Collision"));
 
-	// Create a CameraComponent
-	FirstPersonCameraComponent =
-		CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCameraComponent->bUsePawnControlRotation = false;
-	FirstPersonCameraComponent->SetUsingAbsoluteRotation(true);
-	FirstPersonCameraComponent->SetUsingAbsoluteLocation(true);
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(RootCollision);
+
+	MovementComponent =
+		CreateDefaultSubobject<UEcsactUnrealExampleMovementComponent>( //
+			TEXT("Movement")
+		);
+	MovementComponent->SetUpdatedComponent(RootCollision);
+	MovementComponent->UpdatedComponent = RootCollision;
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent->SetupAttachment(RootCollision);
+	CameraComponent->bUsePawnControlRotation = false;
+	CameraComponent->SetUsingAbsoluteRotation(true);
+	CameraComponent->SetUsingAbsoluteLocation(true);
 
 	PushDetectionSphere =
 		CreateDefaultSubobject<USphereComponent>(TEXT("Push Detection Sphere"));
 	PushDetectionSphere->InitSphereRadius(300.f);
 	PushDetectionSphere->SetupAttachment(RootComponent);
 	PushDetectionSphere->SetCollisionProfileName("OverlapAllDynamic");
+	PushDetectionSphere->SetCollisionEnabled(ECollisionEnabled::ProbeOnly);
 }
 
 void AEcsactUnrealFpsCharacter::BeginPlay() {
@@ -48,8 +56,7 @@ void AEcsactUnrealFpsCharacter::BeginPlay() {
 }
 
 auto AEcsactUnrealFpsCharacter::SetMoveDirection(float X, float Y) -> void {
-	MoveDirX = X;
-	MoveDirY = Y;
+	MovementComponent->SetMoveDirection(X, Y);
 }
 
 bool AEcsactUnrealFpsCharacter::IsMoveInputIgnored() const {
@@ -57,24 +64,9 @@ bool AEcsactUnrealFpsCharacter::IsMoveInputIgnored() const {
 }
 
 void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
-	AddMovementInput(FVector::ForwardVector, MoveDirY);
-	AddMovementInput(FVector::RightVector, MoveDirX);
-
-	if(MoveDirX != 0.0f || MoveDirY != 0.0f) {
-		auto move_vector = FVector{
-			MoveDirX,
-			-MoveDirY,
-			GetActorLocation().Z,
-		};
-
-		auto new_rotation = move_vector.ToOrientationRotator();
-		new_rotation.Pitch = 0.f;
-		SetActorRotation(new_rotation);
-	}
-
 	Super::Tick(DeltaSeconds);
 
-	FirstPersonCameraComponent->SetWorldLocationAndRotationNoPhysics(
+	CameraComponent->SetWorldLocationAndRotationNoPhysics(
 		GetActorLocation() + CameraOffset,
 		CameraRotation
 	);
@@ -105,21 +97,11 @@ void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
 ////////////////////////////////////////////////////////////////////////////
 /// Input
 
-void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
+auto AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 	UInputComponent* PlayerInputComponent
-) {
+) -> void {
 	auto* eic = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if(!eic) {
-		UE_LOG(
-			LogTemplateCharacter,
-			Error,
-			TEXT("'%s' Failed to find an Enhanced Input Component! This template "
-					 "is built to use the Enhanced Input system. If you intend to use "
-					 "the legacy system, then you will need to update this C++ file."),
-			*GetNameSafe(this)
-		);
-		return;
-	}
+	check(eic);
 
 	eic->BindAction(
 		MoveAction,
@@ -150,14 +132,13 @@ void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
 		};
 
 		// Don't send any unncessary actions
-		if(move.x != MoveDirX || move.y != MoveDirY) {
+		if(!MovementComponent->IsMoveDirectionSimilar(move.x, move.y)) {
 			runner->PushAction(move);
-		}
-
-		// If we're being locally controlled we can should set the move direction
-		// immediately.
-		if(Controller) {
-			SetMoveDirection(move.x, move.y);
+			// If we're being locally controlled we can should set the move direction
+			// immediately.
+			if(Controller) {
+				SetMoveDirection(move.x, move.y);
+			}
 		}
 	}
 }
