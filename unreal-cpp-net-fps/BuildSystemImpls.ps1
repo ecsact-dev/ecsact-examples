@@ -5,8 +5,7 @@
 # system such as bazel, cmake, zig, etc.
 
 param (
-	[Parameter(Mandatory)] $ProjectDir,
-	[Parameter(Mandatory)] $WasmOutputFilePath
+	[Parameter(Mandatory)] $ProjectDir
 )
 
 if (${env:UE-ZenSubprocessDataPath})
@@ -60,6 +59,8 @@ ecsact codegen $EcsactFiles `
 emcc -v
 
 mkdir -Force "$ProjectDir/Binaries" | Out-Null
+
+$WasmOutputFilePath = "$ProjectDir/Binaries/SystemImpls.wasm"
 
 # NOTE: PURE_WASI=1 removes emscripten_* functions that are not compatible with the Ecsact SI Wasm host
 emcc -std=c++20 --no-entry -I"$EcsactInc" -I"SystemImpls/generated" `
