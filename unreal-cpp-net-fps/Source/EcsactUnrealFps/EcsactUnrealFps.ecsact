@@ -60,6 +60,20 @@ action Push {
 	}
 }
 
+component MoveDirection {
+	f32 x;
+	f32 y;
+}
+
+action Move {
+	i32 player_id;
+	f32 x;
+	f32 y;
+
+	readonly Player;
+	readwrite MoveDirection;
+}
+
 component RemovePushingTag;
 
 system ApplyPush {

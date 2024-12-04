@@ -10,6 +10,7 @@
 #include "StateTreeExecutionTypes.h"
 #include "StateTreeLinker.h"
 #include "EcsactUnreal/EcsactExecution.h"
+#include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
 #include "EcsactUnrealFps/EcsactPlayerEntitySpawner.h"
 #include "EcsactUnreal/EcsactRunner.h"
 

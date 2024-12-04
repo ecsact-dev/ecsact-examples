@@ -517,3 +517,53 @@ struct example::fps::Push::context {
 	}
 	
 };
+
+struct example::fps::Move::context {
+	[[no_unique_address]] ::ecsact::execution_context _ctx;
+	
+	template<typename T, typename... AssocFields>
+	auto get(AssocFields&&... assoc_fields) -> T {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.Move context.get<T> may only be called with a component readable\n"
+		"| by the system. Did you forget to add readonly or readwrite capabilities? The\n"
+		"| following components are allowed:\n"
+		"| 	- example.fps.Player\n"
+		"| 	- example.fps.MoveDirection\n"
+		"| \n");
+	}
+	
+	template<typename T, typename... AssocFields>
+	auto update(const T& updated_component, AssocFields&&... assoc_fields) -> void {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.Move context.update<T> may only be called with a component\n"
+		"| writable by the system. Did you forget to add readwrite capabilities? The following\n"
+		"| components are allowed:\n"
+		"| 	- example.fps.MoveDirection\n"
+		"| \n");
+	}
+	
+	template<> auto get<example::fps::Player>() -> example::fps::Player {
+		return _ctx.get<example::fps::Player>();
+	}
+	template<> auto get<example::fps::MoveDirection>() -> example::fps::MoveDirection {
+		return _ctx.get<example::fps::MoveDirection>();
+	}
+	template<> auto update<example::fps::MoveDirection>(const example::fps::MoveDirection& updated_component) -> void {
+		_ctx.update<example::fps::MoveDirection>(updated_component);
+	}
+	auto entity() const -> ecsact_entity_id {
+		return _ctx.entity();
+	}
+	
+	
+	auto action() const -> example::fps::Move {
+		return _ctx.action<example::fps::Move>();
+	}
+	
+};

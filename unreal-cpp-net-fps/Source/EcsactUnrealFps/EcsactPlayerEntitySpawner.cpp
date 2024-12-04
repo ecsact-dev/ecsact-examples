@@ -5,6 +5,8 @@
 #include "EcsactUnreal/EcsactAsyncRunner.h"
 #include "EcsactUnreal/EcsactSyncRunner.h"
 #include "EcsactUnrealFpsPlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "EcsactUnrealFpsCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "ecsact/runtime/dynamic.h"
 
@@ -21,6 +23,7 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	// implemtnation for details.
 	Runner->CreateEntity()
 		.AddComponent(example::fps::Player{LocallyControllerPlayerId})
+		.AddComponent(example::fps::MoveDirection{})
 		.AddComponent(example::fps::Position{})
 		.AddComponent(example::fps::Rotation{});
 }
@@ -104,14 +107,18 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 	);
 
 	if(ProxyPlayerClass) {
-		auto* Actor = GetWorld()->SpawnActor<AActor>(
+		auto spawn_params = FActorSpawnParameters{};
+		spawn_params.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		auto* proxy_character = GetWorld()->SpawnActor<AEcsactUnrealFpsCharacter>(
 			ProxyPlayerClass,
 			SpawnLocation,
-			SpawnRotator
+			SpawnRotator,
+			spawn_params
 		);
 
-		check(Actor);
-		PlayerEntities.Add(Entity, Actor);
+		check(proxy_character);
+		PlayerEntities.Add(Entity, proxy_character);
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("ProxyPlayerClass is unset"));
 	}
@@ -199,31 +206,41 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	auto result = AssignedControllers.Find(Entity);
-
-	if(result) {
-		return;
-	}
-	auto ActorWeakPtr = PlayerEntities.Find(Entity);
-
-	if(!ActorWeakPtr) {
+	auto itr = PlayerEntities.Find(Entity);
+	if(!itr) {
 		return;
 	}
 
-	if(ActorWeakPtr->IsValid()) {
-		auto* actor = ActorWeakPtr->Get();
-		// UE_LOG(
-		// 	LogTemp,
-		// 	Error,
-		// 	TEXT("Entity %i Pos %f %f %f"),
-		// 	Entity,
-		// 	Position.X,
-		// 	Position.Y,
-		// 	Position.Z
-		// );
-		actor->SetActorLocation(FVector{Position.X, Position.Y, Position.Z});
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("The found player controller is invalid"));
+	auto player = itr->Get();
+	if(!player) {
+		return;
+	}
+
+	if(!player->Controller) {
+		auto desired_location = FVector{Position.X, Position.Y, Position.Z};
+		player->SetActorLocation(desired_location);
+	}
+}
+
+auto UEcsactPlayerEntitySpawner::UpdateMovedirection_Implementation( //
+	int32                    Entity,
+	FExampleFpsMovedirection MoveDirection
+) -> void {
+	auto itr = PlayerEntities.Find(Entity);
+	if(!itr) {
+		return;
+	}
+
+	auto player = itr->Get();
+	if(!player) {
+		return;
+	}
+
+	// Only set the move direction if they don't have a controller. If they have a
+	// controller they are being controlled locally and are handling the move
+	// direction themselves.
+	if(!player->Controller) {
+		player->SetMoveDirection(MoveDirection.X, MoveDirection.Y);
 	}
 }
 

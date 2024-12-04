@@ -40,3 +40,7 @@ void example__fps__Push (struct ecsact_system_execution_context* cctx) {
 	example::fps::Push::context ctx{cctx};
 	example::fps::Push::impl(ctx);
 }
+void example__fps__Move (struct ecsact_system_execution_context* cctx) {
+	example::fps::Move::context ctx{cctx};
+	example::fps::Move::impl(ctx);
+}

@@ -23,6 +23,9 @@ UCLASS(config = Game)
 class AEcsactUnrealFpsCharacter : public ACharacter {
 	GENERATED_BODY()
 
+	float MoveDirX;
+	float MoveDirY;
+
 	UPROPERTY(EditAnywhere, Category = Camera)
 	FVector CameraOffset;
 
@@ -59,6 +62,8 @@ class AEcsactUnrealFpsCharacter : public ACharacter {
 public:
 	AEcsactUnrealFpsCharacter();
 
+	auto IsMoveInputIgnored() const -> bool override;
+
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
@@ -85,6 +90,8 @@ public:
 	// TODO: Use some kind of entity actor component
 	ecsact_entity_id CharacterEntity = ECSACT_INVALID_ID(entity);
 	int32            CharacterPlayerId = -1;
+
+	auto SetMoveDirection(float X, float Y) -> void;
 
 protected:
 	/** Called for movement input */

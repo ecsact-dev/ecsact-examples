@@ -115,14 +115,14 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		auto vec = FVector{Position.X, Position.Y, Position.Z};
 
 		for(auto EntityHandle : EntityHandles) {
-			UE_LOG(
-				LogTemp,
-				Warning,
-				TEXT("Ecsact Position updated to %f, %f, %f"),
-				Position.X,
-				Position.Y,
-				Position.Z
-			);
+			// UE_LOG(
+			// 	LogTemp,
+			// 	Warning,
+			// 	TEXT("Ecsact Position updated to %f, %f, %f"),
+			// 	Position.X,
+			// 	Position.Y,
+			// 	Position.Z
+			// );
 			auto* EcsactPositionFragment =
 				EntityManager.GetFragmentDataPtr<FEcsactPositionFragment>(EntityHandle);
 

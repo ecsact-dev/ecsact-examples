@@ -77,10 +77,18 @@ struct Toggle {
 	int8_t streaming;
 	auto operator<=>(const example::fps::Toggle&) const = default;
 };
-struct RemovePushingTag {
+struct MoveDirection {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(15);
+	float x;
+	float y;
+	auto operator<=>(const example::fps::MoveDirection&) const = default;
+};
+struct RemovePushingTag {
+	static constexpr bool transient = false;
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_component_id>(17);
 	auto operator<=>(const example::fps::RemovePushingTag&) const = default;
 };
 struct Push {
@@ -101,6 +109,16 @@ struct Push {
 	int16_t force_z;
 	auto operator<=>(const example::fps::Push&) const = default;
 };
+struct Move {
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_action_id>(16);
+	struct context;
+	static void impl(context&);
+	int32_t player_id;
+	float x;
+	float y;
+	auto operator<=>(const example::fps::Move&) const = default;
+};
 struct RemoveToggle {
 	static constexpr auto id = static_cast<ecsact_system_id>(10);
 	struct context;
@@ -117,27 +135,27 @@ struct PusherApplyExpired {
 	static void impl(context&);
 };
 struct ApplyPush {
-	static constexpr auto id = static_cast<ecsact_system_id>(16);
-	struct context;
-	static void impl(context&);
-};
-struct ApplyVelocity {
-	static constexpr auto id = static_cast<ecsact_system_id>(17);
-	struct context;
-	static void impl(context&);
-};
-struct ApplyDrag {
 	static constexpr auto id = static_cast<ecsact_system_id>(18);
 	struct context;
 	static void impl(context&);
 };
-struct TogglePushedEntities {
+struct ApplyVelocity {
 	static constexpr auto id = static_cast<ecsact_system_id>(19);
 	struct context;
 	static void impl(context&);
 };
-struct RemovePushing {
+struct ApplyDrag {
 	static constexpr auto id = static_cast<ecsact_system_id>(20);
+	struct context;
+	static void impl(context&);
+};
+struct TogglePushedEntities {
+	static constexpr auto id = static_cast<ecsact_system_id>(21);
+	struct context;
+	static void impl(context&);
+};
+struct RemovePushing {
+	static constexpr auto id = static_cast<ecsact_system_id>(22);
 	struct context;
 	static void impl(context&);
 };

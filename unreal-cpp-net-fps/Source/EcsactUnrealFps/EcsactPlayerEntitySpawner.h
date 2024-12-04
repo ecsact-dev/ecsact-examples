@@ -4,6 +4,8 @@
 #include "EcsactUnrealFps__ecsact__ue.h"
 #include "EcsactPlayerEntitySpawner.generated.h"
 
+class AEcsactUnrealFpsCharacter;
+
 UCLASS(Abstract)
 
 class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
@@ -38,7 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LocallyControllerPlayerId = 0;
 
-	TMap<int32, TWeakObjectPtr<AActor>> PlayerEntities;
+	TMap<int32, TWeakObjectPtr<AEcsactUnrealFpsCharacter>> PlayerEntities;
 
 	auto GetPlayerPosition(ecsact_entity_id Entity) -> FVector;
 
@@ -60,6 +62,11 @@ public:
 		FExampleFpsPosition Position
 	) -> void override;
 
+	auto UpdateMovedirection_Implementation( //
+		int32                    Entity,
+		FExampleFpsMovedirection MoveDirection
+	) -> void override;
+
 	auto InitPusher_Implementation( //
 		int32             Entity,
 		FExampleFpsPusher Pusher
@@ -71,7 +78,7 @@ public:
 	) -> void override;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProxyPlayerClass;
+	TSubclassOf<AEcsactUnrealFpsCharacter> ProxyPlayerClass;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> PushEffectClass;

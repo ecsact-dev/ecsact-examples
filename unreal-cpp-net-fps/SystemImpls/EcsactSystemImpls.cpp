@@ -44,6 +44,14 @@ auto example::fps::Push::impl(context& ctx) -> void {
 	}
 }
 
+auto example::fps::Move::impl(context& ctx) -> void {
+	auto player_id = ctx.get<Player>().player_id;
+	auto action = ctx.action();
+	if(player_id == action.player_id) {
+		ctx.update(MoveDirection{action.x, action.y});
+	}
+}
+
 auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 	auto player_id = ctx._ctx.parent().get<Player>().player_id;
 	if(player_id != ctx._ctx.parent().action<Push>().player_id) {

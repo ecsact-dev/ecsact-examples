@@ -51,14 +51,20 @@ FExampleFpsToggle FExampleFpsToggle::FromEcsactComponentData(const void* compone
 	result.Streaming = static_cast<const example::fps::Toggle*>(component_data)->streaming;
 	return result;
 }
+FExampleFpsMovedirection FExampleFpsMovedirection::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsMovedirection{};
+	result.X = static_cast<const example::fps::MoveDirection*>(component_data)->x;
+	result.Y = static_cast<const example::fps::MoveDirection*>(component_data)->y;
+	return result;
+}
 FExampleFpsRemovepushingtag FExampleFpsRemovepushingtag::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsRemovepushingtag{};
 	return result;
 }
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 16);
-	UpdateComponentFns.Init(nullptr, 16);
-	RemoveComponentFns.Init(nullptr, 16);
+	InitComponentFns.Init(nullptr, 18);
+	UpdateComponentFns.Init(nullptr, 18);
+	RemoveComponentFns.Init(nullptr, 18);
 	InitComponentFns[1] = &ThisClass::RawInitPlayer;
 	UpdateComponentFns[1] = &ThisClass::RawUpdatePlayer;
 	RemoveComponentFns[1] = &ThisClass::RawRemovePlayer;
@@ -86,9 +92,12 @@ UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
 	InitComponentFns[9] = &ThisClass::RawInitToggle;
 	UpdateComponentFns[9] = &ThisClass::RawUpdateToggle;
 	RemoveComponentFns[9] = &ThisClass::RawRemoveToggle;
-	InitComponentFns[15] = &ThisClass::RawInitRemovepushingtag;
-	UpdateComponentFns[15] = &ThisClass::RawUpdateRemovepushingtag;
-	RemoveComponentFns[15] = &ThisClass::RawRemoveRemovepushingtag;
+	InitComponentFns[15] = &ThisClass::RawInitMovedirection;
+	UpdateComponentFns[15] = &ThisClass::RawUpdateMovedirection;
+	RemoveComponentFns[15] = &ThisClass::RawRemoveMovedirection;
+	InitComponentFns[17] = &ThisClass::RawInitRemovepushingtag;
+	UpdateComponentFns[17] = &ThisClass::RawUpdateRemovepushingtag;
+	RemoveComponentFns[17] = &ThisClass::RawRemoveRemovepushingtag;
 	
 }
 
@@ -184,6 +193,15 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdateToggle(int32 entity, const void*
 }
 void UExampleFpsEcsactRunnerSubsystem::RawRemoveToggle(int32 entity, const void* component) {
 	RemoveToggle(entity, FExampleFpsToggle::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitMovedirection(int32 entity, const void* component) {
+	InitMovedirection(entity, FExampleFpsMovedirection::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateMovedirection(int32 entity, const void* component) {
+	UpdateMovedirection(entity, FExampleFpsMovedirection::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveMovedirection(int32 entity, const void* component) {
+	RemoveMovedirection(entity, FExampleFpsMovedirection::FromEcsactComponentData(component));
 }
 void UExampleFpsEcsactRunnerSubsystem::RawInitRemovepushingtag(int32 entity, const void* component) {
 	InitRemovepushingtag(entity, FExampleFpsRemovepushingtag::FromEcsactComponentData(component));
@@ -299,6 +317,18 @@ void UExampleFpsEcsactRunnerSubsystem::UpdateToggle_Implementation(int32 Entity,
 }
 
 void UExampleFpsEcsactRunnerSubsystem::RemoveToggle_Implementation(int32 Entity, FExampleFpsToggle Toggle) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection) {
 	
 }
 

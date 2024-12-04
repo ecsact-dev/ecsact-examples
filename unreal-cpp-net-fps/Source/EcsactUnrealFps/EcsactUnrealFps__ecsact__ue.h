@@ -112,6 +112,18 @@ struct FExampleFpsToggle {
 };
 
 USTRUCT(BlueprintType)
+struct FExampleFpsMovedirection {
+	GENERATED_BODY()
+	
+	static FExampleFpsMovedirection FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Y;
+	
+};
+
+USTRUCT(BlueprintType)
 struct FExampleFpsRemovepushingtag {
 	GENERATED_BODY()
 	
@@ -153,6 +165,9 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitToggle(int32 Entity, const void* Component);
 	void RawUpdateToggle(int32 Entity, const void* Component);
 	void RawRemoveToggle(int32 Entity, const void* Component);
+	void RawInitMovedirection(int32 Entity, const void* Component);
+	void RawUpdateMovedirection(int32 Entity, const void* Component);
+	void RawRemoveMovedirection(int32 Entity, const void* Component);
 	void RawInitRemovepushingtag(int32 Entity, const void* Component);
 	void RawUpdateRemovepushingtag(int32 Entity, const void* Component);
 	void RawRemoveRemovepushingtag(int32 Entity, const void* Component);
@@ -246,6 +261,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Toggle"))
 	void RemoveToggle(int32 Entity, FExampleFpsToggle Toggle);
 	virtual void RemoveToggle_Implementation(int32 Entity, FExampleFpsToggle Toggle);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.MoveDirection"))
+	void InitMovedirection(int32 Entity, FExampleFpsMovedirection Movedirection);
+	virtual void InitMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.MoveDirection"))
+	void UpdateMovedirection(int32 Entity, FExampleFpsMovedirection Movedirection);
+	virtual void UpdateMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.MoveDirection"))
+	void RemoveMovedirection(int32 Entity, FExampleFpsMovedirection Movedirection);
+	virtual void RemoveMovedirection_Implementation(int32 Entity, FExampleFpsMovedirection Movedirection);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.RemovePushingTag"))
 	void InitRemovepushingtag(int32 Entity, FExampleFpsRemovepushingtag Removepushingtag);
 	virtual void InitRemovepushingtag_Implementation(int32 Entity, FExampleFpsRemovepushingtag Removepushingtag);

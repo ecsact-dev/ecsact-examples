@@ -6,6 +6,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/MovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "Engine/LocalPlayer.h"
 #include "EnhancedInputComponent.h"
@@ -42,19 +45,33 @@ AEcsactUnrealFpsCharacter::AEcsactUnrealFpsCharacter() {
 
 void AEcsactUnrealFpsCharacter::BeginPlay() {
 	Super::BeginPlay();
+}
 
-	// PushDetectionSphere->OnComponentBeginOverlap.AddDynamic(
-	// 	this,
-	// 	&AEcsactUnrealFpsCharacter::OnActorBeginOverlap
-	// );
-	//
-	// PushDetectionSphere->OnComponentEndOverlap.AddDynamic(
-	// 	this,
-	// 	&AEcsactUnrealFpsCharacter::OnActorEndOverlap
-	// );
+auto AEcsactUnrealFpsCharacter::SetMoveDirection(float X, float Y) -> void {
+	MoveDirX = X;
+	MoveDirY = Y;
+}
+
+bool AEcsactUnrealFpsCharacter::IsMoveInputIgnored() const {
+	return false;
 }
 
 void AEcsactUnrealFpsCharacter::Tick(float DeltaSeconds) {
+	AddMovementInput(FVector::ForwardVector, MoveDirY);
+	AddMovementInput(FVector::RightVector, MoveDirX);
+
+	if(MoveDirX != 0.0f || MoveDirY != 0.0f) {
+		auto move_vector = FVector{
+			MoveDirX,
+			-MoveDirY,
+			GetActorLocation().Z,
+		};
+
+		auto new_rotation = move_vector.ToOrientationRotator();
+		new_rotation.Pitch = 0.f;
+		SetActorRotation(new_rotation);
+	}
+
 	Super::Tick(DeltaSeconds);
 
 	FirstPersonCameraComponent->SetWorldLocationAndRotationNoPhysics(
@@ -120,19 +137,28 @@ void AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 }
 
 void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
+	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
+
 	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
+	FVector2D movement_vector = Value.Get<FVector2D>();
 
-	if(Controller != nullptr) {
-		// add movement
-		AddMovementInput(FVector::ForwardVector, MovementVector.Y);
-		AddMovementInput(FVector::RightVector, MovementVector.X);
+	if(runner) {
+		auto move = example::fps::Move{
+			.player_id = CharacterPlayerId,
+			.x = static_cast<float>(movement_vector.X),
+			.y = static_cast<float>(movement_vector.Y),
+		};
 
-		auto rotation =
-			FVector{MovementVector.X, -MovementVector.Y, GetActorLocation().Z}
-				.ToOrientationRotator();
+		// Don't send any unncessary actions
+		if(move.x != MoveDirX || move.y != MoveDirY) {
+			runner->PushAction(move);
+		}
 
-		Controller->SetControlRotation(rotation);
+		// If we're being locally controlled we can should set the move direction
+		// immediately.
+		if(Controller) {
+			SetMoveDirection(move.x, move.y);
+		}
 	}
 }
 
