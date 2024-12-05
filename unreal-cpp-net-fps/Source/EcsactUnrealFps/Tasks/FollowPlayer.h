@@ -7,8 +7,8 @@
 #include "StateTreeEvaluatorBase.h"
 #include "StateTreeExecutionContext.h"
 #include "StateTreeExecutionTypes.h"
-#include "Engine/TimerHandle.h"
 #include "MassSignalSubsystem.h"
+#include "MassNavigationFragments.h"
 
 #include "FollowPlayer.generated.h"
 
@@ -20,7 +20,7 @@ USTRUCT()
 
 struct ECSACTUNREALFPS_API FFollowPlayerInstanceData {
 	GENERATED_BODY() // nolint
-	UPROPERTY(EditAnywhere, Category = Parameter) FVector PlayerPosition;
+	UPROPERTY(VisibleAnywhere, Category = Input) FVector PlayerPosition;
 };
 
 USTRUCT()

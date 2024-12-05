@@ -9,10 +9,13 @@
 #include "MassStateTreeExecutionContext.h"
 #include "StateTreeExecutionTypes.h"
 #include "StateTreeLinker.h"
+<<<<<<< HEAD
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
 #include "EcsactUnrealFps/EcsactPlayerEntitySpawner.h"
 #include "EcsactUnreal/EcsactRunner.h"
+=======
+>>>>>>> 4dcb3a7 (feat: Mass Entities better state handling)
 
 EStateTreeRunStatus FFollowPlayer::EnterState(
 	FStateTreeExecutionContext&       Context,
@@ -30,6 +33,11 @@ EStateTreeRunStatus FFollowPlayer::EnterState(
 		UE::Mass::Signals::StateTreeActivate,
 		MassContext.GetEntity()
 	);
+	auto& MoveTarget = Context.GetExternalData(MoveTargetHandle);
+
+	MoveTarget.CreateNewAction(EMassMovementAction::Move, *Context.GetWorld());
+	MoveTarget.IntentAtGoal = EMassMovementAction::Move;
+	MoveTarget.SlackRadius = 50.f;
 
 	EStateTreeRunStatus Status = EStateTreeRunStatus::Running;
 	MoveToPlayerPosition(Context);
@@ -44,10 +52,8 @@ void FFollowPlayer::ExitState(
 	UE_LOG(LogTemp, Log, TEXT("Exiting State"));
 	auto& MoveTarget = Context.GetExternalData(MoveTargetHandle);
 
+	MoveTarget = {};
 	MoveTarget.CreateNewAction(EMassMovementAction::Stand, *Context.GetWorld());
-	MoveTarget.Center = FVector{0, 0, 0};
-	MoveTarget.DistanceToGoal = 0;
-	MoveTarget.SlackRadius = 0.f;
 	FMassStateTreeTaskBase::ExitState(Context, Transition);
 }
 
@@ -55,13 +61,7 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 	FStateTreeExecutionContext& Context,
 	const float                 DeltaTime
 ) const {
-	const auto& StreamingFragment = Context.GetExternalData(StreamFragmentHandle);
-
-	if(StreamingFragment.ShouldStream()) {
-		MoveToPlayerPosition(Context);
-	} else {
-		return EStateTreeRunStatus::Succeeded;
-	}
+	MoveToPlayerPosition(Context);
 
 	return EStateTreeRunStatus::Running;
 }
@@ -69,32 +69,12 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 void FFollowPlayer::MoveToPlayerPosition( //
 	FStateTreeExecutionContext& Context
 ) const {
-	auto runner = EcsactUnrealExecution::Runner(Context.GetWorld()).Get();
-	check(runner);
-	auto PlayerSpawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
+	auto&              MoveTarget = Context.GetExternalData(MoveTargetHandle);
 	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
-
-	// TODO: We currently only get the first player to follow instead of
-	// accounting for X amount
-	if(PlayerSpawner->PlayerEntities.Num() > 0) {
-		auto ActorWeakPtr = PlayerSpawner->PlayerEntities.begin().Value();
-		if(ActorWeakPtr.IsValid()) {
-			auto* pawn = ActorWeakPtr.Get();
-
-			InstanceData.PlayerPosition = pawn->GetActorLocation();
-		} else {
-			UE_LOG(LogTemp, Warning, TEXT("Player Actor is invalid"));
-		}
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("No players to follow"));
-	}
-
-	auto&       MoveTarget = Context.GetExternalData(MoveTargetHandle);
 	const auto& TransformFragment = Context.GetExternalData(TransformHandle);
 	const auto& PlayerPosition = InstanceData.PlayerPosition;
 
 	MoveTarget.Center = PlayerPosition;
-	MoveTarget.SlackRadius = 50.f;
 	MoveTarget.Forward =
 		(MoveTarget.Center - TransformFragment.GetTransform().GetLocation())
 			.GetSafeNormal();
@@ -102,9 +82,6 @@ void FFollowPlayer::MoveToPlayerPosition( //
 		MoveTarget.Center,
 		TransformFragment.GetTransform().GetLocation()
 	);
-
-	MoveTarget.CreateNewAction(EMassMovementAction::Move, *Context.GetWorld());
-	MoveTarget.IntentAtGoal = EMassMovementAction::Stand;
 }
 
 bool FFollowPlayer::Link(FStateTreeLinker& Linker) {

@@ -1,6 +1,7 @@
 #include "EcsactEntityMassSpawner.h"
 
 #include "MassMovementFragments.h"
+#include "MassStateTreeSubsystem.h"
 #include "Math/Vector.h"
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
@@ -45,6 +46,7 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 			})
 			.AddComponent(example::fps::MassEntity{})
 			.AddComponent(example::fps::Velocity{})
+			.AddComponent(example::fps::Toggle{})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
 				[](auto entity) {
 					UE_LOG(
@@ -217,12 +219,11 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 		return;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("INIT TOGGLE"));
-
 	UWorld* world = GetWorld();
-	auto    MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
+	auto    MassEntitySubsystem = world->GetSubsystem<UMassEntitySubsystem>();
 
-	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
+	FMassEntityManager& EntityManager =
+		MassEntitySubsystem->GetMutableEntityManager();
 
 	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
 
@@ -232,6 +233,8 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 	}
 
 	auto EntityHandles = *MassEntities.Find(EcsactEntity);
+	// Crap! I'm iterating over all entities even if they didn't get affect by the
+	// stream toggle
 
 	for(auto EntityHandle : EntityHandles) {
 		auto* StreamFragent =
@@ -250,8 +253,15 @@ auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
 	auto PushAction = example::fps::Push{
 		.player_id = PlayerId,
 		.radius = 500,
+<<<<<<< HEAD
 		.tick_count = 50,
 		.force = 10,
+=======
+		.tick_count = 250,
+		.force_x = 2,
+		.force_y = 2,
+		.force_z = 0,
+>>>>>>> 4dcb3a7 (feat: Mass Entities better state handling)
 	};
 	runner->PushAction(PushAction);
 }

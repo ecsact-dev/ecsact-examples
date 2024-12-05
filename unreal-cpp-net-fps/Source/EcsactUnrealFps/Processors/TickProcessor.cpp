@@ -80,6 +80,15 @@ void UTickProcessor::Execute(
 						TransformFragments[i].GetTransform().GetLocation();
 					const auto& Entity = EntityFragments[i].GetId();
 
+					// UE_LOG(
+					// 	LogTemp,
+					// 	Log,
+					// 	TEXT("Current transform location of entity %i: %f, %f, %f"),
+					// 	i,
+					// 	TransformLoc.X,
+					// 	TransformLoc.Y,
+					// 	TransformLoc.Z
+					// );
 					runner->Stream(
 						Entity,
 						example::fps::Position{
