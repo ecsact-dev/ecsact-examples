@@ -4,6 +4,7 @@
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFps/EcsactPlayerEntitySpawner.h"
 #include "EcsactUnreal/EcsactRunner.h"
+#include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
 
 FEcsactTracker::FEcsactTracker() {
 }

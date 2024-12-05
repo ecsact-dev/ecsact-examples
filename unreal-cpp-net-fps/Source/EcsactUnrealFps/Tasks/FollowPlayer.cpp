@@ -9,13 +9,6 @@
 #include "MassStateTreeExecutionContext.h"
 #include "StateTreeExecutionTypes.h"
 #include "StateTreeLinker.h"
-<<<<<<< HEAD
-#include "EcsactUnreal/EcsactExecution.h"
-#include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
-#include "EcsactUnrealFps/EcsactPlayerEntitySpawner.h"
-#include "EcsactUnreal/EcsactRunner.h"
-=======
->>>>>>> 4dcb3a7 (feat: Mass Entities better state handling)
 
 EStateTreeRunStatus FFollowPlayer::EnterState(
 	FStateTreeExecutionContext&       Context,

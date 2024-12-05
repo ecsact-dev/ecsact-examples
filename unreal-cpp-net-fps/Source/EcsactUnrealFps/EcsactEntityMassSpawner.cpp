@@ -253,15 +253,8 @@ auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
 	auto PushAction = example::fps::Push{
 		.player_id = PlayerId,
 		.radius = 500,
-<<<<<<< HEAD
-		.tick_count = 50,
-		.force = 10,
-=======
 		.tick_count = 250,
-		.force_x = 2,
-		.force_y = 2,
-		.force_z = 0,
->>>>>>> 4dcb3a7 (feat: Mass Entities better state handling)
+		.force = 2,
 	};
 	runner->PushAction(PushAction);
 }

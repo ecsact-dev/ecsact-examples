@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstdlib>
+#include <algorithm>
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
