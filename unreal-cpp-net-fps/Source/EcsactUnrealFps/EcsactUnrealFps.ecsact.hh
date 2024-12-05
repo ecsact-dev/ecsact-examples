@@ -65,9 +65,9 @@ struct Pushing {
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(8);
 	int16_t tick_count;
-	int16_t force_x;
-	int16_t force_y;
-	int16_t force_z;
+	float force_x;
+	float force_y;
+	float force_z;
 	auto operator<=>(const example::fps::Pushing&) const = default;
 };
 struct Toggle {
@@ -104,9 +104,7 @@ struct Push {
 	int32_t player_id;
 	int16_t radius;
 	int16_t tick_count;
-	int16_t force_x;
-	int16_t force_y;
-	int16_t force_z;
+	float force;
 	auto operator<=>(const example::fps::Push&) const = default;
 };
 struct Move {

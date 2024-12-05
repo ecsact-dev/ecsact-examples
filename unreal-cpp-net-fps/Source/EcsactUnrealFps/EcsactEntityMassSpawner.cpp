@@ -251,9 +251,7 @@ auto UEcsactEntityMassSpawner::Push(int32 PlayerId) -> void {
 		.player_id = PlayerId,
 		.radius = 500,
 		.tick_count = 50,
-		.force_x = 50,
-		.force_y = 50,
-		.force_z = 0,
+		.force = 10,
 	};
 	runner->PushAction(PushAction);
 }

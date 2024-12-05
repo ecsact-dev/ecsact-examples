@@ -53,27 +53,25 @@ auto example::fps::Move::impl(context& ctx) -> void {
 }
 
 auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
+	auto push = ctx._ctx.parent().action<Push>();
 	auto player_id = ctx._ctx.parent().get<Player>().player_id;
-	if(player_id != ctx._ctx.parent().action<Push>().player_id) {
+	if(player_id != push.player_id) {
 		return;
 	}
 
-	const auto parent_pos = ctx._ctx.parent().get<Position>();
-	const auto tick_count = ctx._ctx.parent().action<Push>().tick_count;
-	const auto radius = ctx._ctx.parent().action<Push>().radius;
-
-	const auto force_x = ctx._ctx.parent().action<Push>().force_x;
-	const auto force_y = ctx._ctx.parent().action<Push>().force_y;
-	const auto force_z = ctx._ctx.parent().action<Push>().force_z;
-
+	const auto pusher_pos = ctx._ctx.parent().get<Position>();
 	const auto position = ctx.get<Position>();
 
-	if(is_overlapping(radius, position, parent_pos)) {
+	if(is_overlapping(push.radius, position, pusher_pos)) {
+		auto push_dir_x = std::clamp(position.x - pusher_pos.x, -1.f, 1.f);
+		auto push_dir_y = std::clamp(position.y - pusher_pos.y, -1.f, 1.f);
+		auto push_dir_z = 0.f; // TODO: add a little Z to spice it up
+
 		ctx.add(Pushing{
-			.tick_count = tick_count,
-			.force_x = force_x,
-			.force_y = force_y,
-			.force_z = force_z,
+			.tick_count = push.tick_count,
+			.force_x = push_dir_x * push.force,
+			.force_y = push_dir_y * push.force,
+			.force_z = push_dir_z * push.force,
 		});
 		ctx.add<Toggle>({.streaming = false});
 	}

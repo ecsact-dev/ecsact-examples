@@ -16,9 +16,9 @@ component Velocity {
 
 component Pushing {
 	i16 tick_count;
-	i16 force_x;
-	i16 force_y;
-	i16 force_z;
+	f32 force_x;
+	f32 force_y;
+	f32 force_z;
 }
 
 component Toggle {
@@ -44,9 +44,7 @@ action Push {
 	i32 player_id;
 	i16 radius;
 	i16 tick_count;
-	i16 force_x;
-	i16 force_y;
-	i16 force_z;
+	f32 force;
 
 	readonly Player;
 	readonly Position;
