@@ -62,9 +62,9 @@ FExampleFpsRemovepushingtag FExampleFpsRemovepushingtag::FromEcsactComponentData
 	return result;
 }
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 18);
-	UpdateComponentFns.Init(nullptr, 18);
-	RemoveComponentFns.Init(nullptr, 18);
+	InitComponentFns.Init(nullptr, 17);
+	UpdateComponentFns.Init(nullptr, 17);
+	RemoveComponentFns.Init(nullptr, 17);
 	InitComponentFns[1] = &ThisClass::RawInitPlayer;
 	UpdateComponentFns[1] = &ThisClass::RawUpdatePlayer;
 	RemoveComponentFns[1] = &ThisClass::RawRemovePlayer;
@@ -92,12 +92,12 @@ UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
 	InitComponentFns[9] = &ThisClass::RawInitToggle;
 	UpdateComponentFns[9] = &ThisClass::RawUpdateToggle;
 	RemoveComponentFns[9] = &ThisClass::RawRemoveToggle;
-	InitComponentFns[15] = &ThisClass::RawInitMovedirection;
-	UpdateComponentFns[15] = &ThisClass::RawUpdateMovedirection;
-	RemoveComponentFns[15] = &ThisClass::RawRemoveMovedirection;
-	InitComponentFns[17] = &ThisClass::RawInitRemovepushingtag;
-	UpdateComponentFns[17] = &ThisClass::RawUpdateRemovepushingtag;
-	RemoveComponentFns[17] = &ThisClass::RawRemoveRemovepushingtag;
+	InitComponentFns[14] = &ThisClass::RawInitMovedirection;
+	UpdateComponentFns[14] = &ThisClass::RawUpdateMovedirection;
+	RemoveComponentFns[14] = &ThisClass::RawRemoveMovedirection;
+	InitComponentFns[16] = &ThisClass::RawInitRemovepushingtag;
+	UpdateComponentFns[16] = &ThisClass::RawUpdateRemovepushingtag;
+	RemoveComponentFns[16] = &ThisClass::RawRemoveRemovepushingtag;
 	
 }
 

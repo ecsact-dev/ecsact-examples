@@ -80,7 +80,7 @@ struct Toggle {
 struct MoveDirection {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(15);
+	static constexpr auto id = static_cast<ecsact_component_id>(14);
 	float x;
 	float y;
 	auto operator<=>(const example::fps::MoveDirection&) const = default;
@@ -88,14 +88,14 @@ struct MoveDirection {
 struct RemovePushingTag {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(17);
+	static constexpr auto id = static_cast<ecsact_component_id>(16);
 	auto operator<=>(const example::fps::RemovePushingTag&) const = default;
 };
 struct Push {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(13);
+	static constexpr auto id = static_cast<ecsact_action_id>(12);
 	struct PushEntities {
-		static constexpr auto id = static_cast<ecsact_system_id>(14);
+		static constexpr auto id = static_cast<ecsact_system_id>(13);
 		struct context;
 		static void impl(context&);
 	};
@@ -109,7 +109,7 @@ struct Push {
 };
 struct Move {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(16);
+	static constexpr auto id = static_cast<ecsact_action_id>(15);
 	struct context;
 	static void impl(context&);
 	int32_t player_id;
@@ -117,43 +117,38 @@ struct Move {
 	float y;
 	auto operator<=>(const example::fps::Move&) const = default;
 };
-struct RemoveToggle {
+struct PusherExpireChecker {
 	static constexpr auto id = static_cast<ecsact_system_id>(10);
 	struct context;
 	static void impl(context&);
 };
-struct PusherExpireChecker {
+struct PusherApplyExpired {
 	static constexpr auto id = static_cast<ecsact_system_id>(11);
 	struct context;
 	static void impl(context&);
 };
-struct PusherApplyExpired {
-	static constexpr auto id = static_cast<ecsact_system_id>(12);
-	struct context;
-	static void impl(context&);
-};
 struct ApplyPush {
-	static constexpr auto id = static_cast<ecsact_system_id>(18);
+	static constexpr auto id = static_cast<ecsact_system_id>(17);
 	struct context;
 	static void impl(context&);
 };
 struct ApplyVelocity {
-	static constexpr auto id = static_cast<ecsact_system_id>(19);
+	static constexpr auto id = static_cast<ecsact_system_id>(18);
 	struct context;
 	static void impl(context&);
 };
 struct ApplyDrag {
-	static constexpr auto id = static_cast<ecsact_system_id>(20);
+	static constexpr auto id = static_cast<ecsact_system_id>(19);
 	struct context;
 	static void impl(context&);
 };
 struct TogglePushedEntities {
-	static constexpr auto id = static_cast<ecsact_system_id>(21);
+	static constexpr auto id = static_cast<ecsact_system_id>(20);
 	struct context;
 	static void impl(context&);
 };
 struct RemovePushing {
-	static constexpr auto id = static_cast<ecsact_system_id>(22);
+	static constexpr auto id = static_cast<ecsact_system_id>(21);
 	struct context;
 	static void impl(context&);
 };

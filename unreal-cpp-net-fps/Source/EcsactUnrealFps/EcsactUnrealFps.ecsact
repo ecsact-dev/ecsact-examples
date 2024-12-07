@@ -25,11 +25,6 @@ component Toggle {
 	i8 streaming;
 }
 
-system RemoveToggle(parallel: false) {
-	include MassEntity;
-	removes Toggle;
-}
-
 system PusherExpireChecker {
 	readwrite Pusher;
 	adds PusherExpired;
@@ -53,8 +48,8 @@ action Push {
 	system PushEntities {
 		include MassEntity;
 		readonly Position;
+		readwrite Toggle;
 		adds Pushing;
-		adds Toggle;
 	}
 }
 
@@ -87,14 +82,18 @@ system ApplyVelocity {
 
 system ApplyDrag {
 	readwrite Velocity;
+	readwrite Toggle;
 	readonly Pushing;
 	adds RemovePushingTag;
-	adds Toggle;
 }
 
 system TogglePushedEntities {
 	stream_toggle Position;
 	readonly Toggle;
+
+	notify {
+		onchange Toggle;
+	}
 }
 
 system RemovePushing {

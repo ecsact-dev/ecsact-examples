@@ -6,6 +6,8 @@
 
 UCLASS()
 
+// TODO(Kelwan): Rename this class, it's not clear what it does. Move some logic
+// to other processes
 class ECSACTUNREALFPS_API UTickProcessor : public UMassProcessor {
 	GENERATED_BODY() // nolint
 

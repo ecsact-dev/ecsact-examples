@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <algorithm>
+#include <string>
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
@@ -58,6 +59,7 @@ auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 
 	const auto pusher_pos = ctx._ctx.parent().get<Position>();
 	const auto position = ctx.get<Position>();
+	auto       toggle = ctx.get<Toggle>();
 
 	if(is_overlapping(push.radius, position, pusher_pos)) {
 		auto push_dir_x = std::clamp(position.x - pusher_pos.x, -1.f, 1.f);
@@ -70,7 +72,9 @@ auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
 			.force_y = push_dir_y * push.force,
 			.force_z = push_dir_z * push.force,
 		});
-		ctx.add<Toggle>({.streaming = false});
+
+		toggle.streaming = false;
+		ctx.update(toggle);
 	}
 }
 
@@ -117,14 +121,16 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 	const auto pushing = ctx.get<Pushing>();
 	auto       velocity = ctx.get<Velocity>();
+	auto       toggle = ctx.get<Toggle>();
 
 	velocity.x = velocity.x * 0.9f;
 	velocity.y = velocity.y * 0.9f;
 	velocity.z = velocity.z * 0.9f;
 
 	if(velocity.x <= 2 && pushing.tick_count <= 0) {
-		ctx.add<Toggle>({.streaming = true});
+		toggle.streaming = true;
 		ctx.add<RemovePushingTag>();
+		ctx.update(toggle);
 	}
 	ctx.update(velocity);
 }
@@ -133,9 +139,6 @@ auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
 	const auto toggle = ctx.get<Toggle>();
 
 	ctx.stream_toggle<Position>(toggle.streaming);
-}
-
-auto example::fps::RemoveToggle::impl(context& ctx) -> void {
 }
 
 auto example::fps::RemovePushing::impl(context& ctx) -> void {

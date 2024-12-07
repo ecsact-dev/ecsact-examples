@@ -14,11 +14,15 @@ bool FEcsactTracker::Link(FStateTreeLinker& Linker) {
 	return FMassStateTreeTaskBase::Link(Linker);
 }
 
-// EStateTreeRunStatus FEcsactTracker::EnterState(
-// 	FStateTreeExecutionContext&       Context,
-// 	const FStateTreeTransitionResult& Transition
-// ) const {
-// }
+EStateTreeRunStatus FEcsactTracker::EnterState(
+	FStateTreeExecutionContext&       Context,
+	const FStateTreeTransitionResult& Transition
+) const {
+	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
+	InstanceData.bIsStreaming = true;
+
+	return EStateTreeRunStatus::Running;
+}
 
 EStateTreeRunStatus FEcsactTracker::Tick( //
 	FStateTreeExecutionContext& Context,

@@ -14,6 +14,8 @@
 
 UCLASS(Abstract)
 
+// TODO(Kelwan): MassSpawner does more than its name implies and should be
+// separated before merging to main
 class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT
 
@@ -55,7 +57,7 @@ public:
 		FExampleFpsPosition Position
 	) -> void override;
 
-	auto InitToggle_Implementation( //
+	auto UpdateToggle_Implementation( //
 		int32             Entity,
 		FExampleFpsToggle Toggle
 	) -> void override;

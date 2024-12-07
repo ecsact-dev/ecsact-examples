@@ -14,7 +14,7 @@ USTRUCT()
 
 struct ECSACTUNREALFPS_API FEcsactTrackerInstanceData {
 	GENERATED_BODY() // nolint
-	UPROPERTY(VisibleAnywhere, Category = Output) bool bIsStreaming = false;
+	UPROPERTY(EditAnywhere, Category = Output) bool bIsStreaming = false;
 	UPROPERTY(VisibleAnywhere, Category = Output) FVector PlayerPosition;
 };
 
@@ -32,6 +32,11 @@ struct ECSACTUNREALFPS_API FEcsactTracker : public FMassStateTreeTaskBase {
 	}
 
 	virtual bool Link(FStateTreeLinker& Linker) override;
+
+	virtual EStateTreeRunStatus EnterState(
+		FStateTreeExecutionContext&       Context,
+		const FStateTreeTransitionResult& Transition
+	) const override;
 
 	virtual EStateTreeRunStatus Tick(
 		FStateTreeExecutionContext& Context,

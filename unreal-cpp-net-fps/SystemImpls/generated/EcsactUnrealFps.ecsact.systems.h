@@ -14,10 +14,6 @@ ECSACT_EXPORT("example__fps__Move")
 void example__fps__Move(struct ecsact_system_execution_context*);
 
 ECSACT_EXTERN
-ECSACT_EXPORT("example__fps__RemoveToggle")
-void example__fps__RemoveToggle(struct ecsact_system_execution_context*);
-
-ECSACT_EXTERN
 ECSACT_EXPORT("example__fps__PusherExpireChecker")
 void example__fps__PusherExpireChecker(struct ecsact_system_execution_context*);
 

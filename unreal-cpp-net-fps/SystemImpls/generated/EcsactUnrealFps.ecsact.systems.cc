@@ -1,9 +1,5 @@
 // GENERATED FILE - DO NOT EDIT
 #include "EcsactUnrealFps.ecsact.systems.hh"
-void example__fps__RemoveToggle (struct ecsact_system_execution_context* cctx) {
-	example::fps::RemoveToggle::context ctx{cctx};
-	example::fps::RemoveToggle::impl(ctx);
-}
 void example__fps__PusherExpireChecker (struct ecsact_system_execution_context* cctx) {
 	example::fps::PusherExpireChecker::context ctx{cctx};
 	example::fps::PusherExpireChecker::impl(ctx);

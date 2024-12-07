@@ -11,7 +11,6 @@
 #include "EcsactUnreal/EcsactRunner.h"
 #include "../Fragments/EcsactFragments.h"
 #include "../EcsactUnrealFps.ecsact.hh"
-#include "UObject/UnrealNames.h"
 
 UTickProcessor::UTickProcessor() {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
@@ -75,7 +74,6 @@ void UTickProcessor::Execute(
 				const bool ShouldStream = StreamFragments[i].ShouldStream();
 
 				if(ShouldStream) {
-					// UE_LOG(LogTemp, Log, TEXT("Streaming mass entity"));
 					const auto& TransformLoc =
 						TransformFragments[i].GetTransform().GetLocation();
 					const auto& Entity = EntityFragments[i].GetId();
@@ -101,7 +99,7 @@ void UTickProcessor::Execute(
 					auto&       Transform = TransformFragments[i].GetMutableTransform();
 					const auto& Position = PositionFragments[i].GetPosition();
 
-					const auto& Location = Transform.GetLocation();
+					// const auto& Location = Transform.GetLocation();
 
 					// UE_LOG(
 					// 	LogTemp,
@@ -112,7 +110,7 @@ void UTickProcessor::Execute(
 					// 	Location.Y,
 					// 	Location.Z
 					// );
-					//
+
 					// UE_LOG(
 					// 	LogTemp,
 					// 	Log,
