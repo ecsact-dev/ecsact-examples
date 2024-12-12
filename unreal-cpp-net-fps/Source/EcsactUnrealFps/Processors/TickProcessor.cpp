@@ -53,40 +53,28 @@ void UTickProcessor::Execute(
 			UMassSignalSubsystem& SignalSubsystem =
 				Context.GetMutableSubsystemChecked<UMassSignalSubsystem>();
 
-			const auto& Entities = Context.GetEntities();
+			auto Entities = Context.GetEntities();
 			SignalSubsystem.SignalEntities(
 				UE::Mass::Signals::StateTreeActivate,
 				Entities
 			);
 
-			const auto& StreamFragments =
-				Context.GetFragmentView<FEcsactStreamFragment>();
-
-			const auto& EntityFragments =
-				Context.GetFragmentView<FEcsactEntityFragment>();
-
+			const auto NumEntities = Context.GetNumEntities();
+			auto StreamFragments = Context.GetFragmentView<FEcsactStreamFragment>();
+			auto EntityFragments = Context.GetFragmentView<FEcsactEntityFragment>();
 			auto TransformFragments =
 				Context.GetMutableFragmentView<FTransformFragment>();
-			const auto& PositionFragments =
+			auto PositionFragments =
 				Context.GetFragmentView<FEcsactPositionFragment>();
 
-			for(int i = 0; i < TransformFragments.Num(); ++i) {
+			for(int32 i = 0; NumEntities > i; ++i) {
 				const bool ShouldStream = StreamFragments[i].ShouldStream();
 
 				if(ShouldStream) {
-					const auto& TransformLoc =
+					auto TransformLoc =
 						TransformFragments[i].GetTransform().GetLocation();
-					const auto& Entity = EntityFragments[i].GetId();
+					auto Entity = EntityFragments[i].GetId();
 
-					// UE_LOG(
-					// 	LogTemp,
-					// 	Log,
-					// 	TEXT("Current transform location of entity %i: %f, %f, %f"),
-					// 	i,
-					// 	TransformLoc.X,
-					// 	TransformLoc.Y,
-					// 	TransformLoc.Z
-					// );
 					runner->Stream(
 						Entity,
 						example::fps::Position{
@@ -96,8 +84,8 @@ void UTickProcessor::Execute(
 						}
 					);
 				} else {
-					auto&       Transform = TransformFragments[i].GetMutableTransform();
-					const auto& Position = PositionFragments[i].GetPosition();
+					auto& Transform = TransformFragments[i].GetMutableTransform();
+					auto  Position = PositionFragments[i].GetPosition();
 
 					// const auto& Location = Transform.GetLocation();
 
@@ -121,7 +109,7 @@ void UTickProcessor::Execute(
 					// 	Position.Z
 					// );
 
-					Transform.SetLocation(FVector{Position});
+					Transform.SetLocation(Position);
 				}
 			}
 		}
