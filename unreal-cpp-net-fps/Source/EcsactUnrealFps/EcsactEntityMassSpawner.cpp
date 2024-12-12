@@ -48,7 +48,7 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 			})
 			.AddComponent(example::fps::MassEntity{})
 			.AddComponent(example::fps::Velocity{})
-			.AddComponent(example::fps::Toggle{.streaming = true})
+			.AddComponent(example::fps::Toggle{.streaming = StreamEntities})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
 				[](auto entity) {
 					UE_LOG(
@@ -122,14 +122,6 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		for(auto EntityHandle : EntityHandles) {
 			check(EntityHandle.IsValid());
 			check(EntityHandle.IsSet());
-			UE_LOG(
-				LogTemp,
-				Warning,
-				TEXT("Ecsact Position updated to %f, %f, %f"),
-				Position.X,
-				Position.Y,
-				Position.Z
-			);
 			if(EntityManager.IsProcessing()) {
 				EntityManager.Defer().PushCommand<FMassDeferredSetCommand>(
 					[EntityHandle, vec](auto& EntityManager) {
@@ -194,76 +186,37 @@ auto UEcsactEntityMassSpawner::Spawn(
 			Position.Y
 		);
 
-		if(EntityManager.IsProcessing()) {
-			EntityManager.AddFragmentToEntity(
-				EntityHandle,
-				FEcsactEntityFragment::StaticStruct(),
-				[Entity](void* fragment, const UScriptStruct& FragmentType) {
-					FEcsactEntityFragment* EntityFragment =
-						static_cast<FEcsactEntityFragment*>(fragment);
-					EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
-				}
-			);
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactEntityFragment::StaticStruct(),
+			[Entity](void* fragment, const UScriptStruct& FragmentType) {
+				FEcsactEntityFragment* EntityFragment =
+					static_cast<FEcsactEntityFragment*>(fragment);
+				EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
+			}
+		);
 
-			EntityManager.AddFragmentToEntity(
-				EntityHandle,
-				FEcsactPositionFragment::StaticStruct(),
-				[&vec](void* fragment, const UScriptStruct& FragmentType) {
-					auto* PositionFragment =
-						static_cast<FEcsactPositionFragment*>(fragment);
-					PositionFragment->SetPosition(vec);
-				}
-			);
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactPositionFragment::StaticStruct(),
+			[&vec](void* fragment, const UScriptStruct& FragmentType) {
+				auto* PositionFragment =
+					static_cast<FEcsactPositionFragment*>(fragment);
+				PositionFragment->SetPosition(vec);
+			}
+		);
 
-			EntityManager.AddFragmentToEntity(
-				EntityHandle,
-				FEcsactStreamFragment::StaticStruct(),
-				[this](void* fragment, const UScriptStruct& FragmentType) {
-					auto* StreamFragment = static_cast<FEcsactStreamFragment*>(fragment);
-					StreamFragment->SetStream(StreamEntities);
-				}
-			);
-		} else {
-			EntityManager.Defer().PushCommand<FMassDeferredAddCommand>(
-				[EntityHandle, Entity, ShouldStream = StreamEntities, vec](
-					auto& EntityManager
-				) {
-					EntityManager.AddFragmentToEntity(
-						EntityHandle,
-						FEcsactEntityFragment::StaticStruct(),
-						[Entity](void* fragment, const UScriptStruct& FragmentType) {
-							FEcsactEntityFragment* EntityFragment =
-								static_cast<FEcsactEntityFragment*>(fragment);
-							EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
-						}
-					);
-
-					EntityManager.AddFragmentToEntity(
-						EntityHandle,
-						FEcsactPositionFragment::StaticStruct(),
-						[&vec](void* fragment, const UScriptStruct& FragmentType) {
-							auto* PositionFragment =
-								static_cast<FEcsactPositionFragment*>(fragment);
-							PositionFragment->SetPosition(vec);
-						}
-					);
-
-					EntityManager.AddFragmentToEntity(
-						EntityHandle,
-						FEcsactStreamFragment::StaticStruct(),
-						[ShouldStream](void* fragment, const UScriptStruct& FragmentType) {
-							auto* StreamFragment =
-								static_cast<FEcsactStreamFragment*>(fragment);
-							StreamFragment->SetStream(ShouldStream);
-						}
-					);
-				}
-			);
-		}
+		EntityManager.AddFragmentToEntity(
+			EntityHandle,
+			FEcsactStreamFragment::StaticStruct(),
+			[this](void* fragment, const UScriptStruct& FragmentType) {
+				auto* StreamFragment = static_cast<FEcsactStreamFragment*>(fragment);
+				StreamFragment->SetStream(StreamEntities);
+			}
+		);
 	}
-	EntityManager.FlushCommands();
-	MassEntities.Add(Entity, NewEntityHandles);
 
+	MassEntities.Add(Entity, NewEntityHandles);
 	EntityPools.Remove(Entity);
 }
 
@@ -275,36 +228,23 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 		return;
 	}
 
-	UWorld* world = GetWorld();
-	auto    MassEntitySubsystem = world->GetSubsystem<UMassEntitySubsystem>();
+	auto* world = GetWorld();
+	auto  MassEntitySubsystem = world->GetSubsystem<UMassEntitySubsystem>();
 
-	FMassEntityManager& EntityManager =
-		MassEntitySubsystem->GetMutableEntityManager();
+	auto& EntityManager = MassEntitySubsystem->GetMutableEntityManager();
 
 	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
-
-	if(!MassEntities.Contains(EcsactEntity)) {
+	auto EntityHandles = MassEntities.Find(EcsactEntity);
+	if(!EntityHandles) {
 		UE_LOG(LogTemp, Error, TEXT("Unknown Entity not found (Mass Spawner)"));
 		return;
 	}
 
-	auto EntityHandles = *MassEntities.Find(EcsactEntity);
-
-	for(auto EntityHandle : EntityHandles) {
-		if(EntityManager.IsProcessing()) {
-			EntityManager.Defer().PushCommand<FMassDeferredSetCommand>(
-				[EntityHandle, Streaming = Toggle.Streaming](auto& EntityManager) {
-					auto* StreamFragment =
-						EntityManager.template GetFragmentDataPtr<FEcsactStreamFragment>(
-							EntityHandle
-						);
-					StreamFragment->SetStream(static_cast<bool>(Streaming));
-				}
-			);
+	for(auto Entity : *EntityHandles) {
+		if(Toggle.Streaming) {
+			EntityManager.Defer().AddTag<FEcsactStreamTag>(Entity);
 		} else {
-			auto* StreamFragent =
-				EntityManager.GetFragmentDataPtr<FEcsactStreamFragment>(EntityHandle);
-			StreamFragent->SetStream(static_cast<bool>(Toggle.Streaming));
+			EntityManager.Defer().RemoveTag<FEcsactStreamTag>(Entity);
 		}
 	}
 }

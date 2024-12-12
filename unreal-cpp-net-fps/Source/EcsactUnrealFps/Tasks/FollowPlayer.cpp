@@ -54,6 +54,10 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 	FStateTreeExecutionContext& Context,
 	const float                 DeltaTime
 ) const {
+	if(!Context.GetExternalData(StreamFragmentHandle).ShouldStream()) {
+		return EStateTreeRunStatus::Running;
+	}
+
 	MoveToPlayerPosition(Context);
 
 	return EStateTreeRunStatus::Running;
