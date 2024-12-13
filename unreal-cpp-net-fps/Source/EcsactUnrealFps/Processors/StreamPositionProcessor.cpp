@@ -7,7 +7,7 @@
 #include "MassExecutionContext.h"
 #include "MassRequirements.h"
 
-UStreamPositionProcessor::UStreamPositionProcessor() {
+UStreamPositionProcessor::UStreamPositionProcessor() : EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -20,8 +20,6 @@ auto UStreamPositionProcessor::ConfigureQueries() -> void {
 		.AddRequirement<FTransformFragment>(ReadOnly, All)
 		.AddRequirement<FEcsactEntityFragment>(ReadOnly, All)
 		.AddTagRequirement<FEcsactStreamTag>(All);
-
-	RegisterQuery(EntityQuery);
 }
 
 auto UStreamPositionProcessor::Execute(

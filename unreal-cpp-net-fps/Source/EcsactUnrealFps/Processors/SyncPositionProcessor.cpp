@@ -8,7 +8,7 @@
 #include "MassExecutionContext.h"
 #include "MassRequirements.h"
 
-USyncPositionProcessor::USyncPositionProcessor() {
+USyncPositionProcessor::USyncPositionProcessor() : EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -22,8 +22,6 @@ auto USyncPositionProcessor::ConfigureQueries() -> void {
 		.AddRequirement<FEcsactPositionFragment>(ReadOnly, All)
 		.AddRequirement<FLerpPositionFragment>(ReadWrite, All)
 		.AddTagRequirement<FEcsactStreamTag>(None);
-
-	RegisterQuery(EntityQuery);
 }
 
 auto USyncPositionProcessor::Execute(

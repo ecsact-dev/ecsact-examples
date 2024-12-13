@@ -6,7 +6,7 @@
 #include "MassRequirements.h"
 #include "Math/UnrealMathUtility.h"
 
-ULerpPositionProcessor::ULerpPositionProcessor() {
+ULerpPositionProcessor::ULerpPositionProcessor() : EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -19,8 +19,6 @@ auto ULerpPositionProcessor::ConfigureQueries() -> void {
 		.AddRequirement<FTransformFragment>(ReadWrite, All)
 		.AddRequirement<FLerpPositionFragment>(ReadOnly, All)
 		.AddConstSharedRequirement<FLerpPositionParameters>(All);
-
-	RegisterQuery(EntityQuery);
 }
 
 auto ULerpPositionProcessor::Execute(
