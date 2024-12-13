@@ -10,6 +10,7 @@
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
 #include "MassEntityTemplateRegistry.h"
+#include "MassEntityManager.h"
 #include "MassCommonFragments.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
@@ -46,7 +47,7 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 				.y = static_cast<float>(RandomPointY),
 				.z = 0
 			})
-			.AddComponent(example::fps::MassEntity{})
+			.AddComponent(example::fps::Enemy{})
 			.AddComponent(example::fps::Velocity{})
 			.AddComponent(example::fps::Toggle{.streaming = StreamEntities})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
@@ -114,8 +115,8 @@ auto UEcsactEntityMassSpawner::EntityDestroyed_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
-	int32                 Entity,
-	FExampleFpsMassentity MEntityTag
+	int32            Entity,
+	FExampleFpsEnemy Enemy
 ) -> void {
 }
 
@@ -131,155 +132,65 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 
 	auto entity_handles =
 		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
-	entity_manager.Defer().PushCommand<FMassDeferredAddCommand>(
-		[entity_handles](FMassEntityManager& entity_manager) {
-			for(auto entity_handle : entity_handles) {
-				// entity_manager.AddFragmentToEntity
-			}
-		}
-	);
+	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
+			entity_handle,
+			FEcsactPositionFragment()
+		);
+	}
 }
 
 auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
-	if(MassEntities.Contains(EcsactEntity)) {
-		auto EntityHandles =
-			*MassEntities.Find(static_cast<ecsact_entity_id>(Entity));
+	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
 
-		UWorld* world = GetWorld();
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 
-		auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
-		FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
-
-		auto vec = FVector{Position.X, Position.Y, Position.Z};
-
-		for(auto EntityHandle : EntityHandles) {
-			if(EntityManager.IsProcessing()) {
-				EntityManager.Defer().PushCommand<FMassDeferredSetCommand>(
-					[EntityHandle, vec](auto& EntityManager) {
-						auto* PositionFragment =
-							EntityManager
-								.template GetFragmentDataPtr<FEcsactPositionFragment>(
-									EntityHandle
-								);
-						PositionFragment->SetPosition(vec);
-					}
-				);
-			} else {
-				auto* PositionFragment =
-					EntityManager.GetFragmentDataPtr<FEcsactPositionFragment>(EntityHandle
-					);
-				PositionFragment->SetPosition(vec);
-			}
-		}
-		EntityManager.FlushCommands();
+	const auto& entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	for(auto entity_handle : entity_handles) {
+		entity_manager.GetFragmentDataPtr<FEcsactPositionFragment>(entity_handle)
+			->SetPosition(FVector{
+				Position.X,
+				Position.Y,
+				Position.Z,
+			});
 	}
 }
 
-auto UEcsactEntityMassSpawner::Spawn(
-	ecsact_entity_id           Entity,
-	const FExampleFpsPosition& Position
+auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
+	int32             Entity,
+	FExampleFpsToggle Toggle
 ) -> void {
-	UWorld* world = GetWorld();
-
-	const FMassEntityTemplate& EntityTemplate =
-		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
-
-	auto MassSpawner = world->GetSubsystem<UMassSpawnerSubsystem>();
-	auto MassEntity = world->GetSubsystem<UMassEntitySubsystem>();
-
-	FMassEntityManager& EntityManager = MassEntity->GetMutableEntityManager();
-	auto&               DefaultBuffer = EntityManager.Defer();
-
-	TArray<FMassEntityHandle> NewEntityHandles;
-
-	MassSpawner->SpawnEntities(EntityTemplate, 1, NewEntityHandles);
-	for(auto& EntityHandle : NewEntityHandles) {
-		check(EntityHandle.IsValid());
-		check(EntityHandle.IsSet());
-		auto vec = FVector{Position.X, Position.Y, Position.Z};
-
-		auto* TransformFragment =
-			EntityManager.GetFragmentDataPtr<FTransformFragment>(EntityHandle);
-
-		auto Transform = FTransform(vec);
-		TransformFragment->SetTransform(Transform);
-
-		DefaultBuffer.PushCommand<FTransformUpdateCommand>(
-			EntityHandle,
-			std::move(Transform)
-		);
-
-		UE_LOG(
-			LogTemp,
-			Warning,
-			TEXT("Entity Manager spawning entity at %f %f"),
-			Position.X,
-			Position.Y
-		);
-
-		EntityManager.AddFragmentToEntity(
-			EntityHandle,
-			FEcsactEntityFragment::StaticStruct(),
-			[Entity](void* fragment, const UScriptStruct& FragmentType) {
-				FEcsactEntityFragment* EntityFragment =
-					static_cast<FEcsactEntityFragment*>(fragment);
-				EntityFragment->SetId(static_cast<ecsact_entity_id>(Entity));
-			}
-		);
-
-		EntityManager.AddFragmentToEntity(
-			EntityHandle,
-			FEcsactPositionFragment::StaticStruct(),
-			[&vec](void* fragment, const UScriptStruct& FragmentType) {
-				auto* PositionFragment =
-					static_cast<FEcsactPositionFragment*>(fragment);
-				PositionFragment->SetPosition(vec);
-			}
-		);
-
-		EntityManager.AddFragmentToEntity(
-			EntityHandle,
-			FEcsactStreamFragment::StaticStruct(),
-			[this](void* fragment, const UScriptStruct& FragmentType) {
-				auto* StreamFragment = static_cast<FEcsactStreamFragment*>(fragment);
-				StreamFragment->SetStream(StreamEntities);
-			}
-		);
-	}
-
-	MassEntities.Add(Entity, NewEntityHandles);
-	EntityPools.Remove(Entity);
+	UpdateToggle_Implementation(Entity, Toggle);
 }
 
 auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 	int32             Entity,
 	FExampleFpsToggle Toggle
 ) -> void {
+	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+
 	if(!StreamEntities) {
 		return;
 	}
 
 	auto* world = GetWorld();
-	auto  MassEntitySubsystem = world->GetSubsystem<UMassEntitySubsystem>();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 
-	auto& EntityManager = MassEntitySubsystem->GetMutableEntityManager();
+	auto entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
 
-	auto EcsactEntity = static_cast<ecsact_entity_id>(Entity);
-	auto EntityHandles = MassEntities.Find(EcsactEntity);
-	if(!EntityHandles) {
-		UE_LOG(LogTemp, Error, TEXT("Unknown Entity not found (Mass Spawner)"));
-		return;
-	}
-
-	for(auto Entity : *EntityHandles) {
+	for(auto Entity : entity_handles) {
 		if(Toggle.Streaming) {
-			EntityManager.Defer().AddTag<FEcsactStreamTag>(Entity);
+			entity_manager.Defer().AddTag<FEcsactStreamTag>(Entity);
 		} else {
-			EntityManager.Defer().RemoveTag<FEcsactStreamTag>(Entity);
+			entity_manager.Defer().RemoveTag<FEcsactStreamTag>(Entity);
 		}
 	}
 }

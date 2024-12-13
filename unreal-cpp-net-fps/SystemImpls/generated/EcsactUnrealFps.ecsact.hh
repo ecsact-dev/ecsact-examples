@@ -45,11 +45,11 @@ struct Position {
 	float z;
 	auto operator<=>(const example::fps::Position&) const = default;
 };
-struct MassEntity {
+struct Enemy {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(6);
-	auto operator<=>(const example::fps::MassEntity&) const = default;
+	auto operator<=>(const example::fps::Enemy&) const = default;
 };
 struct Velocity {
 	static constexpr bool transient = false;
