@@ -1,6 +1,7 @@
 #include "EcsactPlayerEntitySpawner.h"
 #include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
 #include "EcsactUnreal/EcsactExecution.h"
+#include "EcsactUnrealFps/Fragments/FollowPlayerTargetFragment.h"
 #include "EcsactUnrealFpsGameMode.h"
 #include "EcsactUnreal/EcsactAsyncRunner.h"
 #include "EcsactUnreal/EcsactSyncRunner.h"
@@ -8,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EcsactUnrealFpsCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "MassEntitySubsystem.h"
+#include "MassSpawnerSubsystem.h"
 #include "ecsact/runtime/dynamic.h"
 
 auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
@@ -202,6 +205,13 @@ auto UEcsactPlayerEntitySpawner::RemovePlayerController( //
 	PendingControllers.Remove(Controller);
 }
 
+auto UEcsactPlayerEntitySpawner::InitPosition_Implementation( //
+	int32               Entity,
+	FExampleFpsPosition Position
+) -> void {
+	UpdatePosition_Implementation(Entity, Position);
+}
+
 auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	int32               Entity,
 	FExampleFpsPosition Position
@@ -220,6 +230,23 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 		auto desired_location = FVector{Position.X, Position.Y, Position.Z};
 		player->SetActorLocation(desired_location);
 	}
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+
+	entity_manager.ForEachSharedFragment<FFollowPlayerTargetFragment>(
+		[&](FFollowPlayerTargetFragment& f) {
+			f.SetPlayerPosition(
+				Entity,
+				FVector{
+					Position.X,
+					Position.Y,
+					Position.Z,
+				}
+			);
+		}
+	);
 }
 
 auto UEcsactPlayerEntitySpawner::UpdateMovedirection_Implementation( //

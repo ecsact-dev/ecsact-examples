@@ -163,6 +163,18 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 				Position.Z,
 			}}
 		);
+
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>(
+			[entity_handle, Position](FMassEntityManager& entity_manager) {
+				entity_manager.GetFragmentDataPtr<FTransformFragment>(entity_handle)
+					->GetMutableTransform()
+					.SetLocation(FVector{
+						Position.X,
+						Position.Y,
+						Position.Z,
+					});
+			}
+		);
 	}
 }
 

@@ -41,8 +41,11 @@ auto USyncPositionProcessor::Execute(
 			for(auto i = 0; num_entities > i; ++i) {
 				auto  entity_pos = pos_fragments[i].GetPosition();
 				auto& lerp_pos = lerp_pos_fragments[i];
-				lerp_pos.DesiredPosition =
-					FVector{entity_pos.X, entity_pos.Y, entity_pos.Z};
+				lerp_pos.DesiredPosition = FVector{
+					entity_pos.X,
+					entity_pos.Y,
+					entity_pos.Z,
+				};
 			}
 		}
 	);

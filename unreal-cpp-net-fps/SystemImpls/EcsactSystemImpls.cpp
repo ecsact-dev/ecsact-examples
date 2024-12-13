@@ -127,7 +127,7 @@ auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 	velocity.y = velocity.y * 0.9f;
 	velocity.z = velocity.z * 0.9f;
 
-	if(velocity.x <= 2 && pushing.tick_count <= 0) {
+	if(std::abs(velocity.x) <= 2 && pushing.tick_count <= 0) {
 		toggle.streaming = true;
 		ctx.add<RemovePushingTag>();
 		ctx.update(toggle);

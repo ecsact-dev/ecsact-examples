@@ -57,6 +57,11 @@ public:
 		FExampleFpsPlayer Player
 	) -> void override;
 
+	auto InitPosition_Implementation( //
+		int32               Entity,
+		FExampleFpsPosition Position
+	) -> void override;
+
 	auto UpdatePosition_Implementation( //
 		int32               Entity,
 		FExampleFpsPosition Position
