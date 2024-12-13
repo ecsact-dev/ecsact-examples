@@ -14,7 +14,6 @@
 
 struct FTransformFragment;
 struct FMassMoveTargetFragment;
-struct FEcsactStreamFragment;
 
 USTRUCT()
 
@@ -56,8 +55,7 @@ struct ECSACTUNREALFPS_API FFollowPlayer : public FMassStateTreeTaskBase {
 private:
 	TStateTreeExternalDataHandle<FMassMoveTargetFragment> MoveTargetHandle;
 	TStateTreeExternalDataHandle<FTransformFragment>      TransformHandle;
-	TStateTreeExternalDataHandle<UMassSignalSubsystem>  MassSignalSubsystemHandle;
-	TStateTreeExternalDataHandle<FEcsactStreamFragment> StreamFragmentHandle;
+	TStateTreeExternalDataHandle<UMassSignalSubsystem> MassSignalSubsystemHandle;
 
 	void OnWaitComplete();
 };

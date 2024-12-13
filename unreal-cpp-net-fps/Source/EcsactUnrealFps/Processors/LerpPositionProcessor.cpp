@@ -1,4 +1,5 @@
 #include "LerpPositionProcessor.h"
+#include "EcsactUnrealFps/Fragments/EcsactFragments.h"
 #include "EcsactUnrealFps/Fragments/LerpPositionFragment.h"
 #include "EcsactUnrealFps/Fragments/LerpPositionParameters.h"
 #include "MassCommonFragments.h"
@@ -14,10 +15,12 @@ auto ULerpPositionProcessor::ConfigureQueries() -> void {
 	using EMassFragmentAccess::ReadOnly;
 	using EMassFragmentAccess::ReadWrite;
 	using EMassFragmentPresence::All;
+	using EMassFragmentPresence::None;
 
 	EntityQuery //
 		.AddRequirement<FTransformFragment>(ReadWrite, All)
 		.AddRequirement<FLerpPositionFragment>(ReadOnly, All)
+		.AddTagRequirement<FEcsactStreamTag>(None)
 		.AddConstSharedRequirement<FLerpPositionParameters>(All);
 }
 
@@ -49,7 +52,7 @@ auto ULerpPositionProcessor::Execute(
 					Context.GetDeltaTimeSeconds() * lerp_pos_params.Speed
 				);
 
-				// transform.SetLocation(new_location);
+				transform.SetLocation(new_location);
 			}
 		}
 	);

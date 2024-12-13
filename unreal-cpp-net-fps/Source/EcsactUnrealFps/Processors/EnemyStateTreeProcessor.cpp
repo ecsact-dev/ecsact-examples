@@ -19,7 +19,7 @@ auto UEnemyStateTreeProcessor::ConfigureQueries() -> void {
 	EntityQuery.AddSubsystemRequirement<UMassSignalSubsystem>(ReadWrite);
 	EntityQuery //
 		.AddRequirement<FMassStateTreeInstanceFragment>(ReadWrite, All)
-		.AddTagRequirement<FEcsactStreamTag>(None);
+		.AddTagRequirement<FEcsactStreamTag>(All);
 }
 
 auto UEnemyStateTreeProcessor::Execute(

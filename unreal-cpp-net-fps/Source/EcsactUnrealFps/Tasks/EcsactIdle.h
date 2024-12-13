@@ -11,12 +11,11 @@
 
 #include "EcsactIdle.generated.h"
 
-struct FEcsactStreamFragment;
 struct FMassMoveTargetFragment;
 
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FEcsactIdleInstanceData{
+struct ECSACTUNREALFPS_API FEcsactIdleInstanceData {
 	GENERATED_BODY() // nolint
 };
 
@@ -49,7 +48,6 @@ struct ECSACTUNREALFPS_API FEcsactIdle : public FMassStateTreeTaskBase {
 	// ) const override;
 
 private:
-	TStateTreeExternalDataHandle<FEcsactStreamFragment> StreamFragmentHandle;
-	TStateTreeExternalDataHandle<UMassSignalSubsystem>  MassSignalSubsystemHandle;
+	TStateTreeExternalDataHandle<UMassSignalSubsystem> MassSignalSubsystemHandle;
 	TStateTreeExternalDataHandle<FMassMoveTargetFragment> MoveTargetHandle;
 };

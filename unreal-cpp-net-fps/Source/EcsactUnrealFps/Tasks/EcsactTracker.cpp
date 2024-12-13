@@ -10,8 +10,7 @@ FEcsactTracker::FEcsactTracker() {
 }
 
 bool FEcsactTracker::Link(FStateTreeLinker& Linker) {
-	Linker.LinkExternalData(StreamFragmentHandle);
-	return FMassStateTreeTaskBase::Link(Linker);
+	return Super::Link(Linker);
 }
 
 EStateTreeRunStatus FEcsactTracker::EnterState(
@@ -48,18 +47,6 @@ EStateTreeRunStatus FEcsactTracker::Tick( //
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("No players to follow"));
 	}
-
-	const auto& StreamingFragment = Context.GetExternalData(StreamFragmentHandle);
-
-	if(InstanceData.bIsStreaming != StreamingFragment.ShouldStream()) {
-		UE_LOG(
-			LogTemp,
-			Log,
-			TEXT("Setting Is Stream to: %i"),
-			StreamingFragment.ShouldStream()
-		);
-	}
-	InstanceData.bIsStreaming = StreamingFragment.ShouldStream();
 
 	return EStateTreeRunStatus::Running;
 }

@@ -3,6 +3,8 @@
 
 #include "CoreMinimal.h"
 #include "EcsactUnrealFps/Fragments/EcsactFragments.h"
+#include "MassSignalSubsystem.h"
+#include "MassStateTreeTypes.h"
 #include "MassStateTreeTypes.h"
 #include "StateTreeEvaluatorBase.h"
 #include "StateTreeExecutionContext.h"
@@ -42,7 +44,4 @@ struct ECSACTUNREALFPS_API FEcsactTracker : public FMassStateTreeTaskBase {
 		FStateTreeExecutionContext& Context,
 		const float                 DeltaTime
 	) const override;
-
-private:
-	TStateTreeExternalDataHandle<FEcsactStreamFragment> StreamFragmentHandle;
 };

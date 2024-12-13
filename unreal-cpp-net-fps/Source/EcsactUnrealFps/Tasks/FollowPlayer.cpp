@@ -16,15 +16,15 @@ EStateTreeRunStatus FFollowPlayer::EnterState(
 ) const {
 	UE_LOG(LogTemp, Log, TEXT("Entering Follow Player State"));
 
-	// auto& MassContext = static_cast<FMassStateTreeExecutionContext&>(Context);
-	//
-	// auto& MassSignalSubsystem =
-	// 	Context.GetExternalData(MassSignalSubsystemHandle);
-	//
-	// MassSignalSubsystem.SignalEntity(
-	// 	UE::Mass::Signals::StateTreeActivate,
-	// 	MassContext.GetEntity()
-	// );
+	auto& MassContext = static_cast<FMassStateTreeExecutionContext&>(Context);
+
+	auto& MassSignalSubsystem =
+		Context.GetExternalData(MassSignalSubsystemHandle);
+
+	MassSignalSubsystem.SignalEntity(
+		UE::Mass::Signals::StateTreeActivate,
+		MassContext.GetEntity()
+	);
 	auto& MoveTarget = Context.GetExternalData(MoveTargetHandle);
 
 	MoveTarget.CreateNewAction(EMassMovementAction::Move, *Context.GetWorld());
@@ -53,10 +53,6 @@ EStateTreeRunStatus FFollowPlayer::Tick( //
 	FStateTreeExecutionContext& Context,
 	const float                 DeltaTime
 ) const {
-	if(!Context.GetExternalData(StreamFragmentHandle).ShouldStream()) {
-		return EStateTreeRunStatus::Running;
-	}
-
 	MoveToPlayerPosition(Context);
 
 	return EStateTreeRunStatus::Running;
@@ -81,7 +77,6 @@ void FFollowPlayer::MoveToPlayerPosition( //
 }
 
 bool FFollowPlayer::Link(FStateTreeLinker& Linker) {
-	Linker.LinkExternalData(StreamFragmentHandle);
 	Linker.LinkExternalData(MoveTargetHandle);
 	Linker.LinkExternalData(TransformHandle);
 	Linker.LinkExternalData(MassSignalSubsystemHandle);
