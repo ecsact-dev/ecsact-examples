@@ -27,8 +27,8 @@ FExampleFpsPosition FExampleFpsPosition::FromEcsactComponentData(const void* com
 	result.Z = static_cast<const example::fps::Position*>(component_data)->z;
 	return result;
 }
-FExampleFpsMassentity FExampleFpsMassentity::FromEcsactComponentData(const void* component_data) {
-	auto result = FExampleFpsMassentity{};
+FExampleFpsEnemy FExampleFpsEnemy::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsEnemy{};
 	return result;
 }
 FExampleFpsVelocity FExampleFpsVelocity::FromEcsactComponentData(const void* component_data) {
@@ -80,9 +80,9 @@ UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
 	InitComponentFns[5] = &ThisClass::RawInitPosition;
 	UpdateComponentFns[5] = &ThisClass::RawUpdatePosition;
 	RemoveComponentFns[5] = &ThisClass::RawRemovePosition;
-	InitComponentFns[6] = &ThisClass::RawInitMassentity;
-	UpdateComponentFns[6] = &ThisClass::RawUpdateMassentity;
-	RemoveComponentFns[6] = &ThisClass::RawRemoveMassentity;
+	InitComponentFns[6] = &ThisClass::RawInitEnemy;
+	UpdateComponentFns[6] = &ThisClass::RawUpdateEnemy;
+	RemoveComponentFns[6] = &ThisClass::RawRemoveEnemy;
 	InitComponentFns[7] = &ThisClass::RawInitVelocity;
 	UpdateComponentFns[7] = &ThisClass::RawUpdateVelocity;
 	RemoveComponentFns[7] = &ThisClass::RawRemoveVelocity;
@@ -158,14 +158,14 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdatePosition(int32 entity, const voi
 void UExampleFpsEcsactRunnerSubsystem::RawRemovePosition(int32 entity, const void* component) {
 	RemovePosition(entity, FExampleFpsPosition::FromEcsactComponentData(component));
 }
-void UExampleFpsEcsactRunnerSubsystem::RawInitMassentity(int32 entity, const void* component) {
-	InitMassentity(entity, FExampleFpsMassentity::FromEcsactComponentData(component));
+void UExampleFpsEcsactRunnerSubsystem::RawInitEnemy(int32 entity, const void* component) {
+	InitEnemy(entity, FExampleFpsEnemy::FromEcsactComponentData(component));
 }
-void UExampleFpsEcsactRunnerSubsystem::RawUpdateMassentity(int32 entity, const void* component) {
-	UpdateMassentity(entity, FExampleFpsMassentity::FromEcsactComponentData(component));
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateEnemy(int32 entity, const void* component) {
+	UpdateEnemy(entity, FExampleFpsEnemy::FromEcsactComponentData(component));
 }
-void UExampleFpsEcsactRunnerSubsystem::RawRemoveMassentity(int32 entity, const void* component) {
-	RemoveMassentity(entity, FExampleFpsMassentity::FromEcsactComponentData(component));
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveEnemy(int32 entity, const void* component) {
+	RemoveEnemy(entity, FExampleFpsEnemy::FromEcsactComponentData(component));
 }
 void UExampleFpsEcsactRunnerSubsystem::RawInitVelocity(int32 entity, const void* component) {
 	InitVelocity(entity, FExampleFpsVelocity::FromEcsactComponentData(component));
@@ -272,15 +272,15 @@ void UExampleFpsEcsactRunnerSubsystem::RemovePosition_Implementation(int32 Entit
 	
 }
 
-void UExampleFpsEcsactRunnerSubsystem::InitMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity) {
+void UExampleFpsEcsactRunnerSubsystem::InitEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy) {
 	
 }
 
-void UExampleFpsEcsactRunnerSubsystem::UpdateMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity) {
+void UExampleFpsEcsactRunnerSubsystem::UpdateEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy) {
 	
 }
 
-void UExampleFpsEcsactRunnerSubsystem::RemoveMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity) {
+void UExampleFpsEcsactRunnerSubsystem::RemoveEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy) {
 	
 }
 

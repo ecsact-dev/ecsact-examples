@@ -89,3 +89,12 @@ struct ECSACTUNREALFPS_API FEcsactPositionFragment : public FMassFragment {
 private:
 	FVector Position;
 };
+
+USTRUCT()
+
+/**
+ * Tag indiciating that this mass entity should be streamed.
+ */
+struct ECSACTUNREALFPS_API FEcsactStreamTag : public FMassTag {
+	GENERATED_BODY()
+};
