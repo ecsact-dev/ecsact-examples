@@ -122,14 +122,6 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		for(auto EntityHandle : EntityHandles) {
 			check(EntityHandle.IsValid());
 			check(EntityHandle.IsSet());
-			UE_LOG(
-				LogTemp,
-				Warning,
-				TEXT("Ecsact Position updated to %f, %f, %f"),
-				Position.X,
-				Position.Y,
-				Position.Z
-			);
 			if(EntityManager.IsProcessing()) {
 				EntityManager.Defer().PushCommand<FMassDeferredSetCommand>(
 					[EntityHandle, vec](auto& EntityManager) {
