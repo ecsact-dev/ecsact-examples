@@ -24,6 +24,8 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 
 	TMap<ecsact_entity_id, TArray<FMassEntityHandle>> MassEntities;
 
+	auto CheckMassEntities(int32 Entity, const TCHAR* EventName) -> bool;
+
 public:
 	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
 

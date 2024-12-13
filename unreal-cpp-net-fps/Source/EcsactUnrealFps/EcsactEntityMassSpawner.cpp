@@ -63,10 +63,32 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	}
 }
 
+auto UEcsactEntityMassSpawner::CheckMassEntities(
+	int32        Entity,
+	const TCHAR* EventName
+) -> bool {
+	// TODO: We really shouldn't need to do this test, but in some cases create
+	// entity event doesn't happen
+	auto has_entity_handles =
+		MassEntities.Contains(static_cast<ecsact_entity_id>(Entity));
+	if(!has_entity_handles) {
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("EntityCreated event did not happen for entity %i - Ignoring %s"),
+			Entity,
+			EventName
+		);
+	}
+	return has_entity_handles;
+}
+
 auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 	int32 Entity
 ) -> void {
 	checkSlow(!MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+
+	UE_LOG(LogTemp, Log, TEXT("Create Entity %i"), Entity);
 
 	auto* world = GetWorld();
 
@@ -97,7 +119,9 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 auto UEcsactEntityMassSpawner::EntityDestroyed_Implementation( //
 	int32 Entity
 ) -> void {
-	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+	if(!CheckMassEntities(Entity, TEXT("EntityDestroyed"))) {
+		return;
+	}
 
 	auto* world = GetWorld();
 	auto& entity_manager =
@@ -118,13 +142,18 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 	int32            Entity,
 	FExampleFpsEnemy Enemy
 ) -> void {
+	if(!CheckMassEntities(Entity, TEXT("InitEnemy"))) {
+		return;
+	}
 }
 
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+	if(!CheckMassEntities(Entity, TEXT("InitPosition"))) {
+		return;
+	}
 
 	auto* world = GetWorld();
 	auto& entity_manager =
@@ -148,7 +177,9 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+	if(!CheckMassEntities(Entity, TEXT("UpdatePosition"))) {
+		return;
+	}
 
 	auto* world = GetWorld();
 	auto& entity_manager =
@@ -170,6 +201,9 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 	int32             Entity,
 	FExampleFpsToggle Toggle
 ) -> void {
+	if(!CheckMassEntities(Entity, TEXT("InitToggle"))) {
+		return;
+	}
 	UpdateToggle_Implementation(Entity, Toggle);
 }
 
@@ -177,7 +211,9 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 	int32             Entity,
 	FExampleFpsToggle Toggle
 ) -> void {
-	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+	if(!CheckMassEntities(Entity, TEXT("UpdateToggle"))) {
+		return;
+	}
 
 	if(!StreamEntities) {
 		return;
