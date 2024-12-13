@@ -4,17 +4,17 @@
 #include "EcsactUnrealFps/Fragments/LerpPositionParameters.h"
 #include "LerpPositionTrait.generated.h"
 
-UCLASS(meta = (DisplayName = "Avoidance"))
+UCLASS(meta = (DisplayName = "Lerp Position"))
+
 class ECSACTUNREALFPS_API ULerpPositionTrait : public UMassEntityTraitBase {
 	GENERATED_BODY()
 
 protected:
-	
 	auto BuildTemplate( //
 		FMassEntityTemplateBuildContext& BuildContext,
-		const UWorld& World
+		const UWorld&                    World
 	) const -> void override;
 
-	UPROPERTY(EditAnywhere, Category="")
+	UPROPERTY(EditAnywhere, Category = "")
 	FLerpPositionParameters PositionParameters;
 };
