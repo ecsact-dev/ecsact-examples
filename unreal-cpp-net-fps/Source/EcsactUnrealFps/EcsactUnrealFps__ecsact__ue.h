@@ -64,10 +64,10 @@ struct FExampleFpsPosition {
 };
 
 USTRUCT(BlueprintType)
-struct FExampleFpsMassentity {
+struct FExampleFpsEnemy {
 	GENERATED_BODY()
 	
-	static FExampleFpsMassentity FromEcsactComponentData(const void*);
+	static FExampleFpsEnemy FromEcsactComponentData(const void*);
 	
 };
 
@@ -153,9 +153,9 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPosition(int32 Entity, const void* Component);
 	void RawUpdatePosition(int32 Entity, const void* Component);
 	void RawRemovePosition(int32 Entity, const void* Component);
-	void RawInitMassentity(int32 Entity, const void* Component);
-	void RawUpdateMassentity(int32 Entity, const void* Component);
-	void RawRemoveMassentity(int32 Entity, const void* Component);
+	void RawInitEnemy(int32 Entity, const void* Component);
+	void RawUpdateEnemy(int32 Entity, const void* Component);
+	void RawRemoveEnemy(int32 Entity, const void* Component);
 	void RawInitVelocity(int32 Entity, const void* Component);
 	void RawUpdateVelocity(int32 Entity, const void* Component);
 	void RawRemoveVelocity(int32 Entity, const void* Component);
@@ -225,15 +225,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Position"))
 	void RemovePosition(int32 Entity, FExampleFpsPosition Position);
 	virtual void RemovePosition_Implementation(int32 Entity, FExampleFpsPosition Position);
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.MassEntity"))
-	void InitMassentity(int32 Entity, FExampleFpsMassentity Massentity);
-	virtual void InitMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.MassEntity"))
-	void UpdateMassentity(int32 Entity, FExampleFpsMassentity Massentity);
-	virtual void UpdateMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
-	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.MassEntity"))
-	void RemoveMassentity(int32 Entity, FExampleFpsMassentity Massentity);
-	virtual void RemoveMassentity_Implementation(int32 Entity, FExampleFpsMassentity Massentity);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Enemy"))
+	void InitEnemy(int32 Entity, FExampleFpsEnemy Enemy);
+	virtual void InitEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.Enemy"))
+	void UpdateEnemy(int32 Entity, FExampleFpsEnemy Enemy);
+	virtual void UpdateEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Enemy"))
+	void RemoveEnemy(int32 Entity, FExampleFpsEnemy Enemy);
+	virtual void RemoveEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Velocity"))
 	void InitVelocity(int32 Entity, FExampleFpsVelocity Velocity);
 	virtual void InitVelocity_Implementation(int32 Entity, FExampleFpsVelocity Velocity);

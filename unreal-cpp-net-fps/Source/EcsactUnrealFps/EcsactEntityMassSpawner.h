@@ -22,19 +22,7 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 	UPROPERTY(EditAnywhere)
 	UMassEntityConfigAsset* MassEntityConfigAsset;
 
-	UPROPERTY(EditAnywhere)
-	TArray<UMassEntitySpawnDataGeneratorBase*> SpawnDataGenerators;
-
 	TMap<ecsact_entity_id, TArray<FMassEntityHandle>> MassEntities;
-
-	using EntityPoolT = std::tuple<
-		std::optional<FExampleFpsMassentity>,
-		std::optional<FExampleFpsPosition>>;
-
-	// NOTE: Temporary until more general solution is implemented
-	TMap<ecsact_entity_id, EntityPoolT> EntityPools;
-
-	void Spawn(ecsact_entity_id Entity, const FExampleFpsPosition& Position);
 
 public:
 	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
@@ -42,9 +30,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool StreamEntities;
 
-	auto InitMassentity_Implementation( //
-		int32                 Entity,
-		FExampleFpsMassentity MassEntity
+	auto EntityCreated_Implementation(int32 Entity) -> void override;
+
+	auto EntityDestroyed_Implementation(int32 Entity) -> void override;
+
+	auto InitEnemy_Implementation( //
+		int32            Entity,
+		FExampleFpsEnemy Enemy
 	) -> void override;
 
 	auto InitPosition_Implementation( //
@@ -55,6 +47,11 @@ public:
 	auto UpdatePosition_Implementation( //
 		int32               Entity,
 		FExampleFpsPosition Position
+	) -> void override;
+
+	auto InitToggle_Implementation( //
+		int32             Entity,
+		FExampleFpsToggle Toggle
 	) -> void override;
 
 	auto UpdateToggle_Implementation( //

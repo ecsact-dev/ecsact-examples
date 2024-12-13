@@ -62,45 +62,82 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	}
 }
 
-auto UEcsactEntityMassSpawner::InitMassentity_Implementation(
+auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
+	int32 Entity
+) -> void {
+	checkSlow(!MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+
+	auto* world = GetWorld();
+
+	const FMassEntityTemplate& entity_template =
+		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
+	auto new_entity_handles = TArray<FMassEntityHandle>{};
+
+	auto  mass_spawner = world->GetSubsystem<UMassSpawnerSubsystem>();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+
+	mass_spawner->SpawnEntities(entity_template, 1, new_entity_handles);
+	for(auto entity_handle : new_entity_handles) {
+		entity_manager.AddFragmentToEntity(
+			entity_handle,
+			FEcsactEntityFragment::StaticStruct(),
+			[Entity](void* fragment, const UScriptStruct&) {
+				static_cast<FEcsactEntityFragment*>(fragment)->SetId(
+					static_cast<ecsact_entity_id>(Entity)
+				);
+			}
+		);
+	}
+
+	MassEntities.Add(static_cast<ecsact_entity_id>(Entity), new_entity_handles);
+}
+
+auto UEcsactEntityMassSpawner::EntityDestroyed_Implementation( //
+	int32 Entity
+) -> void {
+	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+
+	auto old_entity_handles = TArray<FMassEntityHandle>{};
+	MassEntities.RemoveAndCopyValue(
+		static_cast<ecsact_entity_id>(Entity),
+		old_entity_handles
+	);
+
+	for(auto entity_handle : old_entity_handles) {
+		entity_manager.Defer().DestroyEntity(entity_handle);
+	}
+}
+
+auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 	int32                 Entity,
 	FExampleFpsMassentity MEntityTag
 ) -> void {
-	UE_LOG(LogTemp, Warning, TEXT("Mass Entity found, adding to Mass Spawner"));
-
-	auto  EcsactEntity = static_cast<ecsact_entity_id>(Entity);
-	auto& EntityPool = EntityPools.FindOrAdd(EcsactEntity);
-
-	using std::get;
-
-	const auto& Position = get<std::optional<FExampleFpsPosition>>(EntityPool);
-	auto& TMassEntity = get<std::optional<FExampleFpsMassentity>>(EntityPool);
-
-	TMassEntity = MEntityTag;
-	if(Position == std::nullopt) {
-		return;
-	}
-	Spawn(EcsactEntity, *Position);
 }
 
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	auto  EcsactEntity = static_cast<ecsact_entity_id>(Entity);
-	auto& EntityPool = EntityPools.FindOrAdd(EcsactEntity);
+	checkSlow(MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
 
-	using std::get;
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 
-	const auto& TMassEntity =
-		get<std::optional<FExampleFpsMassentity>>(EntityPool);
-	auto& TPosition = get<std::optional<FExampleFpsPosition>>(EntityPool);
-
-	TPosition = Position;
-	if(TMassEntity == std::nullopt) {
-		return;
-	}
-	Spawn(EcsactEntity, Position);
+	auto entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	entity_manager.Defer().PushCommand<FMassDeferredAddCommand>(
+		[entity_handles](FMassEntityManager& entity_manager) {
+			for(auto entity_handle : entity_handles) {
+				// entity_manager.AddFragmentToEntity
+			}
+		}
+	);
 }
 
 auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
@@ -120,8 +157,6 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 		auto vec = FVector{Position.X, Position.Y, Position.Z};
 
 		for(auto EntityHandle : EntityHandles) {
-			check(EntityHandle.IsValid());
-			check(EntityHandle.IsSet());
 			if(EntityManager.IsProcessing()) {
 				EntityManager.Defer().PushCommand<FMassDeferredSetCommand>(
 					[EntityHandle, vec](auto& EntityManager) {

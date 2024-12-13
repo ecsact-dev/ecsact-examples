@@ -6,7 +6,7 @@ component PusherExpired;
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
-component MassEntity;
+component Enemy;
 
 component Velocity {
 	f32 x;
@@ -46,7 +46,7 @@ action Push {
 	adds Pusher;
 	
 	system PushEntities {
-		include MassEntity;
+		include Enemy;
 		readonly Position;
 		readwrite Toggle;
 		adds Pushing;
@@ -70,7 +70,7 @@ action Move {
 component RemovePushingTag;
 
 system ApplyPush {
-	include MassEntity;
+	include Enemy;
 	readwrite Pushing;
 	readwrite Velocity;
 }
@@ -97,7 +97,7 @@ system TogglePushedEntities {
 }
 
 system RemovePushing {
-	include MassEntity;
+	include Enemy;
 	removes RemovePushingTag;
 	removes Pushing;
 }
