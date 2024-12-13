@@ -135,7 +135,11 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
 			entity_handle,
-			FEcsactPositionFragment()
+			FEcsactPositionFragment{FVector{
+				Position.X,
+				Position.Y,
+				Position.Z,
+			}}
 		);
 	}
 }
