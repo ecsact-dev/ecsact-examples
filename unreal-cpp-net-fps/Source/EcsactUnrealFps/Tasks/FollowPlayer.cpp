@@ -16,16 +16,15 @@ EStateTreeRunStatus FFollowPlayer::EnterState(
 ) const {
 	UE_LOG(LogTemp, Log, TEXT("Entering Follow Player State"));
 
-	const auto& MassContext =
-		static_cast<FMassStateTreeExecutionContext&>(Context);
-
-	auto& MassSignalSubsystem =
-		Context.GetExternalData(MassSignalSubsystemHandle);
-
-	MassSignalSubsystem.SignalEntity(
-		UE::Mass::Signals::StateTreeActivate,
-		MassContext.GetEntity()
-	);
+	// auto& MassContext = static_cast<FMassStateTreeExecutionContext&>(Context);
+	//
+	// auto& MassSignalSubsystem =
+	// 	Context.GetExternalData(MassSignalSubsystemHandle);
+	//
+	// MassSignalSubsystem.SignalEntity(
+	// 	UE::Mass::Signals::StateTreeActivate,
+	// 	MassContext.GetEntity()
+	// );
 	auto& MoveTarget = Context.GetExternalData(MoveTargetHandle);
 
 	MoveTarget.CreateNewAction(EMassMovementAction::Move, *Context.GetWorld());

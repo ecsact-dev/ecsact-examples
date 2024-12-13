@@ -10,16 +10,16 @@ EStateTreeRunStatus FEcsactIdle::EnterState(
 ) const {
 	UE_LOG(LogTemp, Log, TEXT("Entering Idle State"));
 
-	const auto& MassContext =
-		static_cast<FMassStateTreeExecutionContext&>(Context);
+	// const auto& MassContext =
+	// 	static_cast<FMassStateTreeExecutionContext&>(Context);
 
-	auto& MassSignalSubsystem =
-		Context.GetExternalData(MassSignalSubsystemHandle);
-
-	MassSignalSubsystem.SignalEntity(
-		UE::Mass::Signals::StateTreeActivate,
-		MassContext.GetEntity()
-	);
+	// auto& MassSignalSubsystem =
+	// 	Context.GetExternalData(MassSignalSubsystemHandle);
+	//
+	// MassSignalSubsystem.SignalEntity(
+	// 	UE::Mass::Signals::StateTreeActivate,
+	// 	MassContext.GetEntity()
+	// );
 
 	EStateTreeRunStatus Status = EStateTreeRunStatus::Running;
 

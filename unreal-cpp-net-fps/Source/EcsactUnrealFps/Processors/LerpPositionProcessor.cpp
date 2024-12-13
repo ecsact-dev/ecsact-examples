@@ -7,7 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 
 ULerpPositionProcessor::ULerpPositionProcessor() : EntityQuery(*this) {
-	ProcessingPhase = EMassProcessingPhase::PostPhysics;
+	ProcessingPhase = EMassProcessingPhase::PrePhysics;
 }
 
 auto ULerpPositionProcessor::ConfigureQueries() -> void {
@@ -49,7 +49,7 @@ auto ULerpPositionProcessor::Execute(
 					Context.GetDeltaTimeSeconds() * lerp_pos_params.Speed
 				);
 
-				transform.SetLocation(new_location);
+				// transform.SetLocation(new_location);
 			}
 		}
 	);

@@ -88,11 +88,9 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 ) -> void {
 	checkSlow(!MassEntities.Contains(static_cast<ecsact_entity_id>(Entity)));
 
-	UE_LOG(LogTemp, Log, TEXT("Create Entity %i"), Entity);
-
 	auto* world = GetWorld();
 
-	const FMassEntityTemplate& entity_template =
+	const auto& entity_template =
 		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
 	auto new_entity_handles = TArray<FMassEntityHandle>{};
 
@@ -102,14 +100,9 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 
 	mass_spawner->SpawnEntities(entity_template, 1, new_entity_handles);
 	for(auto entity_handle : new_entity_handles) {
-		entity_manager.AddFragmentToEntity(
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
 			entity_handle,
-			FEcsactEntityFragment::StaticStruct(),
-			[Entity](void* fragment, const UScriptStruct&) {
-				static_cast<FEcsactEntityFragment*>(fragment)->SetId(
-					static_cast<ecsact_entity_id>(Entity)
-				);
-			}
+			FEcsactEntityFragment{static_cast<ecsact_entity_id>(Entity)}
 		);
 	}
 
@@ -188,12 +181,17 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 	const auto& entity_handles =
 		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
 	for(auto entity_handle : entity_handles) {
-		entity_manager.GetFragmentDataPtr<FEcsactPositionFragment>(entity_handle)
-			->SetPosition(FVector{
-				Position.X,
-				Position.Y,
-				Position.Z,
-			});
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>(
+			[entity_handle, Position](FMassEntityManager& entity_manager) {
+				entity_manager
+					.GetFragmentDataPtr<FEcsactPositionFragment>(entity_handle)
+					->SetPosition(FVector{
+						Position.X,
+						Position.Y,
+						Position.Z,
+					});
+			}
+		);
 	}
 }
 
@@ -226,11 +224,11 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 	auto entity_handles =
 		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
 
-	for(auto Entity : entity_handles) {
+	for(auto entity_handle : entity_handles) {
 		if(Toggle.Streaming) {
-			entity_manager.Defer().AddTag<FEcsactStreamTag>(Entity);
+			entity_manager.Defer().AddTag<FEcsactStreamTag>(entity_handle);
 		} else {
-			entity_manager.Defer().RemoveTag<FEcsactStreamTag>(Entity);
+			entity_manager.Defer().RemoveTag<FEcsactStreamTag>(entity_handle);
 		}
 	}
 }
