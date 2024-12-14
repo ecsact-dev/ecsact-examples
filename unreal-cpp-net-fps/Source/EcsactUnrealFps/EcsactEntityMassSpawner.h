@@ -41,6 +41,11 @@ public:
 		FExampleFpsEnemy Enemy
 	) -> void override;
 
+	auto RemoveEnemy_Implementation( //
+		int32            Entity,
+		FExampleFpsEnemy Enemy
+	) -> void override;
+
 	auto InitPosition_Implementation( //
 		int32               Entity,
 		FExampleFpsPosition Position

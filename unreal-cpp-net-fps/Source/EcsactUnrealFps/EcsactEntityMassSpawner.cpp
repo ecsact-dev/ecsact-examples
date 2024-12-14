@@ -138,6 +138,35 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 	if(!CheckMassEntities(Entity, TEXT("InitEnemy"))) {
 		return;
 	}
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+	auto entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+
+	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddTag<FExampleEnemyTag>(entity_handle);
+	}
+}
+
+auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
+	int32            Entity,
+	FExampleFpsEnemy Enemy
+) -> void {
+	if(!CheckMassEntities(Entity, TEXT("RemoveEnemy"))) {
+		return;
+	}
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+	auto entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+
+	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().RemoveTag<FExampleEnemyTag>(entity_handle);
+	}
 }
 
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(

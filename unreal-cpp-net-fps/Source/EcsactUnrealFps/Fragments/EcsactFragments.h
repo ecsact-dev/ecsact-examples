@@ -71,11 +71,20 @@ private:
 	FVector Position;
 };
 
-USTRUCT()
-
 /**
  * Tag indiciating that this mass entity should be streamed.
  */
+USTRUCT()
+
 struct ECSACTUNREALFPS_API FEcsactStreamTag : public FMassTag {
 	GENERATED_BODY()
+};
+
+/**
+ * Tag indiciating that this entity is an enemy
+ */
+USTRUCT()
+
+struct ECSACTUNREALFPS_API FExampleEnemyTag : public FMassTag {
+	GENERATED_BODY() // nolint
 };
