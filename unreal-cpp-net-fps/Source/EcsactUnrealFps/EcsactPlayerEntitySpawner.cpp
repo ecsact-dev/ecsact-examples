@@ -52,10 +52,35 @@ auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
 	int32          NewPlayerId
 ) -> void {
 	auto world = WorldContext->GetWorld();
-	check(world);
+	if(!world) {
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("SetLocalEcsactPlayerId called too early - world not ready")
+		);
+		return;
+	}
 	auto runner = EcsactUnrealExecution::Runner(world);
-	check(runner.IsValid());
+	if(!world) {
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("SetLocalEcsactPlayerId called too early - runner not ready")
+		);
+		return;
+	}
+
 	auto self = runner->GetSubsystem<ThisClass>();
+	if(!self) {
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("SetLocalEcsactPlayerId called too early - player entity spawner "
+					 "not ready")
+		);
+		return;
+	}
+
 	self->LocallyControllerPlayerId = NewPlayerId;
 
 	UE_LOG(
