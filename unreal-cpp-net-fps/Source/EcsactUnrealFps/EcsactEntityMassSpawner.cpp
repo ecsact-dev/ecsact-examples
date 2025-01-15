@@ -98,7 +98,10 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 	auto& entity_manager =
 		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 
+	UE_LOG(LogTemp, Log, TEXT("EntityCreated implementation %i"), Entity);
+
 	mass_spawner->SpawnEntities(entity_template, 1, new_entity_handles);
+	MassEntities.Add(static_cast<ecsact_entity_id>(Entity), new_entity_handles);
 	for(auto entity_handle : new_entity_handles) {
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
 			entity_handle,
@@ -106,7 +109,12 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 		);
 	}
 
-	MassEntities.Add(static_cast<ecsact_entity_id>(Entity), new_entity_handles);
+	UE_LOG(
+		LogTemp,
+		Log,
+		TEXT("EntityCreated implementation %i"),
+		new_entity_handles.Num()
+	);
 }
 
 auto UEcsactEntityMassSpawner::EntityDestroyed_Implementation( //
@@ -176,6 +184,8 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	if(!CheckMassEntities(Entity, TEXT("InitPosition"))) {
 		return;
 	}
+
+	UE_LOG(LogTemp, Log, TEXT("InitPosition %i"), Entity);
 
 	auto* world = GetWorld();
 	auto& entity_manager =
