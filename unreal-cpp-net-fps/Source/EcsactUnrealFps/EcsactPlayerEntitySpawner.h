@@ -82,6 +82,21 @@ public:
 		FExampleFpsPusher Pusher
 	) -> void override;
 
+	auto InitPushcharge_Implementation(
+		int32                 Entity,
+		FExampleFpsPushcharge Pushcharge
+	) -> void override;
+
+	auto UpdatePushcharge_Implementation(
+		int32                 Entity,
+		FExampleFpsPushcharge Pushcharge
+	) -> void override;
+
+	auto RemovePushcharge_Implementation(
+		int32                 Entity,
+		FExampleFpsPushcharge Pushcharge
+	) -> void override;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AEcsactUnrealFpsCharacter> ProxyPlayerClass;
 

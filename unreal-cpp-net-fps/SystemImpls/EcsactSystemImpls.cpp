@@ -1,14 +1,15 @@
 #include <cstdint>
 #include <cstdlib>
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
 bool is_overlapping(
-	int16_t                      radius,
-	const example::fps::Position pos,
-	const example::fps::Position other_pos
+	int16_t                       radius,
+	const example::fps::Position& pos,
+	const example::fps::Position& other_pos
 ) {
 	float x_dist = std::abs(pos.x - other_pos.x);
 	float y_dist = std::abs(pos.y - other_pos.y);
@@ -35,10 +36,84 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 	// trivial
 }
 
-auto example::fps::Push::impl(context& ctx) -> void {
+auto example::fps::StartPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	if(player_id == ctx.action().player_id) {
+		std::puts("START PUSH");
+		ctx.add(PushCharge{.charge_time = 0, .charge_maximum = 150});
+	}
+}
+
+auto example::fps::FinishPush::impl(context& ctx) -> void {
+	auto player_id = ctx.get<Player>().player_id;
+
+	if(player_id == ctx.action().player_id) {
+		std::puts("PUSHER ADDED");
 		ctx.add(Pusher{1.f});
+	}
+}
+
+auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
+	auto push = ctx._ctx.parent().action<FinishPush>();
+	auto player_id = ctx._ctx.parent().get<Player>().player_id;
+	if(player_id != push.player_id) {
+		return;
+	}
+
+	const auto pusher_pos = ctx._ctx.parent().get<Position>();
+	const auto push_multipliers = ctx._ctx.parent().get<PushCharge>();
+
+	float max_radius = 1000;
+
+	float min_mult = 0.3f;
+	float mult = static_cast<float>(push_multipliers.charge_time) /
+		static_cast<float>(push_multipliers.charge_maximum);
+
+	if(mult < min_mult) {
+		mult = min_mult;
+	}
+
+	auto radius = max_radius * mult;
+
+	const auto position = ctx.get<Position>();
+	auto       toggle = ctx.get<Toggle>();
+
+	if(is_overlapping(radius, position, pusher_pos)) {
+		float max_force = 100;
+		int   max_tick_count = 30;
+
+		int  force = max_force * mult;
+		auto tick_count = static_cast<int16_t>(std::floor(max_tick_count * mult));
+
+		auto push_dir_x = std::clamp(position.x - pusher_pos.x, -1.f, 1.f);
+		auto push_dir_y = std::clamp(position.y - pusher_pos.y, -1.f, 1.f);
+		auto push_dir_z = 0.f; // TODO: add a little Z to spice it up
+
+		ctx.add(Pushing{
+			.tick_count = tick_count,
+			.force_x = push_dir_x * force,
+			.force_y = push_dir_y * force,
+			.force_z = push_dir_z * force,
+		});
+
+		toggle.streaming = false;
+		ctx.update(toggle);
+	}
+}
+
+auto example::fps::RemovePushCharge::impl(context& ctx) -> void {
+	// trivial
+}
+
+auto example::fps::TickPushCharge::impl(context& ctx) -> void {
+	auto push_charge = ctx.get<PushCharge>();
+
+	if(push_charge.charge_time < push_charge.charge_maximum) {
+		push_charge.charge_time += 1;
+		auto charge_str = std::to_string(push_charge.charge_time);
+
+		std::puts(charge_str.c_str());
+		ctx.update(push_charge);
 	}
 }
 
@@ -47,34 +122,6 @@ auto example::fps::Move::impl(context& ctx) -> void {
 	auto action = ctx.action();
 	if(player_id == action.player_id) {
 		ctx.update(MoveDirection{action.x, action.y});
-	}
-}
-
-auto example::fps::Push::PushEntities::impl(context& ctx) -> void {
-	auto push = ctx._ctx.parent().action<Push>();
-	auto player_id = ctx._ctx.parent().get<Player>().player_id;
-	if(player_id != push.player_id) {
-		return;
-	}
-
-	const auto pusher_pos = ctx._ctx.parent().get<Position>();
-	const auto position = ctx.get<Position>();
-	auto       toggle = ctx.get<Toggle>();
-
-	if(is_overlapping(push.radius, position, pusher_pos)) {
-		auto push_dir_x = std::clamp(position.x - pusher_pos.x, -1.f, 1.f);
-		auto push_dir_y = std::clamp(position.y - pusher_pos.y, -1.f, 1.f);
-		auto push_dir_z = 0.f; // TODO: add a little Z to spice it up
-
-		ctx.add(Pushing{
-			.tick_count = push.tick_count,
-			.force_x = push_dir_x * push.force,
-			.force_y = push_dir_y * push.force,
-			.force_z = push_dir_z * push.force,
-		});
-
-		toggle.streaming = false;
-		ctx.update(toggle);
 	}
 }
 

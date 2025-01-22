@@ -6,6 +6,11 @@ component PusherExpired;
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
+component PushCharge {
+	i16 charge_time;
+	i16 charge_maximum;
+}
+
 component Enemy;
 
 component Velocity {
@@ -35,14 +40,18 @@ system PusherApplyExpired {
 	removes Pusher;
 }
 
-action Push {
+action StartPush {
 	i32 player_id;
-	i16 radius;
-	i16 tick_count;
-	f32 force;
+	readonly Player;
+	adds PushCharge;
+}
+
+action FinishPush {
+	i32 player_id;
 
 	readonly Player;
 	readonly Position;
+	readonly PushCharge;
 	adds Pusher;
 	
 	system PushEntities {
@@ -51,6 +60,17 @@ action Push {
 		readwrite Toggle;
 		adds Pushing;
 	}
+}
+
+system RemovePushCharge {
+	include Player;
+	include Pusher; 
+	removes PushCharge;
+}
+
+system TickPushCharge {
+	readonly Player;
+	readwrite PushCharge;
 }
 
 component MoveDirection {

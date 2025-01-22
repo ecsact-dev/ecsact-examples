@@ -64,6 +64,18 @@ struct FExampleFpsPosition {
 };
 
 USTRUCT(BlueprintType)
+struct FExampleFpsPushcharge {
+	GENERATED_BODY()
+	
+	static FExampleFpsPushcharge FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
+	int32 ChargeTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
+	int32 ChargeMaximum;
+	
+};
+
+USTRUCT(BlueprintType)
 struct FExampleFpsEnemy {
 	GENERATED_BODY()
 	
@@ -153,6 +165,9 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPosition(int32 Entity, const void* Component);
 	void RawUpdatePosition(int32 Entity, const void* Component);
 	void RawRemovePosition(int32 Entity, const void* Component);
+	void RawInitPushcharge(int32 Entity, const void* Component);
+	void RawUpdatePushcharge(int32 Entity, const void* Component);
+	void RawRemovePushcharge(int32 Entity, const void* Component);
 	void RawInitEnemy(int32 Entity, const void* Component);
 	void RawUpdateEnemy(int32 Entity, const void* Component);
 	void RawRemoveEnemy(int32 Entity, const void* Component);
@@ -225,6 +240,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Position"))
 	void RemovePosition(int32 Entity, FExampleFpsPosition Position);
 	virtual void RemovePosition_Implementation(int32 Entity, FExampleFpsPosition Position);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.PushCharge"))
+	void InitPushcharge(int32 Entity, FExampleFpsPushcharge Pushcharge);
+	virtual void InitPushcharge_Implementation(int32 Entity, FExampleFpsPushcharge Pushcharge);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.PushCharge"))
+	void UpdatePushcharge(int32 Entity, FExampleFpsPushcharge Pushcharge);
+	virtual void UpdatePushcharge_Implementation(int32 Entity, FExampleFpsPushcharge Pushcharge);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.PushCharge"))
+	void RemovePushcharge(int32 Entity, FExampleFpsPushcharge Pushcharge);
+	virtual void RemovePushcharge_Implementation(int32 Entity, FExampleFpsPushcharge Pushcharge);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Enemy"))
 	void InitEnemy(int32 Entity, FExampleFpsEnemy Enemy);
 	virtual void InitEnemy_Implementation(int32 Entity, FExampleFpsEnemy Enemy);

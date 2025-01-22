@@ -6,8 +6,12 @@
 
 
 ECSACT_EXTERN
-ECSACT_EXPORT("example__fps__Push")
-void example__fps__Push(struct ecsact_system_execution_context*);
+ECSACT_EXPORT("example__fps__StartPush")
+void example__fps__StartPush(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__FinishPush")
+void example__fps__FinishPush(struct ecsact_system_execution_context*);
 
 ECSACT_EXTERN
 ECSACT_EXPORT("example__fps__Move")
@@ -22,8 +26,16 @@ ECSACT_EXPORT("example__fps__PusherApplyExpired")
 void example__fps__PusherApplyExpired(struct ecsact_system_execution_context*);
 
 ECSACT_EXTERN
-ECSACT_EXPORT("example__fps__Push__PushEntities")
-void example__fps__Push__PushEntities(struct ecsact_system_execution_context*);
+ECSACT_EXPORT("example__fps__FinishPush__PushEntities")
+void example__fps__FinishPush__PushEntities(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__RemovePushCharge")
+void example__fps__RemovePushCharge(struct ecsact_system_execution_context*);
+
+ECSACT_EXTERN
+ECSACT_EXPORT("example__fps__TickPushCharge")
+void example__fps__TickPushCharge(struct ecsact_system_execution_context*);
 
 ECSACT_EXTERN
 ECSACT_EXPORT("example__fps__ApplyPush")

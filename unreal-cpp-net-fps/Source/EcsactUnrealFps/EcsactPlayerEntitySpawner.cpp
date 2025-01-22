@@ -318,3 +318,32 @@ auto UEcsactPlayerEntitySpawner::RemovePusher_Implementation( //
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Remove Pusher"));
 }
+
+auto UEcsactPlayerEntitySpawner::InitPushcharge_Implementation(
+	int32                 Entity,
+	FExampleFpsPushcharge Pushcharge
+) -> void {
+}
+
+auto UEcsactPlayerEntitySpawner::UpdatePushcharge_Implementation(
+	int32                 Entity,
+	FExampleFpsPushcharge Pushcharge
+) -> void {
+	float percentage = static_cast<float>(Pushcharge.ChargeTime) /
+		static_cast<float>(Pushcharge.ChargeMaximum);
+
+	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
+	if(proxy && proxy->IsValid()) {
+		proxy->Get()->OnPushChargeUpdated(percentage);
+	}
+}
+
+auto UEcsactPlayerEntitySpawner::RemovePushcharge_Implementation(
+	int32                 Entity,
+	FExampleFpsPushcharge Pushcharge
+) -> void {
+	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
+	if(proxy && proxy->IsValid()) {
+		proxy->Get()->OnPushChargeUpdated(0.0f);
+	}
+}

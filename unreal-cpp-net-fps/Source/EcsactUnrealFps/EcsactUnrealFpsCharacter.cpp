@@ -114,7 +114,13 @@ auto AEcsactUnrealFpsCharacter::SetupPlayerInputComponent(
 		PushAction,
 		ETriggerEvent::Triggered,
 		this,
-		&AEcsactUnrealFpsCharacter::Push
+		&AEcsactUnrealFpsCharacter::StartPush
+	);
+	eic->BindAction(
+		PushAction,
+		ETriggerEvent::Completed,
+		this,
+		&AEcsactUnrealFpsCharacter::FinishPush
 	);
 }
 
@@ -143,13 +149,34 @@ void AEcsactUnrealFpsCharacter::Move(const FInputActionValue& Value) {
 	}
 }
 
-void AEcsactUnrealFpsCharacter::Push(const FInputActionValue& Value) {
+void AEcsactUnrealFpsCharacter::StartPush(const FInputActionValue& Value) {
 	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
-
-	if(runner) {
-		auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
-		MassSpawner->Push(CharacterPlayerId);
+	if(!runner) {
+		return;
 	}
+
+	UE_LOG(LogTemp, Log, TEXT("Start push action"));
+	auto StartPushAction = example::fps::StartPush{
+		.player_id = CharacterPlayerId,
+	};
+
+	runner->PushAction(StartPushAction);
+}
+
+void AEcsactUnrealFpsCharacter::FinishPush(const FInputActionValue& Value) {
+	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();
+	if(!runner) {
+		return;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Finish push action"));
+	auto FinishPushAction = example::fps::FinishPush{
+		.player_id = CharacterPlayerId,
+	};
+	runner->PushAction(FinishPushAction);
+
+	// auto MassSpawner = runner->GetSubsystem<UEcsactEntityMassSpawner>();
+	// MassSpawner->Push(CharacterPlayerId);
 }
 
 void AEcsactUnrealFpsCharacter::OnOverlapBegin(
@@ -172,3 +199,4 @@ void AEcsactUnrealFpsCharacter::OnOverlapEnd(
 	int32                OtherBodyIndex
 ) {
 }
+

@@ -109,7 +109,7 @@ struct example::fps::PusherApplyExpired::context {
 	
 };
 
-struct example::fps::Push::PushEntities::context {
+struct example::fps::FinishPush::PushEntities::context {
 	[[no_unique_address]] ::ecsact::execution_context _ctx;
 	
 	template<typename T, typename... AssocFields>
@@ -118,7 +118,7 @@ struct example::fps::Push::PushEntities::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push.PushEntities context.get<T> may only be called with a\n"
+		"| example.fps.FinishPush.PushEntities context.get<T> may only be called with a\n"
 		"| component readable by the system. Did you forget to add readonly or readwrite\n"
 		"| capabilities? The following components are allowed:\n"
 		"| 	- example.fps.Position\n"
@@ -132,9 +132,9 @@ struct example::fps::Push::PushEntities::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push.PushEntities context.update<T> may only be called with a\n"
-		"| component writable by the system. Did you forget to add readwrite capabilities?\n"
-		"| The following components are allowed:\n"
+		"| example.fps.FinishPush.PushEntities context.update<T> may only be called with\n"
+		"| a component writable by the system. Did you forget to add readwrite\n"
+		"| capabilities? The following components are allowed:\n"
 		"| 	- example.fps.Toggle\n"
 		"| \n");
 	}
@@ -146,7 +146,7 @@ struct example::fps::Push::PushEntities::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push.PushEntities context.add<T> may only be called with a\n"
+		"| example.fps.FinishPush.PushEntities context.add<T> may only be called with a\n"
 		"| component addable by the system. Did you forget to add adds capabilities? The\n"
 		"| following components are allowed:\n"
 		"| 	- example.fps.Pushing\n"
@@ -158,7 +158,7 @@ struct example::fps::Push::PushEntities::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push.PushEntities context.add<T> may only be called with a\n"
+		"| example.fps.FinishPush.PushEntities context.add<T> may only be called with a\n"
 		"| component addable by the system. Did you forget to add adds capabilities? The\n"
 		"| following components are allowed:\n"
 		"| 	- example.fps.Pushing\n"
@@ -180,7 +180,82 @@ struct example::fps::Push::PushEntities::context {
 	auto entity() const -> ecsact_entity_id {
 		return _ctx.entity();
 	}
-	const example::fps::Push::context parent() const;
+	const example::fps::FinishPush::context parent() const;
+	
+	
+	
+};
+
+struct example::fps::RemovePushCharge::context {
+	[[no_unique_address]] ::ecsact::execution_context _ctx;
+	
+	template<typename T, typename... AssocFields>
+	auto remove(AssocFields&&... assoc_fields) -> void {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.RemovePushCharge context.remove<T> may only be called with a\n"
+		"| component removable by the system. Did you forget to add removes capabilities? The\n"
+		"| following components are allowed:\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	
+	template<> auto remove<example::fps::PushCharge>() -> void {
+		return _ctx.remove<example::fps::PushCharge>();
+		
+	}
+	auto entity() const -> ecsact_entity_id {
+		return _ctx.entity();
+	}
+	
+	
+	
+};
+
+struct example::fps::TickPushCharge::context {
+	[[no_unique_address]] ::ecsact::execution_context _ctx;
+	
+	template<typename T, typename... AssocFields>
+	auto get(AssocFields&&... assoc_fields) -> T {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.TickPushCharge context.get<T> may only be called with a component\n"
+		"| readable by the system. Did you forget to add readonly or readwrite\n"
+		"| capabilities? The following components are allowed:\n"
+		"| 	- example.fps.Player\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	
+	template<typename T, typename... AssocFields>
+	auto update(const T& updated_component, AssocFields&&... assoc_fields) -> void {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.TickPushCharge context.update<T> may only be called with a\n"
+		"| component writable by the system. Did you forget to add readwrite capabilities? The\n"
+		"| following components are allowed:\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	
+	template<> auto get<example::fps::Player>() -> example::fps::Player {
+		return _ctx.get<example::fps::Player>();
+	}
+	template<> auto get<example::fps::PushCharge>() -> example::fps::PushCharge {
+		return _ctx.get<example::fps::PushCharge>();
+	}
+	template<> auto update<example::fps::PushCharge>(const example::fps::PushCharge& updated_component) -> void {
+		_ctx.update<example::fps::PushCharge>(updated_component);
+	}
+	auto entity() const -> ecsact_entity_id {
+		return _ctx.entity();
+	}
 	
 	
 	
@@ -445,7 +520,7 @@ struct example::fps::RemovePushing::context {
 	
 };
 
-struct example::fps::Push::context {
+struct example::fps::StartPush::context {
 	[[no_unique_address]] ::ecsact::execution_context _ctx;
 	
 	template<typename T, typename... AssocFields>
@@ -454,11 +529,10 @@ struct example::fps::Push::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push context.get<T> may only be called with a component readable\n"
-		"| by the system. Did you forget to add readonly or readwrite capabilities? The\n"
-		"| following components are allowed:\n"
+		"| example.fps.StartPush context.get<T> may only be called with a component\n"
+		"| readable by the system. Did you forget to add readonly or readwrite capabilities?\n"
+		"| The following components are allowed:\n"
 		"| 	- example.fps.Player\n"
-		"| 	- example.fps.Position\n"
 		"| \n");
 	}
 	
@@ -469,9 +543,70 @@ struct example::fps::Push::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push context.add<T> may only be called with a component addable\n"
-		"| by the system. Did you forget to add adds capabilities? The following components\n"
-		"| are allowed:\n"
+		"| example.fps.StartPush context.add<T> may only be called with a component\n"
+		"| addable by the system. Did you forget to add adds capabilities? The following\n"
+		"| components are allowed:\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	template<typename T>
+	auto add() -> void {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.StartPush context.add<T> may only be called with a component\n"
+		"| addable by the system. Did you forget to add adds capabilities? The following\n"
+		"| components are allowed:\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	
+	template<> auto get<example::fps::Player>() -> example::fps::Player {
+		return _ctx.get<example::fps::Player>();
+	}
+	template<> auto add<example::fps::PushCharge>(const example::fps::PushCharge& new_component) -> void {
+		_ctx.add<example::fps::PushCharge>(new_component);
+	}
+	auto entity() const -> ecsact_entity_id {
+		return _ctx.entity();
+	}
+	
+	
+	auto action() const -> example::fps::StartPush {
+		return _ctx.action<example::fps::StartPush>();
+	}
+	
+};
+
+struct example::fps::FinishPush::context {
+	[[no_unique_address]] ::ecsact::execution_context _ctx;
+	
+	template<typename T, typename... AssocFields>
+	auto get(AssocFields&&... assoc_fields) -> T {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.FinishPush context.get<T> may only be called with a component\n"
+		"| readable by the system. Did you forget to add readonly or readwrite capabilities?\n"
+		"| The following components are allowed:\n"
+		"| 	- example.fps.Player\n"
+		"| 	- example.fps.Position\n"
+		"| 	- example.fps.PushCharge\n"
+		"| \n");
+	}
+	
+	template<typename T>
+		requires(!std::is_empty_v<T>)
+	auto add(const T& new_component) -> void {
+		// local type to make static assert always fail
+		struct codegen_error {};
+		static_assert(std::is_same_v<T, codegen_error>, 
+		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
+		"| example.fps.FinishPush context.add<T> may only be called with a component\n"
+		"| addable by the system. Did you forget to add adds capabilities? The following\n"
+		"| components are allowed:\n"
 		"| 	- example.fps.Pusher\n"
 		"| \n");
 	}
@@ -481,9 +616,9 @@ struct example::fps::Push::context {
 		struct codegen_error {};
 		static_assert(std::is_same_v<T, codegen_error>, 
 		"| [Ecsact C++ Error]: System Execution Context Misuse\n"
-		"| example.fps.Push context.add<T> may only be called with a component addable\n"
-		"| by the system. Did you forget to add adds capabilities? The following components\n"
-		"| are allowed:\n"
+		"| example.fps.FinishPush context.add<T> may only be called with a component\n"
+		"| addable by the system. Did you forget to add adds capabilities? The following\n"
+		"| components are allowed:\n"
 		"| 	- example.fps.Pusher\n"
 		"| \n");
 	}
@@ -494,6 +629,9 @@ struct example::fps::Push::context {
 	template<> auto get<example::fps::Position>() -> example::fps::Position {
 		return _ctx.get<example::fps::Position>();
 	}
+	template<> auto get<example::fps::PushCharge>() -> example::fps::PushCharge {
+		return _ctx.get<example::fps::PushCharge>();
+	}
 	template<> auto add<example::fps::Pusher>(const example::fps::Pusher& new_component) -> void {
 		_ctx.add<example::fps::Pusher>(new_component);
 	}
@@ -502,8 +640,8 @@ struct example::fps::Push::context {
 	}
 	
 	
-	auto action() const -> example::fps::Push {
-		return _ctx.action<example::fps::Push>();
+	auto action() const -> example::fps::FinishPush {
+		return _ctx.action<example::fps::FinishPush>();
 	}
 	
 };

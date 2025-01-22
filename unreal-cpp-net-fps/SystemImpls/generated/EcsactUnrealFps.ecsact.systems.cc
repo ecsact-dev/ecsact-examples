@@ -8,9 +8,17 @@ void example__fps__PusherApplyExpired (struct ecsact_system_execution_context* c
 	example::fps::PusherApplyExpired::context ctx{cctx};
 	example::fps::PusherApplyExpired::impl(ctx);
 }
-void example__fps__Push__PushEntities (struct ecsact_system_execution_context* cctx) {
-	example::fps::Push::PushEntities::context ctx{cctx};
-	example::fps::Push::PushEntities::impl(ctx);
+void example__fps__FinishPush__PushEntities (struct ecsact_system_execution_context* cctx) {
+	example::fps::FinishPush::PushEntities::context ctx{cctx};
+	example::fps::FinishPush::PushEntities::impl(ctx);
+}
+void example__fps__RemovePushCharge (struct ecsact_system_execution_context* cctx) {
+	example::fps::RemovePushCharge::context ctx{cctx};
+	example::fps::RemovePushCharge::impl(ctx);
+}
+void example__fps__TickPushCharge (struct ecsact_system_execution_context* cctx) {
+	example::fps::TickPushCharge::context ctx{cctx};
+	example::fps::TickPushCharge::impl(ctx);
 }
 void example__fps__ApplyPush (struct ecsact_system_execution_context* cctx) {
 	example::fps::ApplyPush::context ctx{cctx};
@@ -32,9 +40,13 @@ void example__fps__RemovePushing (struct ecsact_system_execution_context* cctx) 
 	example::fps::RemovePushing::context ctx{cctx};
 	example::fps::RemovePushing::impl(ctx);
 }
-void example__fps__Push (struct ecsact_system_execution_context* cctx) {
-	example::fps::Push::context ctx{cctx};
-	example::fps::Push::impl(ctx);
+void example__fps__StartPush (struct ecsact_system_execution_context* cctx) {
+	example::fps::StartPush::context ctx{cctx};
+	example::fps::StartPush::impl(ctx);
+}
+void example__fps__FinishPush (struct ecsact_system_execution_context* cctx) {
+	example::fps::FinishPush::context ctx{cctx};
+	example::fps::FinishPush::impl(ctx);
 }
 void example__fps__Move (struct ecsact_system_execution_context* cctx) {
 	example::fps::Move::context ctx{cctx};

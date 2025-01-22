@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "ecsact/runtime/common.h"
+
 #include "EcsactUnrealFpsCharacter.generated.h"
 
 class UInputComponent;
@@ -84,6 +85,9 @@ public:
 
 	auto IsMoveInputIgnored() const -> bool override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPushChargeUpdated(float ChargePercentage);
+
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
@@ -106,6 +110,7 @@ protected:
 		int32                OtherBodyIndex
 	);
 
+
 public:
 	// TODO: Use some kind of entity actor component
 	ecsact_entity_id CharacterEntity = ECSACT_INVALID_ID(entity);
@@ -117,7 +122,8 @@ protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
-	void Push(const FInputActionValue& Value);
+	void StartPush(const FInputActionValue& Value);
+	void FinishPush(const FInputActionValue& Value);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Detect")
 	USphereComponent* PushDetectionSphere;
