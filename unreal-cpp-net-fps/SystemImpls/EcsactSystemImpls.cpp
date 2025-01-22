@@ -39,7 +39,6 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 auto example::fps::StartPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	if(player_id == ctx.action().player_id) {
-		std::puts("START PUSH");
 		ctx.add(PushCharge{.charge_time = 0, .charge_maximum = 150});
 	}
 }
@@ -48,7 +47,6 @@ auto example::fps::FinishPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 
 	if(player_id == ctx.action().player_id) {
-		std::puts("PUSHER ADDED");
 		ctx.add(Pusher{1.f});
 	}
 }
@@ -112,7 +110,6 @@ auto example::fps::TickPushCharge::impl(context& ctx) -> void {
 		push_charge.charge_time += 1;
 		auto charge_str = std::to_string(push_charge.charge_time);
 
-		std::puts(charge_str.c_str());
 		ctx.update(push_charge);
 	}
 }
