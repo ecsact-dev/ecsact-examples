@@ -1,8 +1,10 @@
 #include "EcsactUnrealFps.h"
 #include "Modules/ModuleManager.h"
+#include "EcsactUnreal/EcsactGameModuleImpl.h"
 
 IMPLEMENT_PRIMARY_GAME_MODULE(
-	FDefaultGameModuleImpl,
+	// FDefaultGameModuleImpl,
+	FEcsactGameModuleImpl,
 	EcsactUnrealFps,
 	"EcsactUnrealFps"
 );

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EcsactUnreal/EcsactAsyncRunnerEvents.h"
 #include "EcsactUnrealFps__ecsact__ue.h"
 #include "EcsactPlayerEntitySpawner.generated.h"
 

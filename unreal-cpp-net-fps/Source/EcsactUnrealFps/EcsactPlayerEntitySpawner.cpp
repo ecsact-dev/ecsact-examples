@@ -1,4 +1,5 @@
 #include "EcsactPlayerEntitySpawner.h"
+#include "EcsactUnreal/EcsactAsyncRunnerEvents.h"
 #include "EcsactUnrealFps/EcsactUnrealFpsCharacter.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnrealFps/Fragments/FollowPlayerTargetFragment.h"
@@ -11,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MassEntitySubsystem.h"
 #include "MassSpawnerSubsystem.h"
+#include "ecsact/runtime/common.h"
 #include "ecsact/runtime/dynamic.h"
 #include "PushExplosionVFX.h"
 
@@ -97,9 +99,14 @@ auto UEcsactPlayerEntitySpawner::RunnerStart_Implementation( //
 ) -> void {
 	auto async_runner = Cast<UEcsactAsyncRunner>(Runner);
 	if(async_runner) {
-		async_runner->OnConnect(TDelegate<void()>::CreateLambda([this, Runner] {
-			CreateInitialEntities(Runner);
-		}));
+		async_runner->AsyncSessionEvent.AddWeakLambda(
+			this,
+			[this, Runner](int32, EEcsactAsyncSessionEvent event) {
+				if(event == EEcsactAsyncSessionEvent::Started) {
+					CreateInitialEntities(Runner);
+				}
+			}
+		);
 	} else {
 		CreateInitialEntities(Runner);
 	}
@@ -109,6 +116,7 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 	int32             Entity,
 	FExampleFpsPlayer Player
 ) -> void {
+	UE_LOG(LogTemp, Log, TEXT("InitPlayer"));
 	EntityPlayerStructs.FindOrAdd(Entity) = Player;
 
 	if(Player.PlayerId == LocallyControllerPlayerId) {
