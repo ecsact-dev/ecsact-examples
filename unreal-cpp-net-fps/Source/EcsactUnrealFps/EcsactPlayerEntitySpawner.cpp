@@ -12,6 +12,7 @@
 #include "MassEntitySubsystem.h"
 #include "MassSpawnerSubsystem.h"
 #include "ecsact/runtime/dynamic.h"
+#include "PushExplosionVFX.h"
 
 auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	UEcsactRunner* Runner
@@ -301,15 +302,6 @@ auto UEcsactPlayerEntitySpawner::InitPusher_Implementation( //
 	FExampleFpsPusher Pusher
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Init Pusher"));
-
-	if(PushEffectClass) {
-		GetWorld()->SpawnActor<AActor>(
-			PushEffectClass,
-			GetPlayerPosition(static_cast<ecsact_entity_id>(Entity)),
-			{},
-			{}
-		);
-	}
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePusher_Implementation( //
@@ -345,5 +337,25 @@ auto UEcsactPlayerEntitySpawner::RemovePushcharge_Implementation(
 	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
 	if(proxy && proxy->IsValid()) {
 		proxy->Get()->OnPushChargeUpdated(0.0f);
+	}
+
+	if(PushEffectClass) {
+		auto pushVfx = GetWorld()->SpawnActor<APushExplosionVFX>(
+			PushEffectClass,
+			GetPlayerPosition(static_cast<ecsact_entity_id>(Entity)),
+			{},
+			{}
+		);
+
+		if(pushVfx) {
+			auto multiplier = //
+				static_cast<float>(Pushcharge.ChargeTime) /
+				static_cast<float>(Pushcharge.ChargeMaximum);
+
+			if(multiplier < 0.3f) {
+				multiplier = 0.3f;
+			}
+			pushVfx->ForceChargeMultiplier = multiplier;
+		}
 	}
 }
