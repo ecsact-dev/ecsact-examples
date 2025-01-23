@@ -26,11 +26,28 @@ class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 
 	auto CheckMassEntities(int32 Entity, const TCHAR* EventName) -> bool;
 
+	UPROPERTY()
+	bool StreamEntities;
+
 public:
 	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool StreamEntities;
+	UFUNCTION(
+		BlueprintCallable,
+		Category = "Ecsact Net Unreal Example",
+		Meta = (WorldContext = "WorldContext")
+	)
+	static void SetStreamEntities(
+		const UObject* WorldContext,
+		bool           bStreamEntities
+	);
+
+	UFUNCTION(
+		BlueprintCallable,
+		Category = "Ecsact Net Unreal Example",
+		Meta = (WorldContext = "WorldContext")
+	)
+	static bool IsStreamingEntities(const UObject* WorldContext);
 
 	auto EntityCreated_Implementation(int32 Entity) -> void override;
 

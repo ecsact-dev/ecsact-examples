@@ -21,6 +21,37 @@
 #include "EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps/Commands/UpdateCommands.h"
 
+auto UEcsactEntityMassSpawner::SetStreamEntities(
+	const UObject* WorldContext,
+	bool           bStreamEntities
+) -> void {
+	auto world = WorldContext->GetWorld();
+	check(world);
+	auto runner = EcsactUnrealExecution::Runner(world);
+	checkSlow(runner.IsValid());
+	for(auto subsystem : runner->GetSubsystemArray<ThisClass>()) {
+		if(subsystem) {
+			subsystem->StreamEntities = bStreamEntities;
+		}
+	}
+}
+
+auto UEcsactEntityMassSpawner::IsStreamingEntities( //
+	const UObject* WorldContext
+) -> bool {
+	auto world = WorldContext->GetWorld();
+	check(world);
+	auto runner = EcsactUnrealExecution::Runner(world);
+	checkSlow(runner.IsValid());
+	for(auto subsystem : runner->GetSubsystemArray<ThisClass>()) {
+		if(subsystem) {
+			return subsystem->StreamEntities;
+		}
+	}
+
+	return true;
+}
+
 auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = GetRunner();
 	check(runner);
