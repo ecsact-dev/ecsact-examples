@@ -83,7 +83,6 @@ public:
 		FExampleFpsToggle Toggle
 	) -> void override;
 
-<<<<<<< HEAD
 	auto InitStunned_Implementation( //
 		int32              Entity,
 		FExampleFpsStunned Stunned
@@ -97,15 +96,5 @@ public:
 	auto RemoveStunned_Implementation( //
 		int32              Entity,
 		FExampleFpsStunned Stunned
-=======
-	auto InitPushing_Implementation( //
-		int32              Entity,
-		FExampleFpsPushing Pushing
-	) -> void override;
-
-	auto RemovePushing_Implementation( //
-		int32              Entity,
-		FExampleFpsPushing Pushing
->>>>>>> 34e45b0 (feat: Physics on entities)
 	) -> void override;
 };
