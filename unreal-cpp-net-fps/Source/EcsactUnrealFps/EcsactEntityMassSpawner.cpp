@@ -1,5 +1,6 @@
 #include "EcsactEntityMassSpawner.h"
 
+#include "Components/SkeletalMeshComponent.h"
 #include "MassCommands.h"
 #include "MassMovementFragments.h"
 #include "MassRepresentationActorManagement.h"
@@ -10,11 +11,13 @@
 #include "MassEntityTemplate.h"
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
+#include "MassActorSubsystem.h"
 #include "MassEntityTemplateRegistry.h"
 #include "MassActorSubsystem.h"
 #include "MassEntityManager.h"
 #include "Enemy.h"
 #include "MassCommonFragments.h"
+#include "Engine/SkeletalMesh.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "Fragments/EcsactFragments.h"
@@ -301,6 +304,7 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 	}
 }
 
+<<<<<<< HEAD
 auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
 	int32              Entity,
 	FExampleFpsStunned Stunned
@@ -310,6 +314,14 @@ auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
 	}
 
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+=======
+auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
+	int32              Entity,
+	FExampleFpsPushing Pushing
+) -> void {
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+
+>>>>>>> 34e45b0 (feat: Physics on entities)
 	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
 
 	for(auto entity_handle : entity_handles) {
@@ -317,6 +329,7 @@ auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
 		if(!entity_actor) {
 			continue;
 		}
+<<<<<<< HEAD
 		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
 		if(!enemy_entity_actor) {
 			continue;
@@ -335,6 +348,29 @@ auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
 	}
 
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+=======
+
+		auto skeletal_mesh =
+			entity_actor->FindComponentByClass<USkeletalMeshComponent>();
+
+		if(!skeletal_mesh) {
+			continue;
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("SIMULAR PHYSICS TRUE"));
+
+		skeletal_mesh->SetSimulatePhysics(true);
+		skeletal_mesh->SetAllBodiesSimulatePhysics(true);
+	}
+}
+
+auto UEcsactEntityMassSpawner::RemovePushing_Implementation( //
+	int32              Entity,
+	FExampleFpsPushing Pushing
+) -> void {
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+
+>>>>>>> 34e45b0 (feat: Physics on entities)
 	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
 
 	for(auto entity_handle : entity_handles) {
@@ -342,6 +378,7 @@ auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
 		if(!entity_actor) {
 			continue;
 		}
+<<<<<<< HEAD
 		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
 		if(!enemy_entity_actor) {
 			continue;
@@ -373,5 +410,18 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 		}
 
 		enemy_entity_actor->OnRemoveStunned(Stunned);
+=======
+
+		auto skeletal_mesh =
+			entity_actor->FindComponentByClass<USkeletalMeshComponent>();
+
+		if(!skeletal_mesh) {
+			continue;
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("SIMULAR PHYSICS FALSE"));
+		skeletal_mesh->SetSimulatePhysics(false);
+		skeletal_mesh->SetAllBodiesSimulatePhysics(false);
+>>>>>>> 34e45b0 (feat: Physics on entities)
 	}
 }
