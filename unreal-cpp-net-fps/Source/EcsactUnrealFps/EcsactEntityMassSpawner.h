@@ -97,6 +97,4 @@ public:
 		int32              Entity,
 		FExampleFpsStunned Stunned
 	) -> void override;
-
-	auto Push(int32 PlayerId) -> void;
 };
