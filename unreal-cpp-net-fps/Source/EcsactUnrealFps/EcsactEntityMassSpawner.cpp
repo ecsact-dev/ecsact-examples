@@ -204,8 +204,6 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 		return;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("InitPosition %i"), Entity);
-
 	auto* world = GetWorld();
 	auto& entity_manager =
 		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
