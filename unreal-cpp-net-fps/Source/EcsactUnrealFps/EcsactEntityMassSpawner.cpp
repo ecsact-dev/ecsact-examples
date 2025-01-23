@@ -56,24 +56,9 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	auto runner = GetRunner();
 	check(runner);
 
-	UE_LOG(
-		LogTemp,
-		Warning,
-		TEXT("CreateMassEntities, creating %i entities"),
-		count
-	);
-
 	for(int i = 0; i < count; i++) {
 		auto RandomPointX = FMath::RandRange(-2000, 2000);
 		auto RandomPointY = FMath::RandRange(-2000, 2000);
-
-		UE_LOG(
-			LogTemp,
-			Warning,
-			TEXT("Setting random position to %i %i"),
-			RandomPointX,
-			RandomPointY
-		);
 
 		runner->CreateEntity()
 			.AddComponent(example::fps::Position{
@@ -372,8 +357,6 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 	int32              Entity,
 	FExampleFpsStunned Stunned
 ) -> void {
-	UE_LOG(LogTemp, Error, TEXT("REMOVESTUNNED"));
-
 	if(!CheckMassEntities(Entity, TEXT("RemoveStunned"))) {
 		return;
 	}
