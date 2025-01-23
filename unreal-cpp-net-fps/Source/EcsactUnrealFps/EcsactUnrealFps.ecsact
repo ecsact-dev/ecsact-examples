@@ -134,7 +134,7 @@ system TogglePushedEntities {
 	}
 }
 
-system RemovePushing {
+system RemovePushing(parallel: false) {
 	include Enemy;
 	removes RemovePushingTag;
 	removes Pushing;
