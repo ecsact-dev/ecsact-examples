@@ -106,13 +106,13 @@ system ApplyPush {
 	readwrite Velocity;
 }
 
-system ApplyVelocity {
+system ApplyVelocity(parallel: false) {
 	readwrite Position;
 	readonly Velocity;
 	exclude Stunned;
 }
 
-system ApplyDrag {
+system ApplyDrag(parallel: false) {
 	readwrite Velocity;
 	include Toggle;
 	readonly Pushing;
@@ -120,7 +120,7 @@ system ApplyDrag {
 	adds Stunned;
 }
 
-system ResumeStreaming {
+system ResumeStreaming(parallel: false) {
 	readwrite Toggle;
 	include StunnedExpired;
 }
