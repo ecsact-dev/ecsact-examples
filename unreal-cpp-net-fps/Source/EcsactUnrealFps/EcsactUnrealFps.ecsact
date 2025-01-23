@@ -6,6 +6,12 @@ component PusherExpired;
 component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
 component Position(stream) { f32 x; f32 y; f32 z; }
 
+component Stunned {
+	f32 remaining;
+}
+
+component StunnedExpired;
+
 component PushCharge {
 	i16 charge_time;
 	i16 charge_maximum;
@@ -30,7 +36,12 @@ component Toggle {
 	i8 streaming;
 }
 
-system PusherExpireChecker {
+system StunTimer(parallel: false) {
+	readwrite Stunned;
+	adds StunnedExpired;
+}
+
+system PusherExpireChecker(parallel: false) {
 	readwrite Pusher;
 	adds PusherExpired;
 }
@@ -98,13 +109,20 @@ system ApplyPush {
 system ApplyVelocity {
 	readwrite Position;
 	readonly Velocity;
+	exclude Stunned;
 }
 
 system ApplyDrag {
 	readwrite Velocity;
-	readwrite Toggle;
+	include Toggle;
 	readonly Pushing;
 	adds RemovePushingTag;
+	adds Stunned;
+}
+
+system ResumeStreaming {
+	readwrite Toggle;
+	include StunnedExpired;
 }
 
 system TogglePushedEntities {
@@ -122,3 +140,7 @@ system RemovePushing {
 	removes Pushing;
 }
 
+system StunnedExpiry(parallel: false) {
+	removes Stunned;
+	removes StunnedExpired;
+}

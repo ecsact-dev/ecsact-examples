@@ -165,18 +165,20 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 	const auto pushing = ctx.get<Pushing>();
 	auto       velocity = ctx.get<Velocity>();
-	auto       toggle = ctx.get<Toggle>();
 
 	velocity.x = velocity.x * 0.9f;
 	velocity.y = velocity.y * 0.9f;
 	velocity.z = velocity.z * 0.9f;
 
 	if(std::abs(velocity.x) <= 2 && pushing.tick_count <= 0) {
-		toggle.streaming = true;
 		ctx.add<RemovePushingTag>();
-		ctx.update(toggle);
+		ctx.add(Stunned{10.f});
 	}
 	ctx.update(velocity);
+}
+
+auto example::fps::ResumeStreaming::impl(context& ctx) -> void {
+	ctx.update(Toggle{.streaming = true});
 }
 
 auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
@@ -186,4 +188,18 @@ auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
 }
 
 auto example::fps::RemovePushing::impl(context& ctx) -> void {
+}
+
+auto example::fps::StunTimer::impl(context& ctx) -> void {
+	auto stunned = ctx.get<Stunned>();
+	stunned.remaining -= 0.1f;
+	if(stunned.remaining <= 0.f) {
+		ctx.add<StunnedExpired>();
+	}
+
+	ctx.update(stunned);
+}
+
+auto example::fps::StunnedExpiry::impl(context& ctx) -> void {
+	// trivial
 }

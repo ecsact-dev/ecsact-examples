@@ -2,6 +2,7 @@
 
 #include "MassCommands.h"
 #include "MassMovementFragments.h"
+#include "MassRepresentationActorManagement.h"
 #include "MassStateTreeSubsystem.h"
 #include "Math/Vector.h"
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
@@ -10,7 +11,9 @@
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
 #include "MassEntityTemplateRegistry.h"
+#include "MassActorSubsystem.h"
 #include "MassEntityManager.h"
+#include "Enemy.h"
 #include "MassCommonFragments.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
@@ -281,6 +284,83 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 		} else {
 			entity_manager.Defer().RemoveTag<FEcsactStreamTag>(entity_handle);
 		}
+	}
+}
+
+auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
+	int32              Entity,
+	FExampleFpsStunned Stunned
+) -> void {
+	if(!CheckMassEntities(Entity, TEXT("InitStunned"))) {
+		return;
+	}
+
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			continue;
+		}
+
+		enemy_entity_actor->OnInitStunned(Stunned);
+	}
+}
+
+auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
+	int32              Entity,
+	FExampleFpsStunned Stunned
+) -> void {
+	if(!CheckMassEntities(Entity, TEXT("UpdateStunned"))) {
+		return;
+	}
+
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			continue;
+		}
+
+		enemy_entity_actor->OnUpdateStunned(Stunned);
+	}
+}
+
+auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
+	int32              Entity,
+	FExampleFpsStunned Stunned
+) -> void {
+	UE_LOG(LogTemp, Error, TEXT("REMOVESTUNNED"));
+
+	if(!CheckMassEntities(Entity, TEXT("RemoveStunned"))) {
+		return;
+	}
+
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			continue;
+		}
+
+		enemy_entity_actor->OnRemoveStunned(Stunned);
 	}
 }
 

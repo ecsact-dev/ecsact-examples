@@ -64,6 +64,24 @@ struct FExampleFpsPosition {
 };
 
 USTRUCT(BlueprintType)
+struct FExampleFpsStunned {
+	GENERATED_BODY()
+	
+	static FExampleFpsStunned FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Remaining;
+	
+};
+
+USTRUCT(BlueprintType)
+struct FExampleFpsStunnedexpired {
+	GENERATED_BODY()
+	
+	static FExampleFpsStunnedexpired FromEcsactComponentData(const void*);
+	
+};
+
+USTRUCT(BlueprintType)
 struct FExampleFpsPushcharge {
 	GENERATED_BODY()
 	
@@ -165,6 +183,12 @@ class UExampleFpsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
 	void RawInitPosition(int32 Entity, const void* Component);
 	void RawUpdatePosition(int32 Entity, const void* Component);
 	void RawRemovePosition(int32 Entity, const void* Component);
+	void RawInitStunned(int32 Entity, const void* Component);
+	void RawUpdateStunned(int32 Entity, const void* Component);
+	void RawRemoveStunned(int32 Entity, const void* Component);
+	void RawInitStunnedexpired(int32 Entity, const void* Component);
+	void RawUpdateStunnedexpired(int32 Entity, const void* Component);
+	void RawRemoveStunnedexpired(int32 Entity, const void* Component);
 	void RawInitPushcharge(int32 Entity, const void* Component);
 	void RawUpdatePushcharge(int32 Entity, const void* Component);
 	void RawRemovePushcharge(int32 Entity, const void* Component);
@@ -240,6 +264,24 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Position"))
 	void RemovePosition(int32 Entity, FExampleFpsPosition Position);
 	virtual void RemovePosition_Implementation(int32 Entity, FExampleFpsPosition Position);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.Stunned"))
+	void InitStunned(int32 Entity, FExampleFpsStunned Stunned);
+	virtual void InitStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.Stunned"))
+	void UpdateStunned(int32 Entity, FExampleFpsStunned Stunned);
+	virtual void UpdateStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.Stunned"))
+	void RemoveStunned(int32 Entity, FExampleFpsStunned Stunned);
+	virtual void RemoveStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.StunnedExpired"))
+	void InitStunnedexpired(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
+	virtual void InitStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Update example.fps.StunnedExpired"))
+	void UpdateStunnedexpired(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
+	virtual void UpdateStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
+	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Remove example.fps.StunnedExpired"))
+	void RemoveStunnedexpired(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
+	virtual void RemoveStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired);
 	UFUNCTION(BlueprintNativeEvent, Category = "Ecsact Runner", meta = (DisplayName = "Init example.fps.PushCharge"))
 	void InitPushcharge(int32 Entity, FExampleFpsPushcharge Pushcharge);
 	virtual void InitPushcharge_Implementation(int32 Entity, FExampleFpsPushcharge Pushcharge);

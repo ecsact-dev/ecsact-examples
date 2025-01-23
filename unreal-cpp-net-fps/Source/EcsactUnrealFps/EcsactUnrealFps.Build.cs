@@ -28,6 +28,7 @@ public class EcsactUnrealFps : ModuleRules {
 			"MassSignals",
 			"MassMovement",
 			"MassRepresentation",
+			"MassActors",
 		});
 	}
 }

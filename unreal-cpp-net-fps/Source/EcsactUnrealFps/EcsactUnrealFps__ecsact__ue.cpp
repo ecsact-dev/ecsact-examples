@@ -27,6 +27,15 @@ FExampleFpsPosition FExampleFpsPosition::FromEcsactComponentData(const void* com
 	result.Z = static_cast<const example::fps::Position*>(component_data)->z;
 	return result;
 }
+FExampleFpsStunned FExampleFpsStunned::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsStunned{};
+	result.Remaining = static_cast<const example::fps::Stunned*>(component_data)->remaining;
+	return result;
+}
+FExampleFpsStunnedexpired FExampleFpsStunnedexpired::FromEcsactComponentData(const void* component_data) {
+	auto result = FExampleFpsStunnedexpired{};
+	return result;
+}
 FExampleFpsPushcharge FExampleFpsPushcharge::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsPushcharge{};
 	result.ChargeTime = static_cast<const example::fps::PushCharge*>(component_data)->charge_time;
@@ -68,9 +77,9 @@ FExampleFpsRemovepushingtag FExampleFpsRemovepushingtag::FromEcsactComponentData
 	return result;
 }
 UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
-	InitComponentFns.Init(nullptr, 21);
-	UpdateComponentFns.Init(nullptr, 21);
-	RemoveComponentFns.Init(nullptr, 21);
+	InitComponentFns.Init(nullptr, 24);
+	UpdateComponentFns.Init(nullptr, 24);
+	RemoveComponentFns.Init(nullptr, 24);
 	InitComponentFns[1] = &ThisClass::RawInitPlayer;
 	UpdateComponentFns[1] = &ThisClass::RawUpdatePlayer;
 	RemoveComponentFns[1] = &ThisClass::RawRemovePlayer;
@@ -86,27 +95,33 @@ UExampleFpsEcsactRunnerSubsystem::UExampleFpsEcsactRunnerSubsystem() {
 	InitComponentFns[5] = &ThisClass::RawInitPosition;
 	UpdateComponentFns[5] = &ThisClass::RawUpdatePosition;
 	RemoveComponentFns[5] = &ThisClass::RawRemovePosition;
-	InitComponentFns[6] = &ThisClass::RawInitPushcharge;
-	UpdateComponentFns[6] = &ThisClass::RawUpdatePushcharge;
-	RemoveComponentFns[6] = &ThisClass::RawRemovePushcharge;
-	InitComponentFns[7] = &ThisClass::RawInitEnemy;
-	UpdateComponentFns[7] = &ThisClass::RawUpdateEnemy;
-	RemoveComponentFns[7] = &ThisClass::RawRemoveEnemy;
-	InitComponentFns[8] = &ThisClass::RawInitVelocity;
-	UpdateComponentFns[8] = &ThisClass::RawUpdateVelocity;
-	RemoveComponentFns[8] = &ThisClass::RawRemoveVelocity;
-	InitComponentFns[9] = &ThisClass::RawInitPushing;
-	UpdateComponentFns[9] = &ThisClass::RawUpdatePushing;
-	RemoveComponentFns[9] = &ThisClass::RawRemovePushing;
-	InitComponentFns[10] = &ThisClass::RawInitToggle;
-	UpdateComponentFns[10] = &ThisClass::RawUpdateToggle;
-	RemoveComponentFns[10] = &ThisClass::RawRemoveToggle;
-	InitComponentFns[18] = &ThisClass::RawInitMovedirection;
-	UpdateComponentFns[18] = &ThisClass::RawUpdateMovedirection;
-	RemoveComponentFns[18] = &ThisClass::RawRemoveMovedirection;
-	InitComponentFns[20] = &ThisClass::RawInitRemovepushingtag;
-	UpdateComponentFns[20] = &ThisClass::RawUpdateRemovepushingtag;
-	RemoveComponentFns[20] = &ThisClass::RawRemoveRemovepushingtag;
+	InitComponentFns[6] = &ThisClass::RawInitStunned;
+	UpdateComponentFns[6] = &ThisClass::RawUpdateStunned;
+	RemoveComponentFns[6] = &ThisClass::RawRemoveStunned;
+	InitComponentFns[7] = &ThisClass::RawInitStunnedexpired;
+	UpdateComponentFns[7] = &ThisClass::RawUpdateStunnedexpired;
+	RemoveComponentFns[7] = &ThisClass::RawRemoveStunnedexpired;
+	InitComponentFns[8] = &ThisClass::RawInitPushcharge;
+	UpdateComponentFns[8] = &ThisClass::RawUpdatePushcharge;
+	RemoveComponentFns[8] = &ThisClass::RawRemovePushcharge;
+	InitComponentFns[9] = &ThisClass::RawInitEnemy;
+	UpdateComponentFns[9] = &ThisClass::RawUpdateEnemy;
+	RemoveComponentFns[9] = &ThisClass::RawRemoveEnemy;
+	InitComponentFns[10] = &ThisClass::RawInitVelocity;
+	UpdateComponentFns[10] = &ThisClass::RawUpdateVelocity;
+	RemoveComponentFns[10] = &ThisClass::RawRemoveVelocity;
+	InitComponentFns[11] = &ThisClass::RawInitPushing;
+	UpdateComponentFns[11] = &ThisClass::RawUpdatePushing;
+	RemoveComponentFns[11] = &ThisClass::RawRemovePushing;
+	InitComponentFns[12] = &ThisClass::RawInitToggle;
+	UpdateComponentFns[12] = &ThisClass::RawUpdateToggle;
+	RemoveComponentFns[12] = &ThisClass::RawRemoveToggle;
+	InitComponentFns[21] = &ThisClass::RawInitMovedirection;
+	UpdateComponentFns[21] = &ThisClass::RawUpdateMovedirection;
+	RemoveComponentFns[21] = &ThisClass::RawRemoveMovedirection;
+	InitComponentFns[23] = &ThisClass::RawInitRemovepushingtag;
+	UpdateComponentFns[23] = &ThisClass::RawUpdateRemovepushingtag;
+	RemoveComponentFns[23] = &ThisClass::RawRemoveRemovepushingtag;
 	
 }
 
@@ -166,6 +181,24 @@ void UExampleFpsEcsactRunnerSubsystem::RawUpdatePosition(int32 entity, const voi
 }
 void UExampleFpsEcsactRunnerSubsystem::RawRemovePosition(int32 entity, const void* component) {
 	RemovePosition(entity, FExampleFpsPosition::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitStunned(int32 entity, const void* component) {
+	InitStunned(entity, FExampleFpsStunned::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateStunned(int32 entity, const void* component) {
+	UpdateStunned(entity, FExampleFpsStunned::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveStunned(int32 entity, const void* component) {
+	RemoveStunned(entity, FExampleFpsStunned::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawInitStunnedexpired(int32 entity, const void* component) {
+	InitStunnedexpired(entity, FExampleFpsStunnedexpired::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawUpdateStunnedexpired(int32 entity, const void* component) {
+	UpdateStunnedexpired(entity, FExampleFpsStunnedexpired::FromEcsactComponentData(component));
+}
+void UExampleFpsEcsactRunnerSubsystem::RawRemoveStunnedexpired(int32 entity, const void* component) {
+	RemoveStunnedexpired(entity, FExampleFpsStunnedexpired::FromEcsactComponentData(component));
 }
 void UExampleFpsEcsactRunnerSubsystem::RawInitPushcharge(int32 entity, const void* component) {
 	InitPushcharge(entity, FExampleFpsPushcharge::FromEcsactComponentData(component));
@@ -287,6 +320,30 @@ void UExampleFpsEcsactRunnerSubsystem::UpdatePosition_Implementation(int32 Entit
 }
 
 void UExampleFpsEcsactRunnerSubsystem::RemovePosition_Implementation(int32 Entity, FExampleFpsPosition Position) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveStunned_Implementation(int32 Entity, FExampleFpsStunned Stunned) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::InitStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::UpdateStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired) {
+	
+}
+
+void UExampleFpsEcsactRunnerSubsystem::RemoveStunnedexpired_Implementation(int32 Entity, FExampleFpsStunnedexpired Stunnedexpired) {
 	
 }
 

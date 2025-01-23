@@ -1,5 +1,9 @@
 // GENERATED FILE - DO NOT EDIT
 #include "EcsactUnrealFps.ecsact.systems.hh"
+void example__fps__StunTimer (struct ecsact_system_execution_context* cctx) {
+	example::fps::StunTimer::context ctx{cctx};
+	example::fps::StunTimer::impl(ctx);
+}
 void example__fps__PusherExpireChecker (struct ecsact_system_execution_context* cctx) {
 	example::fps::PusherExpireChecker::context ctx{cctx};
 	example::fps::PusherExpireChecker::impl(ctx);
@@ -32,6 +36,10 @@ void example__fps__ApplyDrag (struct ecsact_system_execution_context* cctx) {
 	example::fps::ApplyDrag::context ctx{cctx};
 	example::fps::ApplyDrag::impl(ctx);
 }
+void example__fps__ResumeStreaming (struct ecsact_system_execution_context* cctx) {
+	example::fps::ResumeStreaming::context ctx{cctx};
+	example::fps::ResumeStreaming::impl(ctx);
+}
 void example__fps__TogglePushedEntities (struct ecsact_system_execution_context* cctx) {
 	example::fps::TogglePushedEntities::context ctx{cctx};
 	example::fps::TogglePushedEntities::impl(ctx);
@@ -39,6 +47,10 @@ void example__fps__TogglePushedEntities (struct ecsact_system_execution_context*
 void example__fps__RemovePushing (struct ecsact_system_execution_context* cctx) {
 	example::fps::RemovePushing::context ctx{cctx};
 	example::fps::RemovePushing::impl(ctx);
+}
+void example__fps__StunnedExpiry (struct ecsact_system_execution_context* cctx) {
+	example::fps::StunnedExpiry::context ctx{cctx};
+	example::fps::StunnedExpiry::impl(ctx);
 }
 void example__fps__StartPush (struct ecsact_system_execution_context* cctx) {
 	example::fps::StartPush::context ctx{cctx};

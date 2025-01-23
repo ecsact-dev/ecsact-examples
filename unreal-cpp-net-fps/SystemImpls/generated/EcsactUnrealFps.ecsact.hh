@@ -45,10 +45,23 @@ struct Position {
 	float z;
 	auto operator<=>(const example::fps::Position&) const = default;
 };
-struct PushCharge {
+struct Stunned {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(6);
+	float remaining;
+	auto operator<=>(const example::fps::Stunned&) const = default;
+};
+struct StunnedExpired {
+	static constexpr bool transient = false;
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_component_id>(7);
+	auto operator<=>(const example::fps::StunnedExpired&) const = default;
+};
+struct PushCharge {
+	static constexpr bool transient = false;
+	static constexpr bool has_assoc_fields = false;
+	static constexpr auto id = static_cast<ecsact_component_id>(8);
 	int16_t charge_time;
 	int16_t charge_maximum;
 	auto operator<=>(const example::fps::PushCharge&) const = default;
@@ -56,13 +69,13 @@ struct PushCharge {
 struct Enemy {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(7);
+	static constexpr auto id = static_cast<ecsact_component_id>(9);
 	auto operator<=>(const example::fps::Enemy&) const = default;
 };
 struct Velocity {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(8);
+	static constexpr auto id = static_cast<ecsact_component_id>(10);
 	float x;
 	float y;
 	float z;
@@ -71,7 +84,7 @@ struct Velocity {
 struct Pushing {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(9);
+	static constexpr auto id = static_cast<ecsact_component_id>(11);
 	int16_t tick_count;
 	float force_x;
 	float force_y;
@@ -81,14 +94,14 @@ struct Pushing {
 struct Toggle {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(10);
+	static constexpr auto id = static_cast<ecsact_component_id>(12);
 	int8_t streaming;
 	auto operator<=>(const example::fps::Toggle&) const = default;
 };
 struct MoveDirection {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(18);
+	static constexpr auto id = static_cast<ecsact_component_id>(21);
 	float x;
 	float y;
 	auto operator<=>(const example::fps::MoveDirection&) const = default;
@@ -96,12 +109,12 @@ struct MoveDirection {
 struct RemovePushingTag {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_component_id>(20);
+	static constexpr auto id = static_cast<ecsact_component_id>(23);
 	auto operator<=>(const example::fps::RemovePushingTag&) const = default;
 };
 struct StartPush {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(13);
+	static constexpr auto id = static_cast<ecsact_action_id>(16);
 	struct context;
 	static void impl(context&);
 	int32_t player_id;
@@ -109,9 +122,9 @@ struct StartPush {
 };
 struct FinishPush {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(14);
+	static constexpr auto id = static_cast<ecsact_action_id>(17);
 	struct PushEntities {
-		static constexpr auto id = static_cast<ecsact_system_id>(15);
+		static constexpr auto id = static_cast<ecsact_system_id>(18);
 		struct context;
 		static void impl(context&);
 	};
@@ -122,7 +135,7 @@ struct FinishPush {
 };
 struct Move {
 	static constexpr bool has_assoc_fields = false;
-	static constexpr auto id = static_cast<ecsact_action_id>(19);
+	static constexpr auto id = static_cast<ecsact_action_id>(22);
 	struct context;
 	static void impl(context&);
 	int32_t player_id;
@@ -130,48 +143,63 @@ struct Move {
 	float y;
 	auto operator<=>(const example::fps::Move&) const = default;
 };
+struct StunTimer {
+	static constexpr auto id = static_cast<ecsact_system_id>(13);
+	struct context;
+	static void impl(context&);
+};
 struct PusherExpireChecker {
-	static constexpr auto id = static_cast<ecsact_system_id>(11);
+	static constexpr auto id = static_cast<ecsact_system_id>(14);
 	struct context;
 	static void impl(context&);
 };
 struct PusherApplyExpired {
-	static constexpr auto id = static_cast<ecsact_system_id>(12);
+	static constexpr auto id = static_cast<ecsact_system_id>(15);
 	struct context;
 	static void impl(context&);
 };
 struct RemovePushCharge {
-	static constexpr auto id = static_cast<ecsact_system_id>(16);
+	static constexpr auto id = static_cast<ecsact_system_id>(19);
 	struct context;
 	static void impl(context&);
 };
 struct TickPushCharge {
-	static constexpr auto id = static_cast<ecsact_system_id>(17);
+	static constexpr auto id = static_cast<ecsact_system_id>(20);
 	struct context;
 	static void impl(context&);
 };
 struct ApplyPush {
-	static constexpr auto id = static_cast<ecsact_system_id>(21);
-	struct context;
-	static void impl(context&);
-};
-struct ApplyVelocity {
-	static constexpr auto id = static_cast<ecsact_system_id>(22);
-	struct context;
-	static void impl(context&);
-};
-struct ApplyDrag {
-	static constexpr auto id = static_cast<ecsact_system_id>(23);
-	struct context;
-	static void impl(context&);
-};
-struct TogglePushedEntities {
 	static constexpr auto id = static_cast<ecsact_system_id>(24);
 	struct context;
 	static void impl(context&);
 };
-struct RemovePushing {
+struct ApplyVelocity {
 	static constexpr auto id = static_cast<ecsact_system_id>(25);
+	struct context;
+	static void impl(context&);
+};
+struct ApplyDrag {
+	static constexpr auto id = static_cast<ecsact_system_id>(26);
+	struct context;
+	static void impl(context&);
+};
+struct ResumeStreaming {
+	static constexpr auto id = static_cast<ecsact_system_id>(27);
+	struct context;
+	static void impl(context&);
+};
+struct TogglePushedEntities {
+	static constexpr auto id = static_cast<ecsact_system_id>(28);
+	struct context;
+	static void impl(context&);
+};
+struct RemovePushing {
+	static constexpr auto id = static_cast<ecsact_system_id>(29);
+	struct context;
+	static void impl(context&);
+};
+struct StunnedExpiry {
+	static constexpr auto id = static_cast<ecsact_system_id>(30);
 	struct context;
 	static void impl(context&);
 };
