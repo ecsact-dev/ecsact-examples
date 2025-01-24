@@ -71,6 +71,42 @@ private:
 	FVector Position;
 };
 
+USTRUCT()
+
+struct ECSACTUNREALFPS_API FEcsactRotationFragment : public FMassFragment {
+	GENERATED_BODY() // nolint
+
+	FEcsactRotationFragment() = default;
+
+	FEcsactRotationFragment(const FVector& StartRotation)
+		: Rotation(StartRotation) {
+	}
+
+	FEcsactRotationFragment(const FQuat& StartRotation)
+		: Rotation(StartRotation.Euler()) {
+	}
+
+	FVector GetRotation() const {
+		return Rotation;
+	}
+
+	FVector& GetMutableRotation() {
+		return Rotation;
+	}
+
+	void SetRotation(const FVector& NewRotation) {
+		Rotation = NewRotation;
+	}
+
+	void SetRotation(const FQuat& NewRotation) {
+		Rotation = NewRotation.Euler();
+	}
+
+private:
+	// Euler
+	FVector Rotation;
+};
+
 /**
  * Tag indiciating that this mass entity should be streamed.
  */
