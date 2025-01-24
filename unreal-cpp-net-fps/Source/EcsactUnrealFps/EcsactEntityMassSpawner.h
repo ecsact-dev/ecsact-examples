@@ -97,4 +97,14 @@ public:
 		int32              Entity,
 		FExampleFpsStunned Stunned
 	) -> void override;
+
+	auto InitPushing_Implementation( //
+		int32              Entity,
+		FExampleFpsPushing Pushing
+	) -> void override;
+
+	auto RemovePushing_Implementation( //
+		int32              Entity,
+		FExampleFpsPushing Pushing
+	) -> void override;
 };

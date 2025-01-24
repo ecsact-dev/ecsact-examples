@@ -378,3 +378,53 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 		enemy_entity_actor->OnRemoveStunned(Stunned);
 	}
 }
+
+auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
+	int32              Entity,
+	FExampleFpsPushing Pushing
+) -> void {
+	UE_LOG(LogTemp, Log, TEXT("INIT PUSHING"));
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto skeletal_mesh =
+			entity_actor->FindComponentByClass<USkeletalMeshComponent>();
+		if(!skeletal_mesh) {
+			continue;
+		}
+		UE_LOG(LogTemp, Log, TEXT("PHYSICS TRUE"));
+		skeletal_mesh->SetSimulatePhysics(true);
+		// skeletal_mesh->SetAllBodiesSimulatePhysics(true);
+		skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", true);
+	}
+}
+
+auto UEcsactEntityMassSpawner::RemovePushing_Implementation( //
+	int32              Entity,
+	FExampleFpsPushing Pushing
+) -> void {
+	UE_LOG(LogTemp, Log, TEXT("REMOVE PUSHING"));
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto skeletal_mesh =
+			entity_actor->FindComponentByClass<USkeletalMeshComponent>();
+		if(!skeletal_mesh) {
+			continue;
+		}
+		UE_LOG(LogTemp, Log, TEXT("PHYSICS FALSE"));
+		skeletal_mesh->SetSimulatePhysics(false);
+		// skeletal_mesh->SetAllBodiesSimulatePhysics(false);
+		skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", false);
+	}
+}
