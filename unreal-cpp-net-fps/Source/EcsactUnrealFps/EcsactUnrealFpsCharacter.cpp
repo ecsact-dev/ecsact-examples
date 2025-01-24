@@ -199,4 +199,3 @@ void AEcsactUnrealFpsCharacter::OnOverlapEnd(
 	int32                OtherBodyIndex
 ) {
 }
-
