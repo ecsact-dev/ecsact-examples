@@ -77,7 +77,7 @@ action FinishPush {
 
 system RemovePushCharge {
 	include Player;
-	include Pusher; 
+	include Pusher;
 	removes PushCharge;
 }
 
@@ -98,7 +98,6 @@ action Move {
 
 	readonly Player;
 	readwrite MoveDirection;
-	exclude PushCharge;
 }
 
 component RemovePushingTag;
