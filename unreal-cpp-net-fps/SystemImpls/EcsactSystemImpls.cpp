@@ -77,8 +77,8 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	auto       toggle = ctx.get<Toggle>();
 
 	if(is_overlapping(radius, position, pusher_pos)) {
-		float max_force = 100;
-		int   max_tick_count = 30;
+		float max_force = 50;
+		int   max_tick_count = 60;
 
 		int  force = max_force * mult;
 		auto tick_count = static_cast<int16_t>(std::floor(max_tick_count * mult));
