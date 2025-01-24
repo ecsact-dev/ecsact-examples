@@ -200,15 +200,35 @@ void AEcsactUnrealFpsCharacter::OnOverlapEnd(
 ) {
 }
 
-FLinearColor AEcsactUnrealFpsCharacter::GetPlayerColour(int player_id) {
-	if(player_id == 0) {
-		return FLinearColor::Red;
-	} else if(player_id == 1) {
-		return FLinearColor::Blue;
-	} else if(player_id == 2) {
-		return FLinearColor::Yellow;
-	} else if(player_id == 3) {
-		return FLinearColor::Green;
+auto AEcsactUnrealFpsCharacter::GetPlayerColour(int player_id) -> FLinearColor {
+	constexpr auto golden_ratio = 0.618033988749895f;
+
+	auto hue = std::fmod<float>( //
+		static_cast<float>(player_id) * golden_ratio,
+		1.0f
+	);
+
+	auto s = 0.8f; // Saturation
+	auto v = 0.9f; // Value
+
+	auto h_i = static_cast<int>(hue * 6);
+	auto f = hue * 6 - h_i;
+	auto p = v * (1 - s);
+	auto q = v * (1 - f * s);
+	auto t = v * (1 - (1 - f) * s);
+
+	switch(h_i) {
+		case 0:
+			return FLinearColor{v, t, p};
+		case 1:
+			return FLinearColor{q, v, p};
+		case 2:
+			return FLinearColor{p, v, t};
+		case 3:
+			return FLinearColor{p, q, v};
+		case 4:
+			return FLinearColor{t, p, v};
+		default:
+			return FLinearColor{v, p, q};
 	}
-	return FLinearColor::Gray;
 }

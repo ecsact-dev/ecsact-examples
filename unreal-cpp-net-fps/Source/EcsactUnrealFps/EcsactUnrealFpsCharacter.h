@@ -93,7 +93,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInitPlayer(FExampleFpsPlayer Player);
 
-	UFUNCTION(BlueprintCallable)
+	/**
+	 * Get the deterministic generated colour for the given player ID. Will always
+	 * return the same colour with the same player ID.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Ecsact Unreal Example")
 	static FLinearColor GetPlayerColour(int player_id);
 
 protected:
