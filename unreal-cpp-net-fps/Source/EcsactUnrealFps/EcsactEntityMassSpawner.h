@@ -19,6 +19,16 @@ UCLASS(Abstract)
 class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT
 
+	/**
+	 * Entity Mass config used when Ecsact entity streaming is enabled.
+	 */
+	UPROPERTY(EditAnywhere)
+	UMassEntityConfigAsset* StreamingMassEntityConfigAsset;
+
+	/**
+	 * Entity Mass config used when Ecsact entity streaming is **disabled**. If
+	 * unset then the `StreamingMassEntityConfigAsset` will be used instead.
+	 */
 	UPROPERTY(EditAnywhere)
 	UMassEntityConfigAsset* MassEntityConfigAsset;
 
@@ -49,6 +59,9 @@ public:
 	)
 	static bool IsStreamingEntities(const UObject* WorldContext);
 
+	UFUNCTION()
+	UMassEntityConfigAsset* GetEntityMassConfig() const;
+
 	auto EntityCreated_Implementation(int32 Entity) -> void override;
 
 	auto EntityDestroyed_Implementation(int32 Entity) -> void override;
@@ -71,6 +84,16 @@ public:
 	auto UpdatePosition_Implementation( //
 		int32               Entity,
 		FExampleFpsPosition Position
+	) -> void override;
+
+	auto InitRotation_Implementation( //
+		int32               Entity,
+		FExampleFpsRotation Rotation
+	) -> void override;
+
+	auto UpdateRotation_Implementation( //
+		int32               Entity,
+		FExampleFpsRotation Rotation
 	) -> void override;
 
 	auto InitToggle_Implementation( //

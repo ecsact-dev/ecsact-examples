@@ -69,9 +69,10 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 				.y = static_cast<float>(RandomPointY),
 				.z = 0
 			})
+			.AddComponent(example::fps::Rotation{})
 			.AddComponent(example::fps::Enemy{})
 			.AddComponent(example::fps::Velocity{})
-			.AddComponent(example::fps::Toggle{.streaming = StreamEntities})
+			.AddComponent(example::fps::Toggle{.streaming = true})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
 				[](auto entity) {
 					UE_LOG(
@@ -105,6 +106,15 @@ auto UEcsactEntityMassSpawner::CheckMassEntities(
 	return has_entity_handles;
 }
 
+auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
+	-> UMassEntityConfigAsset* {
+	if(!StreamEntities && MassEntityConfigAsset) {
+		return MassEntityConfigAsset;
+	}
+
+	return StreamingMassEntityConfigAsset;
+}
+
 auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 	int32 Entity
 ) -> void {
@@ -113,7 +123,7 @@ auto UEcsactEntityMassSpawner::EntityCreated_Implementation( //
 	auto* world = GetWorld();
 
 	const auto& entity_template =
-		MassEntityConfigAsset->GetOrCreateEntityTemplate(*world);
+		GetEntityMassConfig()->GetOrCreateEntityTemplate(*world);
 	auto new_entity_handles = TArray<FMassEntityHandle>{};
 
 	auto  mass_spawner = world->GetSubsystem<UMassSpawnerSubsystem>();
@@ -260,6 +270,73 @@ auto UEcsactEntityMassSpawner::UpdatePosition_Implementation(
 						Position.X,
 						Position.Y,
 						Position.Z,
+					});
+			}
+		);
+	}
+}
+
+auto UEcsactEntityMassSpawner::InitRotation_Implementation(
+	int32               Entity,
+	FExampleFpsRotation Rotation
+) -> void {
+	if(!CheckMassEntities(Entity, TEXT("InitRotation"))) {
+		return;
+	}
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+
+	auto entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
+			entity_handle,
+			FEcsactRotationFragment{FVector{
+				Rotation.Roll,
+				Rotation.Pitch,
+				Rotation.Yaw,
+			}}
+		);
+
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>(
+			[entity_handle, Rotation](FMassEntityManager& entity_manager) {
+				entity_manager.GetFragmentDataPtr<FTransformFragment>(entity_handle)
+					->GetMutableTransform()
+					.SetLocation(FVector{
+						Rotation.Roll,
+						Rotation.Pitch,
+						Rotation.Yaw,
+					});
+			}
+		);
+	}
+}
+
+auto UEcsactEntityMassSpawner::UpdateRotation_Implementation(
+	int32               Entity,
+	FExampleFpsRotation Rotation
+) -> void {
+	if(!CheckMassEntities(Entity, TEXT("UpdateRotation"))) {
+		return;
+	}
+
+	auto* world = GetWorld();
+	auto& entity_manager =
+		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+
+	const auto& entity_handles =
+		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>(
+			[entity_handle, Rotation](FMassEntityManager& entity_manager) {
+				entity_manager
+					.GetFragmentDataPtr<FEcsactRotationFragment>(entity_handle)
+					->SetRotation(FVector{
+						Rotation.Roll,
+						Rotation.Pitch,
+						Rotation.Yaw,
 					});
 			}
 		);
