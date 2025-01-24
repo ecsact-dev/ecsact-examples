@@ -46,15 +46,6 @@ auto UStreamRotationProcessor::Execute(
 				auto entity_rot =
 					transform_fragments[i].GetTransform().GetRotation().Euler();
 
-				UE_LOG(
-					LogTemp,
-					Warning,
-					TEXT("Stream Rotation (%f, %f, %f)"),
-					entity_rot.X,
-					entity_rot.Y,
-					entity_rot.Z
-				);
-
 				runner->Stream(
 					ecsact_entity,
 					example::fps::Rotation{
