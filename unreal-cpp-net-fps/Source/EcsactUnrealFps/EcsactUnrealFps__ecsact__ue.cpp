@@ -38,8 +38,7 @@ FExampleFpsStunnedexpired FExampleFpsStunnedexpired::FromEcsactComponentData(con
 }
 FExampleFpsPushcharge FExampleFpsPushcharge::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsPushcharge{};
-	result.ChargeTime = static_cast<const example::fps::PushCharge*>(component_data)->charge_time;
-	result.ChargeMaximum = static_cast<const example::fps::PushCharge*>(component_data)->charge_maximum;
+	result.Radius = static_cast<const example::fps::PushCharge*>(component_data)->radius;
 	return result;
 }
 FExampleFpsEnemy FExampleFpsEnemy::FromEcsactComponentData(const void* component_data) {

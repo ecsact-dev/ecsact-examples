@@ -62,8 +62,7 @@ struct PushCharge {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(8);
-	int16_t charge_time;
-	int16_t charge_maximum;
+	float radius;
 	auto operator<=>(const example::fps::PushCharge&) const = default;
 };
 struct Enemy {

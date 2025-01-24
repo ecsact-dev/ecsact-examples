@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "Components/CapsuleComponent.h"
@@ -9,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "ecsact/runtime/common.h"
+#include "EcsactUnrealFps__ecsact__ue.h"
 
 #include "EcsactUnrealFpsCharacter.generated.h"
 
@@ -24,6 +23,8 @@ UCLASS(config = Game)
 
 class AEcsactUnrealFpsCharacter : public APawn {
 	GENERATED_BODY()
+
+	friend class UEcsactPlayerEntitySpawner;
 
 	float MoveDirX;
 	float MoveDirY;
@@ -116,6 +117,15 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32                OtherBodyIndex
 	);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInitPushcharge(FExampleFpsPushcharge Pushcharge);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUpdatePushcharge(FExampleFpsPushcharge Pushcharge);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRemovePushcharge(FExampleFpsPushcharge Pushcharge);
 
 public:
 	// TODO: Use some kind of entity actor component

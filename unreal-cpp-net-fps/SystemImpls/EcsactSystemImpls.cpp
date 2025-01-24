@@ -7,7 +7,7 @@
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
 static bool is_overlapping(
-	int16_t                       radius,
+	float                         radius,
 	const example::fps::Position& pos,
 	const example::fps::Position& other_pos
 ) {
@@ -53,7 +53,7 @@ auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
 auto example::fps::StartPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	if(player_id == ctx.action().player_id) {
-		ctx.add(PushCharge{.charge_time = 0, .charge_maximum = 150});
+		ctx.add(PushCharge{.radius = 3.f});
 	}
 }
 
@@ -63,6 +63,16 @@ auto example::fps::FinishPush::impl(context& ctx) -> void {
 	if(player_id == ctx.action().player_id) {
 		ctx.add(Pusher{1.f});
 	}
+}
+
+static auto push_radius_to_force(float radius) -> float {
+	// TODO
+	return 30.f;
+}
+
+static auto push_radius_to_tick_count(float radius) -> int16_t {
+	// TODO
+	return 15;
 }
 
 auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
@@ -75,31 +85,17 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	const auto pusher_pos = ctx._ctx.parent().get<Position>();
 	const auto push_multipliers = ctx._ctx.parent().get<PushCharge>();
 
-	float max_radius = 1000;
-
-	float min_mult = 0.3f;
-	float mult = static_cast<float>(push_multipliers.charge_time) /
-		static_cast<float>(push_multipliers.charge_maximum);
-
-	if(mult < min_mult) {
-		mult = min_mult;
-	}
-
-	auto radius = max_radius * mult;
-
 	const auto position = ctx.get<Position>();
+	const auto charge = ctx._ctx.parent().get<PushCharge>();
 	auto       toggle = ctx.get<Toggle>();
 
-	if(is_overlapping(radius, position, pusher_pos)) {
+	if(is_overlapping(charge.radius, position, pusher_pos)) {
 		auto enemy = ctx.get<Enemy>();
 		enemy.player_id = player_id;
 		ctx.update(enemy);
 
-		float max_force = 35;
-		int   max_tick_count = 60;
-
-		int  force = max_force * mult;
-		auto tick_count = static_cast<int16_t>(std::floor(max_tick_count * mult));
+		auto force = push_radius_to_force(charge.radius);
+		auto tick_count = push_radius_to_tick_count(charge.radius);
 
 		auto push_dir_x = position.x - pusher_pos.x;
 		auto push_dir_y = position.y - pusher_pos.y;
@@ -125,13 +121,8 @@ auto example::fps::RemovePushCharge::impl(context& ctx) -> void {
 
 auto example::fps::TickPushCharge::impl(context& ctx) -> void {
 	auto push_charge = ctx.get<PushCharge>();
-
-	if(push_charge.charge_time < push_charge.charge_maximum) {
-		push_charge.charge_time += 1;
-		auto charge_str = std::to_string(push_charge.charge_time);
-
-		ctx.update(push_charge);
-	}
+	push_charge.radius += 3.f;
+	ctx.update(push_charge);
 }
 
 auto example::fps::Move::impl(context& ctx) -> void {

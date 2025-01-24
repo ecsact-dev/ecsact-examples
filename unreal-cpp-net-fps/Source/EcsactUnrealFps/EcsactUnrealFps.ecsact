@@ -13,8 +13,7 @@ component Stunned {
 component StunnedExpired;
 
 component PushCharge {
-	i16 charge_time;
-	i16 charge_maximum;
+	f32 radius;
 }
 
 component Enemy {
@@ -99,6 +98,7 @@ action Move {
 
 	readonly Player;
 	readwrite MoveDirection;
+	exclude PushCharge;
 }
 
 component RemovePushingTag;

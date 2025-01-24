@@ -326,47 +326,47 @@ auto UEcsactPlayerEntitySpawner::InitPushcharge_Implementation(
 	int32                 Entity,
 	FExampleFpsPushcharge Pushcharge
 ) -> void {
+	auto itr = PlayerEntities.Find(Entity);
+	if(!itr) {
+		return;
+	}
+
+	auto player = itr->Get();
+	if(!player) {
+		return;
+	}
+
+	player->OnInitPushcharge(Pushcharge);
 }
 
 auto UEcsactPlayerEntitySpawner::UpdatePushcharge_Implementation(
 	int32                 Entity,
 	FExampleFpsPushcharge Pushcharge
 ) -> void {
-	float percentage = static_cast<float>(Pushcharge.ChargeTime) /
-		static_cast<float>(Pushcharge.ChargeMaximum);
-
-	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
-	if(proxy && proxy->IsValid()) {
-		proxy->Get()->OnPushChargeUpdated(percentage);
+	auto itr = PlayerEntities.Find(Entity);
+	if(!itr) {
+		return;
 	}
+
+	auto player = itr->Get();
+	if(!player) {
+		return;
+	}
+	player->OnUpdatePushcharge(Pushcharge);
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePushcharge_Implementation(
 	int32                 Entity,
 	FExampleFpsPushcharge Pushcharge
 ) -> void {
-	auto proxy = PlayerEntities.Find(static_cast<int32>(Entity));
-	if(proxy && proxy->IsValid()) {
-		proxy->Get()->OnPushChargeUpdated(0.0f);
+	auto itr = PlayerEntities.Find(Entity);
+	if(!itr) {
+		return;
 	}
 
-	if(PushEffectClass) {
-		auto pushVfx = GetWorld()->SpawnActor<APushExplosionVFX>(
-			PushEffectClass,
-			GetPlayerPosition(static_cast<ecsact_entity_id>(Entity)),
-			{},
-			{}
-		);
-
-		if(pushVfx) {
-			auto multiplier = //
-				static_cast<float>(Pushcharge.ChargeTime) /
-				static_cast<float>(Pushcharge.ChargeMaximum);
-
-			if(multiplier < 0.3f) {
-				multiplier = 0.3f;
-			}
-			pushVfx->ForceChargeMultiplier = multiplier;
-		}
+	auto player = itr->Get();
+	if(!player) {
+		return;
 	}
+	player->OnRemovePushcharge(Pushcharge);
 }

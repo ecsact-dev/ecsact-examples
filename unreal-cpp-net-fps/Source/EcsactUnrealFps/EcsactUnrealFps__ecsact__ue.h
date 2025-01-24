@@ -86,10 +86,8 @@ struct FExampleFpsPushcharge {
 	GENERATED_BODY()
 	
 	static FExampleFpsPushcharge FromEcsactComponentData(const void*);
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
-	int32 ChargeTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
-	int32 ChargeMaximum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Radius;
 	
 };
 

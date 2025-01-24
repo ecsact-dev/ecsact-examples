@@ -102,9 +102,6 @@ public:
 	TSubclassOf<AEcsactUnrealFpsCharacter> ProxyPlayerClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> PushEffectClass;
-
-	UPROPERTY(EditAnywhere)
 	FVector SpawnLocation;
 
 	UPROPERTY(EditAnywhere)
