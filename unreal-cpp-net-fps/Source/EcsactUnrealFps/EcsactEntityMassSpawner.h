@@ -130,4 +130,9 @@ public:
 		int32              Entity,
 		FExampleFpsPushing Pushing
 	) -> void override;
+
+	auto UpdateEnemy_Implementation( //
+		int32            Entity,
+		FExampleFpsEnemy Enemy
+	) -> void override;
 };

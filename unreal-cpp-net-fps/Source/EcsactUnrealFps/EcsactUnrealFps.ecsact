@@ -17,7 +17,9 @@ component PushCharge {
 	i16 charge_maximum;
 }
 
-component Enemy;
+component Enemy {
+	i32 player_id;
+}
 
 component Velocity {
 	f32 x;
@@ -66,7 +68,7 @@ action FinishPush {
 	adds Pusher;
 	
 	system PushEntities {
-		include Enemy;
+		readwrite Enemy;
 		readonly Position;
 		readwrite Toggle;
 		adds Pushing;

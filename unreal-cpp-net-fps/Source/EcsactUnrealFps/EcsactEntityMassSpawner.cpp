@@ -447,6 +447,7 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 		if(!entity_actor) {
 			continue;
 		}
+
 		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
 		if(!enemy_entity_actor) {
 			continue;
@@ -457,10 +458,7 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 		if(!skeletal_mesh) {
 			continue;
 		}
-		UE_LOG(LogTemp, Log, TEXT("PHYSICS FALSE"));
 		skeletal_mesh->SetSimulatePhysics(false);
-		// skeletal_mesh->SetAllBodiesSimulatePhysics(false);
-		// skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", false);
 
 		enemy_entity_actor->OnRemoveStunned(Stunned);
 	}
@@ -470,7 +468,6 @@ auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
 	int32              Entity,
 	FExampleFpsPushing Pushing
 ) -> void {
-	UE_LOG(LogTemp, Log, TEXT("INIT PUSHING"));
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
 	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
 
@@ -484,10 +481,7 @@ auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
 		if(!skeletal_mesh) {
 			continue;
 		}
-		UE_LOG(LogTemp, Log, TEXT("PHYSICS TRUE"));
 		skeletal_mesh->SetSimulatePhysics(true);
-		// skeletal_mesh->SetAllBodiesSimulatePhysics(true);
-		// skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", true);
 	}
 }
 
@@ -495,15 +489,25 @@ auto UEcsactEntityMassSpawner::RemovePushing_Implementation( //
 	int32              Entity,
 	FExampleFpsPushing Pushing
 ) -> void {
-	UE_LOG(LogTemp, Log, TEXT("REMOVE PUSHING"));
-	// auto mass_actor_subsystem =
-	// GetWorld()->GetSubsystem<UMassActorSubsystem>(); auto entity_handles =
-	// MassEntities[static_cast<ecsact_entity_id>(Entity)];
-	//
-	// for(auto entity_handle : entity_handles) {
-	// 	auto entity_actor =
-	// mass_actor_subsystem->GetActorFromHandle(entity_handle); if(!entity_actor)
-	// { 		continue;
-	// 	}
-	// }
+}
+
+auto UEcsactEntityMassSpawner::UpdateEnemy_Implementation( //
+	int32            Entity,
+	FExampleFpsEnemy Enemy
+) -> void {
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
+	auto entity_handles = MassEntities[static_cast<ecsact_entity_id>(Entity)];
+
+	for(auto entity_handle : entity_handles) {
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			continue;
+		}
+
+		enemy_entity_actor->OnUpdateEnemy(Enemy);
+	}
 }

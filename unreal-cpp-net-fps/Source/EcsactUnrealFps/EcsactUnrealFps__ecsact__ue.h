@@ -98,6 +98,8 @@ struct FExampleFpsEnemy {
 	GENERATED_BODY()
 	
 	static FExampleFpsEnemy FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PlayerId;
 	
 };
 

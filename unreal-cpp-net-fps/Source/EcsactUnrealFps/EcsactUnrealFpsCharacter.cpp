@@ -199,3 +199,16 @@ void AEcsactUnrealFpsCharacter::OnOverlapEnd(
 	int32                OtherBodyIndex
 ) {
 }
+
+FLinearColor AEcsactUnrealFpsCharacter::GetPlayerColour(int player_id) {
+	if(player_id == 0) {
+		return FLinearColor::Red;
+	} else if(player_id == 1) {
+		return FLinearColor::Blue;
+	} else if(player_id == 2) {
+		return FLinearColor::Yellow;
+	} else if(player_id == 3) {
+		return FLinearColor::Green;
+	}
+	return FLinearColor::Gray;
+}

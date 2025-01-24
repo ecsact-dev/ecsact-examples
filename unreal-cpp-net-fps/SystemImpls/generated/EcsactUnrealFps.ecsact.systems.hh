@@ -194,6 +194,7 @@ struct example::fps::FinishPush::PushEntities::context {
 		"| component readable by the system. Did you forget to add readonly or readwrite\n"
 		"| capabilities? The following components are allowed:\n"
 		"| 	- example.fps.Position\n"
+		"| 	- example.fps.Enemy\n"
 		"| 	- example.fps.Toggle\n"
 		"| \n");
 	}
@@ -207,6 +208,7 @@ struct example::fps::FinishPush::PushEntities::context {
 		"| example.fps.FinishPush.PushEntities context.update<T> may only be called with\n"
 		"| a component writable by the system. Did you forget to add readwrite\n"
 		"| capabilities? The following components are allowed:\n"
+		"| 	- example.fps.Enemy\n"
 		"| 	- example.fps.Toggle\n"
 		"| \n");
 	}
@@ -240,11 +242,17 @@ struct example::fps::FinishPush::PushEntities::context {
 	template<> auto get<example::fps::Position>() -> example::fps::Position {
 		return _ctx.get<example::fps::Position>();
 	}
+	template<> auto get<example::fps::Enemy>() -> example::fps::Enemy {
+		return _ctx.get<example::fps::Enemy>();
+	}
 	template<> auto get<example::fps::Toggle>() -> example::fps::Toggle {
 		return _ctx.get<example::fps::Toggle>();
 	}
 	template<> auto add<example::fps::Pushing>(const example::fps::Pushing& new_component) -> void {
 		_ctx.add<example::fps::Pushing>(new_component);
+	}
+	template<> auto update<example::fps::Enemy>(const example::fps::Enemy& updated_component) -> void {
+		_ctx.update<example::fps::Enemy>(updated_component);
 	}
 	template<> auto update<example::fps::Toggle>(const example::fps::Toggle& updated_component) -> void {
 		_ctx.update<example::fps::Toggle>(updated_component);

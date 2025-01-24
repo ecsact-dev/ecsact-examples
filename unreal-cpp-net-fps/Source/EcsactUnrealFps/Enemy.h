@@ -1,7 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
 #include "GameFramework/Actor.h"
+#include "Math/Color.h"
 #include "Enemy.generated.h"
 
 UCLASS(Blueprintable)
@@ -22,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnRemoveStunned(FExampleFpsStunned Stunned);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUpdateEnemy(FExampleFpsEnemy Enemy);
 };

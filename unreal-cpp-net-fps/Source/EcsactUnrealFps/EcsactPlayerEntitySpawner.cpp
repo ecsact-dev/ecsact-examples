@@ -154,6 +154,8 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 			spawn_params
 		);
 
+		proxy_character->OnInitPlayer(Player);
+
 		check(proxy_character);
 		PlayerEntities.Add(Entity, proxy_character);
 	} else {
@@ -200,6 +202,7 @@ auto UEcsactPlayerEntitySpawner::SetupController(
 		player_start->GetActorRotation(),
 		spawn_params
 	);
+	pawn->OnInitPlayer(Player);
 	check(pawn);
 	// TODO: no cast please
 	pawn->CharacterEntity = static_cast<ecsact_entity_id>(Entity);

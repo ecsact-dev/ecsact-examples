@@ -70,6 +70,7 @@ struct Enemy {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(9);
+	int32_t player_id;
 	auto operator<=>(const example::fps::Enemy&) const = default;
 };
 struct Velocity {

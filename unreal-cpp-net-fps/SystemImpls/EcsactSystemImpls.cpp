@@ -91,6 +91,10 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	auto       toggle = ctx.get<Toggle>();
 
 	if(is_overlapping(radius, position, pusher_pos)) {
+		auto enemy = ctx.get<Enemy>();
+		enemy.player_id = player_id;
+		ctx.update(enemy);
+
 		float max_force = 35;
 		int   max_tick_count = 60;
 

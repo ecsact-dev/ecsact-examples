@@ -44,6 +44,7 @@ FExampleFpsPushcharge FExampleFpsPushcharge::FromEcsactComponentData(const void*
 }
 FExampleFpsEnemy FExampleFpsEnemy::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsEnemy{};
+	result.PlayerId = static_cast<const example::fps::Enemy*>(component_data)->player_id;
 	return result;
 }
 FExampleFpsVelocity FExampleFpsVelocity::FromEcsactComponentData(const void* component_data) {

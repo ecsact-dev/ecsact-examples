@@ -4,6 +4,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "CoreMinimal.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
 #include "GameFramework/Pawn.h"
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -88,6 +89,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPushChargeUpdated(float ChargePercentage);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInitPlayer(FExampleFpsPlayer Player);
+
+	UFUNCTION(BlueprintCallable)
+	static FLinearColor GetPlayerColour(int player_id);
+
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
@@ -109,7 +116,6 @@ protected:
 		UPrimitiveComponent* OtherComp,
 		int32                OtherBodyIndex
 	);
-
 
 public:
 	// TODO: Use some kind of entity actor component
