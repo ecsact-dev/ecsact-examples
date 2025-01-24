@@ -381,9 +381,9 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 			continue;
 		}
 		UE_LOG(LogTemp, Log, TEXT("PHYSICS FALSE"));
-		// skeletal_mesh->SetSimulatePhysics(false);
+		skeletal_mesh->SetSimulatePhysics(false);
 		// skeletal_mesh->SetAllBodiesSimulatePhysics(false);
-		skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", false);
+		// skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", false);
 
 		enemy_entity_actor->OnRemoveStunned(Stunned);
 	}
@@ -408,9 +408,9 @@ auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
 			continue;
 		}
 		UE_LOG(LogTemp, Log, TEXT("PHYSICS TRUE"));
-		// skeletal_mesh->SetSimulatePhysics(true);
+		skeletal_mesh->SetSimulatePhysics(true);
 		// skeletal_mesh->SetAllBodiesSimulatePhysics(true);
-		skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", true);
+		// skeletal_mesh->SetAllBodiesBelowSimulatePhysics("Rig1", true);
 	}
 }
 
