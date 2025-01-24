@@ -6,7 +6,7 @@
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
-bool is_overlapping(
+static bool is_overlapping(
 	int16_t                       radius,
 	const example::fps::Position& pos,
 	const example::fps::Position& other_pos
@@ -20,6 +20,19 @@ bool is_overlapping(
 	} else {
 		return false;
 	}
+}
+
+template<std::floating_point T>
+static auto normalize2(T& a, T& b) -> void {
+	if(std::abs(a) < std::numeric_limits<T>::epsilon() &&
+		 std::abs(b) < std::numeric_limits<T>::epsilon()) {
+		return;
+	}
+
+	float magnitude = std::sqrt(a * a + b * b);
+
+	a = a / magnitude;
+	b = b / magnitude;
 }
 
 auto example::fps::PusherExpireChecker::impl(context& ctx) -> void {
@@ -83,9 +96,11 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 		int  force = max_force * mult;
 		auto tick_count = static_cast<int16_t>(std::floor(max_tick_count * mult));
 
-		auto push_dir_x = std::clamp(position.x - pusher_pos.x, -1.f, 1.f);
-		auto push_dir_y = std::clamp(position.y - pusher_pos.y, -1.f, 1.f);
+		auto push_dir_x = position.x - pusher_pos.x;
+		auto push_dir_y = position.y - pusher_pos.y;
 		auto push_dir_z = 0.f; // TODO: add a little Z to spice it up
+
+		normalize2(push_dir_x, push_dir_y);
 
 		ctx.add(Pushing{
 			.tick_count = tick_count,
