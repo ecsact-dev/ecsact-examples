@@ -580,12 +580,17 @@ struct example::fps::TogglePushedEntities::context {
 		"| example.fps.TogglePushedEntities context.stream_toggle<T> may only be called\n"
 		"| with stream components declared by the system. Did you forget to add stream\n"
 		"| toggle capabilities? The following components are allowed:\n"
+		"| 	- example.fps.Rotation\n"
 		"| 	- example.fps.Position\n"
 		"| \n");
 	}
 	
 	template<> auto get<example::fps::Toggle>() -> example::fps::Toggle {
 		return _ctx.get<example::fps::Toggle>();
+	}
+	template<> auto stream_toggle<example::fps::Rotation>(bool enable_stream) -> void {
+		return _ctx.stream_toggle<example::fps::Rotation>(enable_stream);
+		
 	}
 	template<> auto stream_toggle<example::fps::Position>(bool enable_stream) -> void {
 		return _ctx.stream_toggle<example::fps::Position>(enable_stream);

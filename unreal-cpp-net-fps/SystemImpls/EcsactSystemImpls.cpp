@@ -24,12 +24,13 @@ static bool is_overlapping(
 
 template<std::floating_point T>
 static auto normalize2(T& a, T& b) -> void {
-	if(std::abs(a) < std::numeric_limits<T>::epsilon() &&
-		 std::abs(b) < std::numeric_limits<T>::epsilon()) {
+	T magnitude = std::sqrt(a * a + b * b);
+
+	if(std::abs(magnitude) < std::numeric_limits<T>::epsilon()) {
+		a = {};
+		b = {};
 		return;
 	}
-
-	float magnitude = std::sqrt(a * a + b * b);
 
 	a = a / magnitude;
 	b = b / magnitude;
@@ -200,6 +201,7 @@ auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
 	const auto toggle = ctx.get<Toggle>();
 
 	ctx.stream_toggle<Position>(toggle.streaming);
+	ctx.stream_toggle<Rotation>(toggle.streaming);
 }
 
 auto example::fps::RemovePushing::impl(context& ctx) -> void {

@@ -128,6 +128,7 @@ system ResumeStreaming(parallel: false) {
 
 system TogglePushedEntities {
 	stream_toggle Position;
+	stream_toggle Rotation;
 	readonly Toggle;
 
 	notify {
