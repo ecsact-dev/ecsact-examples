@@ -12,8 +12,8 @@
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
 #include "MassActorSubsystem.h"
+#include "MassActorSpawnerSubsystem.h"
 #include "MassEntityTemplateRegistry.h"
-#include "MassActorSubsystem.h"
 #include "MassEntityManager.h"
 #include "Enemy.h"
 #include "MassCommonFragments.h"
@@ -184,9 +184,29 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles =
 		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	auto mass_actor_subsystem = world->GetSubsystem<UMassActorSubsystem>();
 
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().AddTag<FExampleEnemyTag>(entity_handle);
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
+			entity_handle,
+			FExampleEnemyFragment{Enemy.PlayerId}
+		);
+
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			UE_LOG(
+				LogTemp,
+				Warning,
+				TEXT("No mass actor available. Will update in begin play?")
+			);
+			return;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			return;
+		}
+
+		enemy_entity_actor->OnInitEnemy(Enemy);
 	}
 }
 
@@ -203,9 +223,21 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles =
 		MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
 
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().RemoveTag<FExampleEnemyTag>(entity_handle);
+		entity_manager.Defer().RemoveFragment<FExampleEnemyFragment>(entity_handle);
+
+		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
+		if(!entity_actor) {
+			continue;
+		}
+		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
+		if(!enemy_entity_actor) {
+			continue;
+		}
+
+		enemy_entity_actor->OnRemoveEnemy(Enemy);
 	}
 }
 

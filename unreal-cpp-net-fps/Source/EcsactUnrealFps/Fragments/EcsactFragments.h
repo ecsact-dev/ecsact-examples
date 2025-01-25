@@ -117,10 +117,17 @@ struct ECSACTUNREALFPS_API FEcsactStreamTag : public FMassTag {
 };
 
 /**
- * Tag indiciating that this entity is an enemy
+ * Fragment indiciating that this entity is an enemy
  */
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FExampleEnemyTag : public FMassTag {
+struct ECSACTUNREALFPS_API FExampleEnemyFragment : public FMassFragment {
 	GENERATED_BODY() // nolint
+
+	int32 PlayerId;
+
+	FExampleEnemyFragment() = default;
+
+	FExampleEnemyFragment(int32 PlayerId) : PlayerId(PlayerId) {
+	}
 };

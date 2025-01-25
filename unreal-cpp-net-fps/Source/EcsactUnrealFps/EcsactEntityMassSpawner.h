@@ -71,6 +71,11 @@ public:
 		FExampleFpsEnemy Enemy
 	) -> void override;
 
+	auto UpdateEnemy_Implementation( //
+		int32            Entity,
+		FExampleFpsEnemy Enemy
+	) -> void override;
+
 	auto RemoveEnemy_Implementation( //
 		int32            Entity,
 		FExampleFpsEnemy Enemy
@@ -129,10 +134,5 @@ public:
 	auto RemovePushing_Implementation( //
 		int32              Entity,
 		FExampleFpsPushing Pushing
-	) -> void override;
-
-	auto UpdateEnemy_Implementation( //
-		int32            Entity,
-		FExampleFpsEnemy Enemy
 	) -> void override;
 };

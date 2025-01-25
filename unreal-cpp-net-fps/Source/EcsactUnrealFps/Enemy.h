@@ -26,5 +26,11 @@ public:
 	void OnRemoveStunned(FExampleFpsStunned Stunned);
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void OnInitEnemy(FExampleFpsEnemy Enemy);
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void OnUpdateEnemy(FExampleFpsEnemy Enemy);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRemoveEnemy(FExampleFpsEnemy Enemy);
 };

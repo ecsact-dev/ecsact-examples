@@ -5,18 +5,23 @@ UEnemyVisualProcessor::UEnemyVisualProcessor() {
 }
 
 auto UEnemyVisualProcessor::ConfigureQueries() -> void {
+	using EMassFragmentAccess::ReadOnly;
 	using EMassFragmentPresence::All;
 	Super::ConfigureQueries();
 
-	CloseEntityQuery.AddTagRequirement<FExampleEnemyTag>(All);
-	FarEntityQuery.AddTagRequirement<FExampleEnemyTag>(All);
-	DebugEntityQuery.AddTagRequirement<FExampleEnemyTag>(All);
-	CloseEntityAdjustDistanceQuery.AddTagRequirement<FExampleEnemyTag>(All);
+	CloseEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
+	FarEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
+	DebugEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
+	CloseEntityAdjustDistanceQuery.AddRequirement<FExampleEnemyFragment>(
+		ReadOnly,
+		All
+	);
 }
 
 auto UEnemyRepresentationProcessor::ConfigureQueries() -> void {
+	using EMassFragmentAccess::ReadOnly;
 	using EMassFragmentPresence::All;
 	Super::ConfigureQueries();
 
-	EntityQuery.AddTagRequirement<FExampleEnemyTag>(All);
+	EntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
 }
