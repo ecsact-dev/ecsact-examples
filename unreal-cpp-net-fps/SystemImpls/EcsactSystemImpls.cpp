@@ -6,20 +6,15 @@
 #include "generated/EcsactUnrealFps.ecsact.hh"
 #include "generated/EcsactUnrealFps.ecsact.systems.hh"
 
-static bool is_overlapping(
-	float                         radius,
+static auto is_within_radius(
 	const example::fps::Position& pos,
-	const example::fps::Position& other_pos
-) {
-	float x_dist = std::abs(pos.x - other_pos.x);
-	float y_dist = std::abs(pos.y - other_pos.y);
-	float z_dist = std::abs(pos.z - other_pos.z);
+	const example::fps::Position& center,
+	float                         radius
+) -> bool {
+	auto dist_x = pos.x - center.x;
+	auto dist_y = pos.y - center.y;
 
-	if(x_dist < radius && y_dist < radius && z_dist < radius) {
-		return true;
-	} else {
-		return false;
-	}
+	return dist_x * dist_x + dist_y * dist_y < radius * radius;
 }
 
 template<std::floating_point T>
@@ -61,7 +56,7 @@ auto example::fps::FinishPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 
 	if(player_id == ctx.action().player_id) {
-		ctx.add(Pusher{1.f});
+		ctx.add(Pusher{2.f});
 	}
 }
 
@@ -89,7 +84,7 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	const auto charge = ctx._ctx.parent().get<PushCharge>();
 	auto       toggle = ctx.get<Toggle>();
 
-	if(is_overlapping(charge.radius, position, pusher_pos)) {
+	if(is_within_radius(position, pusher_pos, charge.radius)) {
 		auto enemy = ctx.get<Enemy>();
 		enemy.player_id = player_id;
 		ctx.update(enemy);
