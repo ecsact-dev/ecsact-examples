@@ -194,11 +194,6 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 
 		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
 		if(!entity_actor) {
-			UE_LOG(
-				LogTemp,
-				Warning,
-				TEXT("No mass actor available. Will update in begin play?")
-			);
 			return;
 		}
 		auto enemy_entity_actor = Cast<AEnemy>(entity_actor);
