@@ -39,8 +39,10 @@ auto FFollowPlayerTargetFragment::GetClosestPlayerPosition( //
 	auto closest_index = 0;
 	auto closest_dist = FVector::Dist(Source, PlayerPositions[0]);
 	for(auto i = 1; PlayerPositions.Num() > i; ++i) {
+		auto player_dist = FVector::Dist(Source, PlayerPositions[i]);
 		if(FVector::Dist(Source, PlayerPositions[i]) < closest_dist) {
 			closest_index = i;
+			closest_dist = player_dist;
 		}
 	}
 
