@@ -62,12 +62,12 @@ auto example::fps::FinishPush::impl(context& ctx) -> void {
 
 static auto push_radius_to_force(float radius) -> float {
 	// TODO
-	return 40.f;
+	return 25.f;
 }
 
 static auto push_radius_to_tick_count(float radius) -> int16_t {
 	// TODO
-	return 50;
+	return 80;
 }
 
 auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
@@ -109,7 +109,7 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 		ctx.add(Pushing{
 			.tick_total = dist_tick_count,
 			.tick_count = 0,
-			.max_height = 1000.f * dynamic_force,
+			.max_height = 400.f * dynamic_force,
 			.force_x = push_dir_x * (force * dynamic_force),
 			.force_y = push_dir_y * (force * dynamic_force),
 			.force_z = push_dir_z * force,
@@ -145,14 +145,14 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 	if(pushing.tick_count < pushing.tick_total) {
 		velocity.x = pushing.force_x;
 		velocity.y = pushing.force_y;
+		pushing.tick_count += 1;
 
-		const int   tick_peak = pushing.tick_total / 2;
+		const float tick_peak = static_cast<float>(pushing.tick_total) / 2;
 		const float a = pushing.max_height / (tick_peak * tick_peak);
 
 		velocity.z =
 			-a * (pushing.tick_count - tick_peak) * (pushing.tick_count - tick_peak) +
 			pushing.max_height;
-		pushing.tick_count += 1;
 
 		ctx.update(pushing);
 		ctx.update(velocity);
@@ -174,9 +174,6 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 	// auto vel_y = std::to_string(velocity.y);
 	// auto vel_z = std::to_string(velocity.z);
 	//
-	// std::string velocity_str =
-	// 	("Velocity: " + vel_x + ", " + vel_y + ", " + vel_z + "\n");
-	// std::puts(velocity_str.c_str());
 
 	position.x += velocity.x;
 	position.y += velocity.y;
