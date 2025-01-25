@@ -331,11 +331,11 @@ auto UEcsactEntityMassSpawner::InitRotation_Implementation(
 			[entity_handle, Rotation](FMassEntityManager& entity_manager) {
 				entity_manager.GetFragmentDataPtr<FTransformFragment>(entity_handle)
 					->GetMutableTransform()
-					.SetLocation(FVector{
+					.SetRotation(FQuat::MakeFromEuler(FVector{
 						Rotation.Roll,
 						Rotation.Pitch,
 						Rotation.Yaw,
-					});
+					}));
 			}
 		);
 	}
