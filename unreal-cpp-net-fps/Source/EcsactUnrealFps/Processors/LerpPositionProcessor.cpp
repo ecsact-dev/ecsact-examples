@@ -46,13 +46,17 @@ auto ULerpPositionProcessor::Execute(
 				auto& transform = transform_fragments[i].GetMutableTransform();
 				auto  lerp_pos = lerp_pos_fragments[i];
 
-				auto new_location = FMath::Lerp(
-					transform.GetLocation(),
-					lerp_pos.DesiredPosition,
-					Context.GetDeltaTimeSeconds() * lerp_pos_params.Speed
-				);
+				if(lerp_pos_params.Disabled) {
+					transform.SetLocation(lerp_pos.DesiredPosition);
+				} else {
+					auto new_location = FMath::Lerp(
+						transform.GetLocation(),
+						lerp_pos.DesiredPosition,
+						Context.GetDeltaTimeSeconds() * lerp_pos_params.Speed
+					);
 
-				transform.SetLocation(new_location);
+					transform.SetLocation(new_location);
+				}
 			}
 		}
 	);
