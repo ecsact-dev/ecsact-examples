@@ -59,6 +59,7 @@ auto UFollowPlayerProcessor::Execute(
 				move_target.IntentAtGoal = EMassMovementAction::Move;
 				move_target.SlackRadius = 50.f;
 				move_target.Center = closest_player_pos;
+				move_target.Center.Z = 0.0f;
 				move_target.Forward = (move_target.Center - entity_loc).GetSafeNormal();
 				move_target.DistanceToGoal =
 					FVector::Dist(move_target.Center, entity_loc);

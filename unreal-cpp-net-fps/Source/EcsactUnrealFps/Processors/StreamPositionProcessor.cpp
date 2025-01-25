@@ -49,9 +49,7 @@ auto UStreamPositionProcessor::Execute(
 					example::fps::Position{
 						.x = static_cast<float>(entity_loc.X),
 						.y = static_cast<float>(entity_loc.Y),
-						// NOTE: We're not streaming the Z because the Z should constantly
-						// be at 0 except when the ecsact systems are driving it.
-						.z = 0.f,
+						.z = static_cast<float>(entity_loc.Z),
 					}
 				);
 			}
