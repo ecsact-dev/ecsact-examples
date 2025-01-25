@@ -121,7 +121,11 @@ struct FExampleFpsPushing {
 	
 	static FExampleFpsPushing FromEcsactComponentData(const void*);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
+	int32 TickTotal;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
 	int32 TickCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ForceX;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

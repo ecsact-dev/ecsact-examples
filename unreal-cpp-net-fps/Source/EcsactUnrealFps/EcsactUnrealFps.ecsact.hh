@@ -85,7 +85,9 @@ struct Pushing {
 	static constexpr bool transient = false;
 	static constexpr bool has_assoc_fields = false;
 	static constexpr auto id = static_cast<ecsact_component_id>(11);
+	int16_t tick_total;
 	int16_t tick_count;
+	float max_height;
 	float force_x;
 	float force_y;
 	float force_z;

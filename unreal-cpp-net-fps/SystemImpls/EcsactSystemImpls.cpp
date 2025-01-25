@@ -62,12 +62,12 @@ auto example::fps::FinishPush::impl(context& ctx) -> void {
 
 static auto push_radius_to_force(float radius) -> float {
 	// TODO
-	return 30.f;
+	return 40.f;
 }
 
 static auto push_radius_to_tick_count(float radius) -> int16_t {
 	// TODO
-	return 15;
+	return 50;
 }
 
 auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
@@ -84,7 +84,11 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	const auto charge = ctx._ctx.parent().get<PushCharge>();
 	auto       toggle = ctx.get<Toggle>();
 
+	float dist_x = std::abs(position.x - pusher_pos.x);
+	float dist_y = std::abs(position.y - pusher_pos.y);
+
 	if(is_within_radius(position, pusher_pos, charge.radius)) {
+		auto total_dist = std::sqrt(dist_x * dist_x + dist_y * dist_y);
 		auto enemy = ctx.get<Enemy>();
 		enemy.player_id = player_id;
 		ctx.update(enemy);
@@ -98,10 +102,16 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 
 		normalize2(push_dir_x, push_dir_y);
 
+		auto dynamic_force = std::max(1 - (total_dist / charge.radius), 0.3f);
+
+		int16_t dist_tick_count = std::ceil(tick_count * dynamic_force);
+
 		ctx.add(Pushing{
-			.tick_count = tick_count,
-			.force_x = push_dir_x * force,
-			.force_y = push_dir_y * force,
+			.tick_total = dist_tick_count,
+			.tick_count = 0,
+			.max_height = 1000.f * dynamic_force,
+			.force_x = push_dir_x * (force * dynamic_force),
+			.force_y = push_dir_y * (force * dynamic_force),
 			.force_z = push_dir_z * force,
 		});
 
@@ -132,14 +142,20 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 	auto pushing = ctx.get<Pushing>();
 	auto velocity = ctx.get<Velocity>();
 
-	if(pushing.tick_count > 0) {
+	if(pushing.tick_count < pushing.tick_total) {
 		velocity.x = pushing.force_x;
 		velocity.y = pushing.force_y;
-		velocity.z = pushing.force_z;
 
-		pushing.tick_count -= 1;
-		ctx.update(velocity);
+		const int   tick_peak = pushing.tick_total / 2;
+		const float a = pushing.max_height / (tick_peak * tick_peak);
+
+		velocity.z =
+			-a * (pushing.tick_count - tick_peak) * (pushing.tick_count - tick_peak) +
+			pushing.max_height;
+		pushing.tick_count += 1;
+
 		ctx.update(pushing);
+		ctx.update(velocity);
 	}
 }
 
@@ -151,7 +167,8 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 	// auto y = std::to_string(position.y);
 	// auto z = std::to_string(position.z);
 	//
-	// std::string position_str = ("Position: " + x + ", " + y + ", " + z + "\n");
+	// std::string position_str = ("Position: " + x + ", " + y + ", " + z +
+	// "\n");
 	//
 	// auto vel_x = std::to_string(velocity.x);
 	// auto vel_y = std::to_string(velocity.y);
@@ -163,7 +180,7 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 
 	position.x += velocity.x;
 	position.y += velocity.y;
-	position.z += velocity.z;
+	position.z = velocity.z;
 
 	ctx.update(position);
 }
@@ -174,9 +191,9 @@ auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 
 	velocity.x = velocity.x * 0.9f;
 	velocity.y = velocity.y * 0.9f;
-	velocity.z = velocity.z * 0.9f;
+	// velocity.z = velocity.z * 0.9f;
 
-	if(std::abs(velocity.x) <= 2 && pushing.tick_count <= 0) {
+	if(std::abs(velocity.x) <= 2 && pushing.tick_count >= pushing.tick_total) {
 		ctx.add<RemovePushingTag>();
 		ctx.add(Stunned{10.f});
 	}

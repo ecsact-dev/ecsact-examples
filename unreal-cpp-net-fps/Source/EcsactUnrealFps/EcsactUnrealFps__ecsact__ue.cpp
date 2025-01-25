@@ -55,7 +55,9 @@ FExampleFpsVelocity FExampleFpsVelocity::FromEcsactComponentData(const void* com
 }
 FExampleFpsPushing FExampleFpsPushing::FromEcsactComponentData(const void* component_data) {
 	auto result = FExampleFpsPushing{};
+	result.TickTotal = static_cast<const example::fps::Pushing*>(component_data)->tick_total;
 	result.TickCount = static_cast<const example::fps::Pushing*>(component_data)->tick_count;
+	result.MaxHeight = static_cast<const example::fps::Pushing*>(component_data)->max_height;
 	result.ForceX = static_cast<const example::fps::Pushing*>(component_data)->force_x;
 	result.ForceY = static_cast<const example::fps::Pushing*>(component_data)->force_y;
 	result.ForceZ = static_cast<const example::fps::Pushing*>(component_data)->force_z;

@@ -27,7 +27,9 @@ component Velocity {
 }
 
 component Pushing {
+	i16 tick_total;
 	i16 tick_count;
+	f32 max_height;
 	f32 force_x;
 	f32 force_y;
 	f32 force_z;
