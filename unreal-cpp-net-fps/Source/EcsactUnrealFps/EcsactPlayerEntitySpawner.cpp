@@ -63,8 +63,8 @@ auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
 		);
 		return;
 	}
-	auto runner = EcsactUnrealExecution::Runner(world);
-	if(!world) {
+	auto runner = EcsactUnrealExecution::Runner(world).Get();
+	if(!runner) {
 		UE_LOG(
 			LogTemp,
 			Error,

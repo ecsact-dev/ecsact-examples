@@ -44,11 +44,12 @@ auto UEcsactEntityMassSpawner::IsStreamingEntities( //
 ) -> bool {
 	auto world = WorldContext->GetWorld();
 	check(world);
-	auto runner = EcsactUnrealExecution::Runner(world);
-	checkSlow(runner.IsValid());
-	for(auto subsystem : runner->GetSubsystemArray<ThisClass>()) {
-		if(subsystem) {
-			return subsystem->StreamEntities;
+	auto runner = EcsactUnrealExecution::Runner(world).Get();
+	if(runner) {
+		for(auto subsystem : runner->GetSubsystemArray<ThisClass>()) {
+			if(subsystem) {
+				return subsystem->StreamEntities;
+			}
 		}
 	}
 

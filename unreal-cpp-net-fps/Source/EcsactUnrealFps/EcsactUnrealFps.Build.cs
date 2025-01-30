@@ -15,6 +15,7 @@ public class EcsactUnrealFps : ModuleRules {
 			"EnhancedInput",
 			"Ecsact",
 			"EcsactNet",
+			"EcsactNetWasm",
 			"StructUtils",
 			"MassSpawner",
 			"MassAIBehavior",

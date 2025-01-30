@@ -9,12 +9,6 @@
 void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
-	auto runner = EcsactUnrealExecution::RunnerOrWarn(GetWorld()).Get();
-	if(!runner) {
-		UE_LOG(LogTemp, Warning, TEXT("NO RUNNER??????????????"));
-		return;
-	}
-
 	// get the enhanced input subsystem
 	auto* Subsystem =
 		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
@@ -23,6 +17,11 @@ void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	if(Subsystem) {
 		// add the mapping context so we get controls
 		Subsystem->AddMappingContext(InputMappingContext, 0);
+	}
+
+	auto runner = EcsactUnrealExecution::RunnerOrWarn(GetWorld()).Get();
+	if(!runner) {
+		return;
 	}
 
 	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
