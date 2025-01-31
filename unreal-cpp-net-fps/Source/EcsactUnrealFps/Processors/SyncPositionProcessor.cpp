@@ -1,6 +1,7 @@
 #include "SyncPositionProcessor.h"
 #include "EcsactUnrealFps/Fragments/EcsactFragments.h"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__mass__ue.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "EcsactUnrealFps/Fragments/LerpPositionFragment.h"
@@ -19,7 +20,7 @@ auto USyncPositionProcessor::ConfigureQueries() -> void {
 	using EMassFragmentPresence::None;
 
 	EntityQuery //
-		.AddRequirement<FEcsactPositionFragment>(ReadOnly, All)
+		.AddRequirement<FExampleFpsPositionFragment>(ReadOnly, All)
 		.AddRequirement<FLerpPositionFragment>(ReadWrite, All)
 		.AddTagRequirement<FEcsactStreamTag>(None);
 }
@@ -34,13 +35,14 @@ auto USyncPositionProcessor::Execute(
 		[](FMassExecutionContext& Context) {
 			const auto num_entities = Context.GetNumEntities();
 
-			auto pos_fragments = Context.GetFragmentView<FEcsactPositionFragment>();
+			auto pos_fragments =
+				Context.GetFragmentView<FExampleFpsPositionFragment>();
 			auto lerp_pos_fragments =
 				Context.GetMutableFragmentView<FLerpPositionFragment>();
 
 			for(auto i = 0; num_entities > i; ++i) {
-				auto  entity_pos = pos_fragments[i].GetPosition();
-				auto& lerp_pos = lerp_pos_fragments[i];
+				const auto entity_pos = pos_fragments[i].component;
+				auto&      lerp_pos = lerp_pos_fragments[i];
 				lerp_pos.DesiredPosition = FVector{
 					entity_pos.X,
 					entity_pos.Y,

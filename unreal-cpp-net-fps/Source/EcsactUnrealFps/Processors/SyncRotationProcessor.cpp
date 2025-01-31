@@ -1,6 +1,7 @@
 #include "SyncRotationProcessor.h"
 #include "EcsactUnrealFps/Fragments/EcsactFragments.h"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__mass__ue.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "MassCommonFragments.h"
@@ -18,7 +19,7 @@ auto USyncRotationProcessor::ConfigureQueries() -> void {
 	using EMassFragmentPresence::None;
 
 	EntityQuery //
-		.AddRequirement<FEcsactRotationFragment>(ReadOnly, All)
+		.AddRequirement<FExampleFpsRotationFragment>(ReadOnly, All)
 		.AddRequirement<FTransformFragment>(ReadWrite, All)
 		.AddTagRequirement<FEcsactStreamTag>(None);
 }
@@ -33,12 +34,17 @@ auto USyncRotationProcessor::Execute(
 		[](FMassExecutionContext& Context) {
 			const auto num_entities = Context.GetNumEntities();
 
-			auto rot_fragments = Context.GetFragmentView<FEcsactRotationFragment>();
+			auto rot_fragments =
+				Context.GetFragmentView<FExampleFpsRotationFragment>();
 			auto transform_fragments =
 				Context.GetMutableFragmentView<FTransformFragment>();
 
 			for(auto i = 0; num_entities > i; ++i) {
-				auto  ecsact_entity_rot = rot_fragments[i].GetRotation();
+				auto ecsact_entity_rot = FVector{
+					rot_fragments[i].component.Pitch,
+					rot_fragments[i].component.Yaw,
+					rot_fragments[i].component.Roll
+				};
 				auto& entity_transform = transform_fragments[i].GetMutableTransform();
 
 				entity_transform.SetRotation(FQuat::MakeFromEuler(ecsact_entity_rot));

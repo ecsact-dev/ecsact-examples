@@ -2,53 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include <array>
-#include "ecsact/runtime/common.h"
 #include "EcsactUnreal/EcsactRunnerSubsystem.h"
 #include "EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps__ecsact__ue.generated.h"
 
-
-namespace EcsactUnreal::CodegenMeta {
-	constexpr auto ExampleFpsSystemLikeIds = std::array<ecsact_system_like_id, 16>{
-		static_cast<ecsact_system_like_id>(13 /* example.fps.StunTimer */),
-		static_cast<ecsact_system_like_id>(14 /* example.fps.PusherExpireChecker */),
-		static_cast<ecsact_system_like_id>(15 /* example.fps.PusherApplyExpired */),
-		static_cast<ecsact_system_like_id>(18 /* example.fps.FinishPush.PushEntities */),
-		static_cast<ecsact_system_like_id>(19 /* example.fps.RemovePushCharge */),
-		static_cast<ecsact_system_like_id>(20 /* example.fps.TickPushCharge */),
-		static_cast<ecsact_system_like_id>(24 /* example.fps.ApplyPush */),
-		static_cast<ecsact_system_like_id>(25 /* example.fps.ApplyVelocity */),
-		static_cast<ecsact_system_like_id>(26 /* example.fps.ApplyDrag */),
-		static_cast<ecsact_system_like_id>(27 /* example.fps.ResumeStreaming */),
-		static_cast<ecsact_system_like_id>(28 /* example.fps.TogglePushedEntities */),
-		static_cast<ecsact_system_like_id>(29 /* example.fps.RemovePushing */),
-		static_cast<ecsact_system_like_id>(30 /* example.fps.StunnedExpiry */),
-		static_cast<ecsact_system_like_id>(16 /* example.fps.StartPush */),
-		static_cast<ecsact_system_like_id>(17 /* example.fps.FinishPush */),
-		static_cast<ecsact_system_like_id>(22 /* example.fps.Move */),
-	};
-	
-	constexpr auto ExampleFpsExportNames = std::array<const char*, 16>{
-		"example__fps__StunTimer",
-		"example__fps__PusherExpireChecker",
-		"example__fps__PusherApplyExpired",
-		"example__fps__FinishPush__PushEntities",
-		"example__fps__RemovePushCharge",
-		"example__fps__TickPushCharge",
-		"example__fps__ApplyPush",
-		"example__fps__ApplyVelocity",
-		"example__fps__ApplyDrag",
-		"example__fps__ResumeStreaming",
-		"example__fps__TogglePushedEntities",
-		"example__fps__RemovePushing",
-		"example__fps__StunnedExpiry",
-		"example__fps__StartPush",
-		"example__fps__FinishPush",
-		"example__fps__Move",
-	};
-	
-}
 
 USTRUCT(BlueprintType)
 struct FExampleFpsPlayer {

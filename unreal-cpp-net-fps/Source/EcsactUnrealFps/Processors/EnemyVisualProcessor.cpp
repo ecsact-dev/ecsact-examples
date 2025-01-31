@@ -1,5 +1,5 @@
 #include "EnemyVisualProcessor.h"
-#include "EcsactUnrealFps/Fragments/EcsactFragments.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__mass__ue.h"
 
 UEnemyVisualProcessor::UEnemyVisualProcessor() {
 }
@@ -9,10 +9,10 @@ auto UEnemyVisualProcessor::ConfigureQueries() -> void {
 	using EMassFragmentPresence::All;
 	Super::ConfigureQueries();
 
-	CloseEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
-	FarEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
-	DebugEntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
-	CloseEntityAdjustDistanceQuery.AddRequirement<FExampleEnemyFragment>(
+	CloseEntityQuery.AddRequirement<FExampleFpsEnemyFragment>(ReadOnly, All);
+	FarEntityQuery.AddRequirement<FExampleFpsEnemyFragment>(ReadOnly, All);
+	DebugEntityQuery.AddRequirement<FExampleFpsEnemyFragment>(ReadOnly, All);
+	CloseEntityAdjustDistanceQuery.AddRequirement<FExampleFpsEnemyFragment>(
 		ReadOnly,
 		All
 	);
@@ -23,5 +23,5 @@ auto UEnemyRepresentationProcessor::ConfigureQueries() -> void {
 	using EMassFragmentPresence::All;
 	Super::ConfigureQueries();
 
-	EntityQuery.AddRequirement<FExampleEnemyFragment>(ReadOnly, All);
+	EntityQuery.AddRequirement<FExampleFpsEnemyFragment>(ReadOnly, All);
 }
