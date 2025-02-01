@@ -12,6 +12,7 @@ void UExampleFpsMassSpawner::InitPlayer_Implementation(int32 Entity, FExampleFps
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsPlayerFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsPlayerFragment{Player});
 		
 	}
@@ -57,6 +58,7 @@ void UExampleFpsMassSpawner::InitPusher_Implementation(int32 Entity, FExampleFps
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsPusherFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsPusherFragment{Pusher});
 		
 	}
@@ -126,6 +128,7 @@ void UExampleFpsMassSpawner::InitRotation_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsRotationFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsRotationFragment{Rotation});
 		
 	}
@@ -171,6 +174,7 @@ void UExampleFpsMassSpawner::InitPosition_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsPositionFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsPositionFragment{Position});
 		
 	}
@@ -216,6 +220,7 @@ void UExampleFpsMassSpawner::InitStunned_Implementation(int32 Entity, FExampleFp
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsStunnedFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsStunnedFragment{Stunned});
 		
 	}
@@ -285,6 +290,7 @@ void UExampleFpsMassSpawner::InitPushcharge_Implementation(int32 Entity, FExampl
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsPushchargeFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsPushchargeFragment{Pushcharge});
 		
 	}
@@ -330,6 +336,7 @@ void UExampleFpsMassSpawner::InitEnemy_Implementation(int32 Entity, FExampleFpsE
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsEnemyFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsEnemyFragment{Enemy});
 		
 	}
@@ -375,6 +382,7 @@ void UExampleFpsMassSpawner::InitVelocity_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsVelocityFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsVelocityFragment{Velocity});
 		
 	}
@@ -420,6 +428,7 @@ void UExampleFpsMassSpawner::InitPushing_Implementation(int32 Entity, FExampleFp
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsPushingFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsPushingFragment{Pushing});
 		
 	}
@@ -465,6 +474,7 @@ void UExampleFpsMassSpawner::InitToggle_Implementation(int32 Entity, FExampleFps
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsToggleFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsToggleFragment{Toggle});
 		
 	}
@@ -510,6 +520,7 @@ void UExampleFpsMassSpawner::InitMovedirection_Implementation(int32 Entity, FExa
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
+		entity_manager.Defer().AddFragment<FExampleFpsMovedirectionFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FExampleFpsMovedirectionFragment{Movedirection});
 		
 	}
@@ -594,6 +605,7 @@ auto UOneToOneExampleFpsMassSpawner::EntityCreated_Implementation(int32 Entity) 
 	mass_spawner->SpawnEntities(entity_template, 1, new_entity_handles);
 	MassEntities.Add(static_cast<ecsact_entity_id>(Entity), new_entity_handles);
 	for(auto entity_handle : new_entity_handles) {
+		entity_manager.Defer().AddFragment<FEcsactEntityFragment>(entity_handle);
 		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FEcsactEntityFragment{static_cast<ecsact_entity_id>(Entity)});
 		;
 		
