@@ -11,7 +11,7 @@ class AEcsactUnrealFpsCharacter;
 
 UCLASS(Abstract)
 
-class UEcsactPlayerEntitySpawner : public UOneToOneExampleFpsMassSpawner {
+class UEcsactPlayerEntitySpawner : public UExampleFpsEcsactRunnerSubsystem {
 	GENERATED_BODY() // NOLINT
 
 	auto CreateInitialEntities(class UEcsactRunner* Runner) -> void;
