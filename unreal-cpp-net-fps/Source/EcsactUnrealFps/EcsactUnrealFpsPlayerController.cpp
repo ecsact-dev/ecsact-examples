@@ -8,7 +8,6 @@
 
 void AEcsactUnrealFpsPlayerController::BeginPlay() {
 	Super::BeginPlay();
-	__debugbreak();
 
 	// get the enhanced input subsystem
 	auto* Subsystem =

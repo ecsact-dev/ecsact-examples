@@ -109,7 +109,6 @@ auto UEcsactEntityMassSpawner::CheckMassEntities(
 
 auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
 	-> UMassEntityConfigAsset* {
-	__debugbreak();
 	if(!StreamEntities && MassEntityConfigAsset) {
 		return MassEntityConfigAsset;
 	}
@@ -119,7 +118,7 @@ auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
 
 auto UEcsactEntityMassSpawner::EntityCreated_Implementation(int32 Entity)
 	-> void {
-	__debugbreak();
+	UE_LOG(LogTemp, Log, TEXT("Mass Spawner EntityCreated_impl"));
 	Super::EntityCreated_Implementation(Entity);
 }
 
@@ -130,7 +129,6 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 	// if(!CheckMassEntities(Entity, TEXT("InitEnemy"))) {
 	// 	return;
 	// }
-	__debugbreak();
 	Super::InitEnemy_Implementation(Entity, Enemy);
 	auto* world = GetWorld();
 
@@ -162,7 +160,6 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 	int32            Entity,
 	FExampleFpsEnemy Enemy
 ) -> void {
-	__debugbreak();
 	// if(!CheckMassEntities(Entity, TEXT("RemoveEnemy"))) {
 	// 	return;
 	// }
@@ -186,9 +183,6 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 }
 
 UEcsactEntityMassSpawner::UEcsactEntityMassSpawner() {
-	if(!IsTemplate()) {
-		__debugbreak();
-	}
 }
 
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(
@@ -224,9 +218,9 @@ auto UEcsactEntityMassSpawner::InitRotation_Implementation(
 	int32               Entity,
 	FExampleFpsRotation Rotation
 ) -> void {
-	if(!CheckMassEntities(Entity, TEXT("InitRotation"))) {
-		return;
-	}
+	// if(!CheckMassEntities(Entity, TEXT("InitRotation"))) {
+	// 	return;
+	// }
 
 	Super::InitRotation_Implementation(Entity, Rotation);
 
