@@ -516,13 +516,9 @@ auto UOneToOneExampleFpsMassSpawner::EntityCreated_Implementation(int32 Entity) 
 	
 	auto* config = GetEntityMassConfig();
 	if(!config) {
-	UE_LOG(LogTemp, Warning, TEXT("COULD NOT GET MASSENTITY CONFIG"));
+			UE_LOG(Ecsact, Warning, TEXT("UOneToOneExampleFpsMassSpawner::GetEntityMassConfig() returned null"));
+		return;
 	}
-	else {
-	UE_LOG(LogTemp, Warning, TEXT("FOUND A MASS ENTITY CONFIG OWOWOW"));
-	}
-	check(config);
-	
 	const auto& entity_template = config->GetOrCreateEntityTemplate(*world);
 	auto new_entity_handles = TArray<FMassEntityHandle>{};
 	
@@ -550,7 +546,9 @@ auto UOneToOneExampleFpsMassSpawner::EntityCreated_Implementation(int32 Entity) 
 	}
 }
 auto UOneToOneExampleFpsMassSpawner::GetEcsactMassEntityHandles(int32 Entity) -> TArray<FMassEntityHandle> {
-	return MassEntities.FindChecked(static_cast<ecsact_entity_id>(Entity));
+	auto handles = MassEntities.Find(static_cast<ecsact_entity_id>(Entity));
+	if(!handles) return {};
+	return *handles;
 	
 }
 auto UOneToOneExampleFpsMassSpawner::GetEntityMassConfig() const -> UMassEntityConfigAsset*
