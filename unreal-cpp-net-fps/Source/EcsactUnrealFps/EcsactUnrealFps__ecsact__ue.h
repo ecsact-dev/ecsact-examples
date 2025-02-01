@@ -4,6 +4,7 @@
 #include "UObject/Interface.h"
 #include <array>
 #include "ecsact/runtime/common.h"
+#include "EcsactUnreal/Ecsact.h"
 #include "EcsactUnreal/EcsactRunnerSubsystem.h"
 #include "EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps__ecsact__ue.generated.h"

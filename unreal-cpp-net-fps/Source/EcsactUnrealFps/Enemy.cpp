@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__mass__ue.h"
 #include "EcsactUnrealFps/Fragments/EcsactFragments.h"
 #include "MassCommandBuffer.h"
 #include "MassEntitySubsystem.h"
@@ -26,10 +27,11 @@ void AEnemy::BeginPlay() {
 
 			if(entity_handle.IsValid()) {
 				auto enemy_fragment =
-					entity_manager.GetFragmentDataPtr<FExampleEnemyFragment>(entity_handle
+					entity_manager.GetFragmentDataPtr<FExampleFpsEnemyFragment>(
+						entity_handle
 					);
 				if(enemy_fragment) {
-					OnInitEnemy(FExampleFpsEnemy{enemy_fragment->PlayerId});
+					OnInitEnemy(FExampleFpsEnemy{enemy_fragment->component});
 				} else {
 					UE_LOG(LogTemp, Warning, TEXT("No enemy fragment!"));
 				}

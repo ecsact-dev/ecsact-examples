@@ -13,8 +13,6 @@
 #include "MassEntitySubsystem.h"
 #include "MassSpawnerSubsystem.h"
 #include "ecsact/runtime/common.h"
-#include "ecsact/runtime/dynamic.h"
-#include "PushExplosionVFX.h"
 
 auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	UEcsactRunner* Runner
@@ -26,7 +24,7 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	// have permission to just create entities at will. Instead they will already
 	// be created for them and any entity creation at runtime would occur during a
 	// generator system of backend function. Refer to your Ecsact async
-	// implemtnation for details.
+	// implemenation for details.
 	Runner->CreateEntity()
 		.AddComponent(example::fps::Player{LocallyControllerPlayerId})
 		.AddComponent(example::fps::MoveDirection{})

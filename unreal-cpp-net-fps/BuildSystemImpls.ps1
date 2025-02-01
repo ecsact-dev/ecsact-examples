@@ -86,5 +86,5 @@ Write-Host "Uploading $WasmOutputFilePath to Ecsact Net ..."
 $EcsactNetConfig = Get-Content "$ProjectDir/Config/DefaultEcsactNet.ini" | Where-Object { !$_.StartsWith('[') } | ConvertFrom-StringData
 
 # TODO: We shouldn't have to set the project ID everytime. Instead ecsact-net subcommands should accept the project ID as an option
-ecsact-net config set project_id $EcsactNetConfig.ProjectID;
-ecsact-net system_impls replace $WasmOutputFilePath;
+# ecsact-net config set project_id $EcsactNetConfig.ProjectID;
+# ecsact-net system_impls replace $WasmOutputFilePath;

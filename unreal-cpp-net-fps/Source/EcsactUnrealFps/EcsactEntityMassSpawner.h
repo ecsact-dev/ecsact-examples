@@ -5,34 +5,24 @@
 #include <optional>
 
 #include "CoreMinimal.h"
+
 #include "MassEntityConfigAsset.h"
 #include "EcsactUnrealFps__ecsact__ue.h"
+#include "EcsactUnrealFps__ecsact__mass__ue.h"
 #include "MassEntitySpawnDataGeneratorBase.h"
-#include "MassEntityTypes.h"
-#include "Ecsact/runtime/common.h"
 #include "EcsactEntityMassSpawner.generated.h"
 
 UCLASS(Abstract)
 
-// TODO(Kelwan): MassSpawner does more than its name implies and should be
-// separated before merging to main
-class UEcsactEntityMassSpawner : public UExampleFpsEcsactRunnerSubsystem {
+class UEcsactEntityMassSpawner : public UOneToOneExampleFpsMassSpawner {
 	GENERATED_BODY() // NOLINT
+									 //
 
 	/**
 	 * Entity Mass config used when Ecsact entity streaming is enabled.
 	 */
 	UPROPERTY(EditAnywhere)
 	UMassEntityConfigAsset* StreamingMassEntityConfigAsset;
-
-	/**
-	 * Entity Mass config used when Ecsact entity streaming is **disabled**. If
-	 * unset then the `StreamingMassEntityConfigAsset` will be used instead.
-	 */
-	UPROPERTY(EditAnywhere)
-	UMassEntityConfigAsset* MassEntityConfigAsset;
-
-	TMap<ecsact_entity_id, TArray<FMassEntityHandle>> MassEntities;
 
 	auto CheckMassEntities(int32 Entity, const TCHAR* EventName) -> bool;
 
@@ -59,12 +49,9 @@ public:
 	)
 	static bool IsStreamingEntities(const UObject* WorldContext);
 
-	UFUNCTION()
-	UMassEntityConfigAsset* GetEntityMassConfig() const;
+	UMassEntityConfigAsset* GetEntityMassConfig() const override;
 
-	auto EntityCreated_Implementation(int32 Entity) -> void override;
-
-	auto EntityDestroyed_Implementation(int32 Entity) -> void override;
+	auto ToggleStreamTag(int32 Entity, FExampleFpsToggle Toggle) -> void;
 
 	auto InitEnemy_Implementation( //
 		int32            Entity,
@@ -86,17 +73,7 @@ public:
 		FExampleFpsPosition Position
 	) -> void override;
 
-	auto UpdatePosition_Implementation( //
-		int32               Entity,
-		FExampleFpsPosition Position
-	) -> void override;
-
 	auto InitRotation_Implementation( //
-		int32               Entity,
-		FExampleFpsRotation Rotation
-	) -> void override;
-
-	auto UpdateRotation_Implementation( //
 		int32               Entity,
 		FExampleFpsRotation Rotation
 	) -> void override;
@@ -127,11 +104,6 @@ public:
 	) -> void override;
 
 	auto InitPushing_Implementation( //
-		int32              Entity,
-		FExampleFpsPushing Pushing
-	) -> void override;
-
-	auto RemovePushing_Implementation( //
 		int32              Entity,
 		FExampleFpsPushing Pushing
 	) -> void override;
