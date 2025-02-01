@@ -5,20 +5,15 @@
 #include <optional>
 
 #include "CoreMinimal.h"
-#pragma once
 
 #include "MassEntityConfigAsset.h"
 #include "EcsactUnrealFps__ecsact__ue.h"
 #include "EcsactUnrealFps__ecsact__mass__ue.h"
 #include "MassEntitySpawnDataGeneratorBase.h"
-#include "MassEntityTypes.h"
-#include "Ecsact/runtime/common.h"
 #include "EcsactEntityMassSpawner.generated.h"
 
 UCLASS(Abstract)
 
-// TODO(Kelwan): MassSpawner does more than its name implies and should be
-// separated before merging to main
 class UEcsactEntityMassSpawner : public UOneToOneExampleFpsMassSpawner {
 	GENERATED_BODY() // NOLINT
 									 //
@@ -35,8 +30,6 @@ class UEcsactEntityMassSpawner : public UOneToOneExampleFpsMassSpawner {
 	bool StreamEntities;
 
 public:
-	UEcsactEntityMassSpawner();
-
 	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
 
 	UFUNCTION(
@@ -58,7 +51,7 @@ public:
 
 	UMassEntityConfigAsset* GetEntityMassConfig() const override;
 
-	auto EntityCreated_Implementation(int32 Entity) -> void override;
+	auto ToggleStreamTag(int32 Entity, FExampleFpsToggle Toggle) -> void;
 
 	auto InitEnemy_Implementation( //
 		int32            Entity,
@@ -83,6 +76,11 @@ public:
 	auto InitRotation_Implementation( //
 		int32               Entity,
 		FExampleFpsRotation Rotation
+	) -> void override;
+
+	auto InitToggle_Implementation( //
+		int32             Entity,
+		FExampleFpsToggle Toggle
 	) -> void override;
 
 	auto UpdateToggle_Implementation( //

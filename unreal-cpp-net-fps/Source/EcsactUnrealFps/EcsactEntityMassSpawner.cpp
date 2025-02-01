@@ -2,17 +2,12 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "MassCommands.h"
-#include "MassMovementFragments.h"
 #include "MassRepresentationActorManagement.h"
-#include "MassStateTreeSubsystem.h"
-#include "Math/Vector.h"
 #include "EcsactUnrealFps/EcsactUnrealFps.ecsact.hh"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
-#include "MassEntityTemplate.h"
 #include "MassSpawnerSubsystem.h"
 #include "MassEntitySubsystem.h"
 #include "MassActorSubsystem.h"
-#include "MassActorSpawnerSubsystem.h"
 #include "MassEntityTemplateRegistry.h"
 #include "MassEntityManager.h"
 #include "Enemy.h"
@@ -86,27 +81,6 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 	}
 }
 
-auto UEcsactEntityMassSpawner::CheckMassEntities(
-	int32        Entity,
-	const TCHAR* EventName
-) -> bool {
-	// // TODO: We really shouldn't need to do this test, but in some cases create
-	// // entity event doesn't happen
-	// auto has_entity_handles =
-	// 	MassEntities.Contains(static_cast<ecsact_entity_id>(Entity));
-	// if(!has_entity_handles) {
-	// 	UE_LOG(
-	// 		LogTemp,
-	// 		Error,
-	// 		TEXT("EntityCreated event did not happen for entity %i - Ignoring %s"),
-	// 		Entity,
-	// 		EventName
-	// 	);
-	// }
-	// return has_entity_handles;
-	return false;
-}
-
 auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
 	-> UMassEntityConfigAsset* {
 	if(!StreamEntities && MassEntityConfigAsset) {
@@ -116,33 +90,17 @@ auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
 	return StreamingMassEntityConfigAsset;
 }
 
-auto UEcsactEntityMassSpawner::EntityCreated_Implementation(int32 Entity)
-	-> void {
-	UE_LOG(LogTemp, Log, TEXT("Mass Spawner EntityCreated_impl"));
-	Super::EntityCreated_Implementation(Entity);
-}
-
 auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 	int32            Entity,
 	FExampleFpsEnemy Enemy
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("InitEnemy"))) {
-	// 	return;
-	// }
 	Super::InitEnemy_Implementation(Entity, Enemy);
 	auto* world = GetWorld();
 
-	auto  entity_handles = GetEcsactMassEntityHandles(Entity);
-	auto  mass_actor_subsystem = world->GetSubsystem<UMassActorSubsystem>();
-	auto& entity_manager =
-		world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
+	auto entity_handles = GetEcsactMassEntityHandles(Entity);
+	auto mass_actor_subsystem = world->GetSubsystem<UMassActorSubsystem>();
 
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(
-			entity_handle,
-			FExampleFpsEnemyFragment{Enemy}
-		);
-
 		auto entity_actor = mass_actor_subsystem->GetActorFromHandle(entity_handle);
 		if(!entity_actor) {
 			return;
@@ -160,9 +118,6 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 	int32            Entity,
 	FExampleFpsEnemy Enemy
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("RemoveEnemy"))) {
-	// 	return;
-	// }
 	Super::RemoveEnemy_Implementation(Entity, Enemy);
 
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
@@ -182,17 +137,10 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 	}
 }
 
-UEcsactEntityMassSpawner::UEcsactEntityMassSpawner() {
-}
-
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 	int32               Entity,
 	FExampleFpsPosition Position
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("InitPosition"))) {
-	// 	return;
-	// }
-
 	Super::InitPosition_Implementation(Entity, Position);
 
 	auto& entity_manager =
@@ -218,10 +166,6 @@ auto UEcsactEntityMassSpawner::InitRotation_Implementation(
 	int32               Entity,
 	FExampleFpsRotation Rotation
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("InitRotation"))) {
-	// 	return;
-	// }
-
 	Super::InitRotation_Implementation(Entity, Rotation);
 
 	auto& entity_manager =
@@ -243,19 +187,10 @@ auto UEcsactEntityMassSpawner::InitRotation_Implementation(
 	}
 }
 
-auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
+auto UEcsactEntityMassSpawner::ToggleStreamTag(
 	int32             Entity,
 	FExampleFpsToggle Toggle
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("UpdateToggle"))) {
-	// 	return;
-	// }
-	Super::UpdateToggle_Implementation(Entity, Toggle);
-
-	if(!StreamEntities) {
-		return;
-	}
-
 	auto& entity_manager =
 		GetWorld()->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 
@@ -269,13 +204,36 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 	}
 }
 
+auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
+	int32             Entity,
+	FExampleFpsToggle Toggle
+) -> void {
+	Super::InitToggle_Implementation(Entity, Toggle);
+
+	if(!StreamEntities) {
+		return;
+	}
+
+	ToggleStreamTag(Entity, Toggle);
+}
+
+auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
+	int32             Entity,
+	FExampleFpsToggle Toggle
+) -> void {
+	Super::UpdateToggle_Implementation(Entity, Toggle);
+
+	if(!StreamEntities) {
+		return;
+	}
+
+	ToggleStreamTag(Entity, Toggle);
+}
+
 auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
 	int32              Entity,
 	FExampleFpsStunned Stunned
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("InitStunned"))) {
-	// 	return;
-	// }
 	Super::InitStunned_Implementation(Entity, Stunned);
 
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
@@ -299,10 +257,6 @@ auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
 	int32              Entity,
 	FExampleFpsStunned Stunned
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("UpdateStunned"))) {
-	// 	return;
-	// }
-	//
 	Super::UpdateStunned_Implementation(Entity, Stunned);
 
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
@@ -326,10 +280,6 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 	int32              Entity,
 	FExampleFpsStunned Stunned
 ) -> void {
-	// if(!CheckMassEntities(Entity, TEXT("RemoveStunned"))) {
-	// 	return;
-	// }
-
 	Super::RemoveStunned_Implementation(Entity, Stunned);
 
 	auto mass_actor_subsystem = GetWorld()->GetSubsystem<UMassActorSubsystem>();
