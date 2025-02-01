@@ -24,9 +24,15 @@ void UExampleFpsMassSpawner::UpdatePlayer_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Player](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Player](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsPlayerFragment>(entity_handle)->component = Player;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsPlayerFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsPlayerFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Player;
+			
 		});
 		
 	}
@@ -63,9 +69,15 @@ void UExampleFpsMassSpawner::UpdatePusher_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Pusher](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Pusher](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsPusherFragment>(entity_handle)->component = Pusher;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsPusherFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsPusherFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Pusher;
+			
 		});
 		
 	}
@@ -126,9 +138,15 @@ void UExampleFpsMassSpawner::UpdateRotation_Implementation(int32 Entity, FExampl
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Rotation](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Rotation](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsRotationFragment>(entity_handle)->component = Rotation;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsRotationFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsRotationFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Rotation;
+			
 		});
 		
 	}
@@ -165,9 +183,15 @@ void UExampleFpsMassSpawner::UpdatePosition_Implementation(int32 Entity, FExampl
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Position](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Position](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsPositionFragment>(entity_handle)->component = Position;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsPositionFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsPositionFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Position;
+			
 		});
 		
 	}
@@ -204,9 +228,15 @@ void UExampleFpsMassSpawner::UpdateStunned_Implementation(int32 Entity, FExample
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Stunned](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Stunned](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsStunnedFragment>(entity_handle)->component = Stunned;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsStunnedFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsStunnedFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Stunned;
+			
 		});
 		
 	}
@@ -267,9 +297,15 @@ void UExampleFpsMassSpawner::UpdatePushcharge_Implementation(int32 Entity, FExam
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Pushcharge](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Pushcharge](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsPushchargeFragment>(entity_handle)->component = Pushcharge;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsPushchargeFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsPushchargeFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Pushcharge;
+			
 		});
 		
 	}
@@ -306,9 +342,15 @@ void UExampleFpsMassSpawner::UpdateEnemy_Implementation(int32 Entity, FExampleFp
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Enemy](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Enemy](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsEnemyFragment>(entity_handle)->component = Enemy;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsEnemyFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsEnemyFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Enemy;
+			
 		});
 		
 	}
@@ -345,9 +387,15 @@ void UExampleFpsMassSpawner::UpdateVelocity_Implementation(int32 Entity, FExampl
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Velocity](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Velocity](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsVelocityFragment>(entity_handle)->component = Velocity;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsVelocityFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsVelocityFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Velocity;
+			
 		});
 		
 	}
@@ -384,9 +432,15 @@ void UExampleFpsMassSpawner::UpdatePushing_Implementation(int32 Entity, FExample
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Pushing](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Pushing](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsPushingFragment>(entity_handle)->component = Pushing;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsPushingFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsPushingFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Pushing;
+			
 		});
 		
 	}
@@ -423,9 +477,15 @@ void UExampleFpsMassSpawner::UpdateToggle_Implementation(int32 Entity, FExampleF
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Toggle](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Toggle](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsToggleFragment>(entity_handle)->component = Toggle;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsToggleFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsToggleFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Toggle;
+			
 		});
 		
 	}
@@ -462,9 +522,15 @@ void UExampleFpsMassSpawner::UpdateMovedirection_Implementation(int32 Entity, FE
 	auto& entity_manager = world->GetSubsystem<UMassEntitySubsystem>()->GetMutableEntityManager();
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
-		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([entity_handle, Movedirection](FMassEntityManager& entity_manager)
+		entity_manager.Defer().PushCommand<FMassDeferredSetCommand>([this, Entity, entity_handle, Movedirection](FMassEntityManager& entity_manager)
 		 {
-			entity_manager.GetFragmentDataPtr<FExampleFpsMovedirectionFragment>(entity_handle)->component = Movedirection;
+			auto fragment = entity_manager.GetFragmentDataPtr<FExampleFpsMovedirectionFragment>(entity_handle);
+			if(!fragment) {
+				UE_LOG(Ecsact, Warning, TEXT("%s fragment FExampleFpsMovedirectionFragment does not exist for entity %i"), *GetClass()->GetName(), Entity);
+				return;
+			}
+			fragment->component = Movedirection;
+			
 		});
 		
 	}
@@ -516,7 +582,7 @@ auto UOneToOneExampleFpsMassSpawner::EntityCreated_Implementation(int32 Entity) 
 	
 	auto* config = GetEntityMassConfig();
 	if(!config) {
-			UE_LOG(Ecsact, Warning, TEXT("UOneToOneExampleFpsMassSpawner::GetEntityMassConfig() returned null"));
+		UE_LOG(Ecsact, Warning, TEXT("%s GetEntityMassConfig() returned null"), *GetClass()->GetName());
 		return;
 	}
 	const auto& entity_template = config->GetOrCreateEntityTemplate(*world);
