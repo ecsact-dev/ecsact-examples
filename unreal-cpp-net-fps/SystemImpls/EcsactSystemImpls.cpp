@@ -3,13 +3,13 @@
 #include <algorithm>
 #include <cmath>
 #include <string>
-#include "generated/EcsactUnrealFps.ecsact.hh"
-#include "generated/EcsactUnrealFps.ecsact.systems.hh"
+#include "generated/Floppybots.ecsact.hh"
+#include "generated/Floppybots.ecsact.systems.hh"
 
 static auto is_within_radius(
-	const example::fps::Position& pos,
-	const example::fps::Position& center,
-	float                         radius
+	const floppybots::Position& pos,
+	const floppybots::Position& center,
+	float                       radius
 ) -> bool {
 	auto dist_x = pos.x - center.x;
 	auto dist_y = pos.y - center.y;
@@ -31,7 +31,7 @@ static auto normalize2(T& a, T& b) -> void {
 	b = b / magnitude;
 }
 
-auto example::fps::PusherExpireChecker::impl(context& ctx) -> void {
+auto floppybots::PusherExpireChecker::impl(context& ctx) -> void {
 	auto pusher = ctx.get<Pusher>();
 	pusher.cooldown_remaining -= 0.1f;
 	if(pusher.cooldown_remaining < 0.f) {
@@ -41,18 +41,18 @@ auto example::fps::PusherExpireChecker::impl(context& ctx) -> void {
 	ctx.update(pusher);
 }
 
-auto example::fps::PusherApplyExpired::impl(context& ctx) -> void {
+auto floppybots::PusherApplyExpired::impl(context& ctx) -> void {
 	// trivial
 }
 
-auto example::fps::StartPush::impl(context& ctx) -> void {
+auto floppybots::StartPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	if(player_id == ctx.action().player_id) {
 		ctx.add(PushCharge{.radius = 3.f});
 	}
 }
 
-auto example::fps::FinishPush::impl(context& ctx) -> void {
+auto floppybots::FinishPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 
 	if(player_id == ctx.action().player_id) {
@@ -70,7 +70,7 @@ static auto push_radius_to_tick_count(float radius) -> int16_t {
 	return 80;
 }
 
-auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
+auto floppybots::FinishPush::PushEntities::impl(context& ctx) -> void {
 	auto push = ctx._ctx.parent().action<FinishPush>();
 	auto player_id = ctx._ctx.parent().get<Player>().player_id;
 	if(player_id != push.player_id) {
@@ -120,17 +120,17 @@ auto example::fps::FinishPush::PushEntities::impl(context& ctx) -> void {
 	}
 }
 
-auto example::fps::RemovePushCharge::impl(context& ctx) -> void {
+auto floppybots::RemovePushCharge::impl(context& ctx) -> void {
 	// trivial
 }
 
-auto example::fps::TickPushCharge::impl(context& ctx) -> void {
+auto floppybots::TickPushCharge::impl(context& ctx) -> void {
 	auto push_charge = ctx.get<PushCharge>();
 	push_charge.radius += 3.f;
 	ctx.update(push_charge);
 }
 
-auto example::fps::Move::impl(context& ctx) -> void {
+auto floppybots::Move::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	auto action = ctx.action();
 	if(player_id == action.player_id) {
@@ -138,7 +138,7 @@ auto example::fps::Move::impl(context& ctx) -> void {
 	}
 }
 
-auto example::fps::ApplyPush::impl(context& ctx) -> void {
+auto floppybots::ApplyPush::impl(context& ctx) -> void {
 	auto pushing = ctx.get<Pushing>();
 	auto velocity = ctx.get<Velocity>();
 
@@ -159,7 +159,7 @@ auto example::fps::ApplyPush::impl(context& ctx) -> void {
 	}
 }
 
-auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
+auto floppybots::ApplyVelocity::impl(context& ctx) -> void {
 	const auto velocity = ctx.get<Velocity>();
 	auto       position = ctx.get<Position>();
 
@@ -182,7 +182,7 @@ auto example::fps::ApplyVelocity::impl(context& ctx) -> void {
 	ctx.update(position);
 }
 
-auto example::fps::ApplyDrag::impl(context& ctx) -> void {
+auto floppybots::ApplyDrag::impl(context& ctx) -> void {
 	const auto pushing = ctx.get<Pushing>();
 	auto       velocity = ctx.get<Velocity>();
 
@@ -197,21 +197,21 @@ auto example::fps::ApplyDrag::impl(context& ctx) -> void {
 	ctx.update(velocity);
 }
 
-auto example::fps::ResumeStreaming::impl(context& ctx) -> void {
+auto floppybots::ResumeStreaming::impl(context& ctx) -> void {
 	ctx.update(Toggle{.streaming = true});
 }
 
-auto example::fps::TogglePushedEntities::impl(context& ctx) -> void {
+auto floppybots::TogglePushedEntities::impl(context& ctx) -> void {
 	const auto toggle = ctx.get<Toggle>();
 
 	ctx.stream_toggle<Position>(toggle.streaming);
 	ctx.stream_toggle<Rotation>(toggle.streaming);
 }
 
-auto example::fps::RemovePushing::impl(context& ctx) -> void {
+auto floppybots::RemovePushing::impl(context& ctx) -> void {
 }
 
-auto example::fps::StunTimer::impl(context& ctx) -> void {
+auto floppybots::StunTimer::impl(context& ctx) -> void {
 	auto stunned = ctx.get<Stunned>();
 	stunned.remaining -= 0.1f;
 	if(stunned.remaining <= 0.f) {
@@ -221,6 +221,6 @@ auto example::fps::StunTimer::impl(context& ctx) -> void {
 	ctx.update(stunned);
 }
 
-auto example::fps::StunnedExpiry::impl(context& ctx) -> void {
+auto floppybots::StunnedExpiry::impl(context& ctx) -> void {
 	// trivial
 }

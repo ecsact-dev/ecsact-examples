@@ -1,0 +1,151 @@
+main package floppybots;
+
+component Player { i32 player_id; }
+component Pusher { f32 cooldown_remaining; }
+component PusherExpired;
+component Rotation(stream) { f32 pitch; f32 yaw; f32 roll; }
+component Position(stream) { f32 x; f32 y; f32 z; }
+
+component Stunned {
+	f32 remaining;
+}
+
+component StunnedExpired;
+
+component PushCharge {
+	f32 radius;
+}
+
+component Enemy {
+	i32 player_id;
+}
+
+component Velocity {
+	f32 x;
+	f32 y;
+	f32 z;
+}
+
+component Pushing {
+	i16 tick_total;
+	i16 tick_count;
+	f32 max_height;
+	f32 force_x;
+	f32 force_y;
+	f32 force_z;
+}
+
+component Toggle {
+	i8 streaming;
+}
+
+system StunTimer(parallel: false) {
+	readwrite Stunned;
+	adds StunnedExpired;
+}
+
+system PusherExpireChecker(parallel: false) {
+	readwrite Pusher;
+	adds PusherExpired;
+}
+
+system PusherApplyExpired {
+	include PusherExpired;
+	removes Pusher;
+}
+
+action StartPush {
+	i32 player_id;
+	readonly Player;
+	adds PushCharge;
+}
+
+action FinishPush {
+	i32 player_id;
+
+	readonly Player;
+	readonly Position;
+	readonly PushCharge;
+	adds Pusher;
+	
+	system PushEntities {
+		readwrite Enemy;
+		readonly Position;
+		readwrite Toggle;
+		adds Pushing;
+		exclude Stunned;
+	}
+}
+
+system RemovePushCharge {
+	include Player;
+	include Pusher;
+	removes PushCharge;
+}
+
+system TickPushCharge {
+	readonly Player;
+	readwrite PushCharge;
+}
+
+component MoveDirection {
+	f32 x;
+	f32 y;
+}
+
+action Move {
+	i32 player_id;
+	f32 x;
+	f32 y;
+
+	readonly Player;
+	readwrite MoveDirection;
+}
+
+component RemovePushingTag;
+
+system ApplyPush {
+	include Enemy;
+	readwrite Pushing;
+	readwrite Velocity;
+}
+
+system ApplyVelocity(parallel: false) {
+	readwrite Position;
+	readonly Velocity;
+	exclude Stunned;
+}
+
+system ApplyDrag(parallel: false) {
+	readwrite Velocity;
+	include Toggle;
+	readonly Pushing;
+	adds RemovePushingTag;
+	adds Stunned;
+}
+
+system ResumeStreaming(parallel: false) {
+	readwrite Toggle;
+	include StunnedExpired;
+}
+
+system TogglePushedEntities {
+	stream_toggle Position;
+	stream_toggle Rotation;
+	readonly Toggle;
+
+	notify {
+		onchange Toggle;
+	}
+}
+
+system RemovePushing(parallel: false) {
+	include Enemy;
+	removes RemovePushingTag;
+	removes Pushing;
+}
+
+system StunnedExpiry(parallel: false) {
+	removes Stunned;
+	removes StunnedExpired;
+}
