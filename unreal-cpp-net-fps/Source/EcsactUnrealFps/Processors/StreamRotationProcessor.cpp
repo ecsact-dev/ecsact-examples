@@ -1,6 +1,7 @@
 #include "StreamRotationProcessor.h"
 #include "EcsactUnrealFps/Fragments/EcsactFragments.h"
 #include "EcsactUnrealFps/EcsactUnrealFps__ecsact__ue.h"
+#include "EcsactUnrealFps/EcsactUnrealFps__ecsact__mass__ue.h"
 #include "EcsactUnreal/EcsactExecution.h"
 #include "EcsactUnreal/EcsactRunner.h"
 #include "MassCommonFragments.h"
