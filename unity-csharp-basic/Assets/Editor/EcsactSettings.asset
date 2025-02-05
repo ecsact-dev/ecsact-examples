@@ -18,5 +18,9 @@ MonoBehaviour:
   runtimeBuilderDebugBuild: 1
   runtimeBuilderPrintSubcommandStdout: 1
   runtimeBuilderPrintSubcommandStderr: 1
-  recipePath: rt_entt
+  recipes:
+  - async_reference
+  - rt_entt
+  - serialize_reference
+  - si_wasmer
   runtimeBuilderCompilerPath: 
