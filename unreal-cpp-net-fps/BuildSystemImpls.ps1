@@ -8,8 +8,7 @@ param (
 	[Parameter(Mandatory)] $ProjectDir
 )
 
-if (${env:UE-ZenSubprocessDataPath})
-{
+if (${env:UE-ZenSubprocessDataPath}) {
 	Write-Host "Detected live coding enabled"
 	Write-Host "Skipping system impl re-build"
 	exit 0
@@ -17,32 +16,29 @@ if (${env:UE-ZenSubprocessDataPath})
 
 $ErrorActionPreference = 'Stop'
 
-if(-not $env:EMSDK)
-{
-	if (Test-Path -Path "C:\emsdk\emsdk_env.ps1" -PathType Leaf)
-	{
+if (-not $env:EMSDK) {
+	if (Test-Path -Path "C:\emsdk\emsdk_env.ps1" -PathType Leaf) {
 		(. C:\emsdk\emsdk_env.ps1) 2> $null
 	}
 
-	if(-not $env:EMSDK)
-	{
+	if (-not $env:EMSDK) {
 		throw "Unable to find the Emscripten SDK installed on your system"
 	}
 }
 
 $EcsactFiles = @(
-	"$ProjectDir/Source/EcsactUnrealFps/EcsactUnrealFps.ecsact"
+	"$ProjectDir/Source/Floppybots/Floppybots.ecsact"
 )
 
 $Sources = @(
 	"$ProjectDir/SystemImpls/EcsactSystemImpls.cpp"
 )
 
-$GeneratedOutDir ="$ProjectDir/SystemImpls/generated"
+$GeneratedOutDir = "$ProjectDir/SystemImpls/generated"
 
 # TODO: don't hard set generated sources
 $GeneratedSources = @(
-	"$ProjectDir/SystemImpls/generated/EcsactUnrealFps.ecsact.systems.cc"
+	"$ProjectDir/SystemImpls/generated/Floppybots.ecsact.systems.cc"
 )
 
 $EcsactInc = (ecsact config include_dir)
@@ -74,8 +70,7 @@ emcc -std=c++20 --no-entry -I"$EcsactInc" -I"SystemImpls/generated" `
 	$Sources `
 	$GeneratedSources
 
-if(-not $?)
-{
+if (-not $?) {
 	throw "emcc exited with code ${LastExitCode}"
 }
 
