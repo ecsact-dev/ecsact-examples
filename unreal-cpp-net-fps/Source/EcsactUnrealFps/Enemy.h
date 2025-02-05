@@ -8,7 +8,7 @@
 
 UCLASS(Blueprintable)
 
-class ECSACTUNREALFPS_API AEnemy : public AActor {
+class FLOPPYBOTS_API AEnemy : public AActor {
 	GENERATED_BODY()
 
 public:

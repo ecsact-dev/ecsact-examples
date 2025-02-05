@@ -6,7 +6,7 @@
 
 UCLASS(meta = (DisplayName = "Lerp Position"))
 
-class ECSACTUNREALFPS_API ULerpPositionTrait : public UMassEntityTraitBase {
+class FLOPPYBOTS_API ULerpPositionTrait : public UMassEntityTraitBase {
 	GENERATED_BODY()
 
 protected:

@@ -6,7 +6,7 @@
 
 UCLASS(Blueprintable)
 
-class ECSACTUNREALFPS_API APushExplosionVFX : public AActor {
+class FLOPPYBOTS_API APushExplosionVFX : public AActor {
 	GENERATED_BODY()
 
 public:

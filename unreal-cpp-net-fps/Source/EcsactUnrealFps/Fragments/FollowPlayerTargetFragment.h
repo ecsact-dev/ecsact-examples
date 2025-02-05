@@ -5,8 +5,7 @@
 
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FFollowPlayerTargetFragment
-	: public FMassSharedFragment {
+struct FLOPPYBOTS_API FFollowPlayerTargetFragment : public FMassSharedFragment {
 	GENERATED_BODY()
 
 	auto SetPlayerPosition(int32 Entity, FVector Position) -> void;

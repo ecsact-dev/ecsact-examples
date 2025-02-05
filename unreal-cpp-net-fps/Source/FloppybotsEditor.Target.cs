@@ -3,11 +3,11 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class EcsactUnrealFpsEditorTarget : TargetRules {
-	public EcsactUnrealFpsEditorTarget(TargetInfo Target) : base(Target) {
+public class FloppybotsEditorTarget : TargetRules {
+	public FloppybotsEditorTarget(TargetInfo Target) : base(Target) {
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
-		ExtraModuleNames.Add("EcsactUnrealFps");
+		ExtraModuleNames.Add("Floppybots");
 	}
 }

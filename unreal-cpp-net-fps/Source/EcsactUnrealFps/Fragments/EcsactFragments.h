@@ -10,6 +10,6 @@
  */
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FEcsactStreamTag : public FMassTag {
+struct FLOPPYBOTS_API FEcsactStreamTag : public FMassTag {
 	GENERATED_BODY()
 };

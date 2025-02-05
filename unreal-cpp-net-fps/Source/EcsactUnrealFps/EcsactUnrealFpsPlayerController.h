@@ -11,7 +11,7 @@ class UInputMappingContext;
  */
 UCLASS()
 
-class ECSACTUNREALFPS_API AEcsactUnrealFpsPlayerController
+class FLOPPYBOTS_API AEcsactUnrealFpsPlayerController
 	: public APlayerController {
 	GENERATED_BODY()
 

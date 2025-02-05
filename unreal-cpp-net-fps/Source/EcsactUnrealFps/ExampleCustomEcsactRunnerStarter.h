@@ -5,7 +5,7 @@
 
 UCLASS()
 
-class ECSACTUNREALFPS_API UExampleCustomEcsactRunnerStarter : public UObject {
+class FLOPPYBOTS_API UExampleCustomEcsactRunnerStarter : public UObject {
 	GENERATED_BODY() // NOLINT
 
 public:

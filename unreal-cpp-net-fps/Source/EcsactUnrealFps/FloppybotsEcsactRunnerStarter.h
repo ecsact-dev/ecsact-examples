@@ -5,7 +5,7 @@
 
 UCLASS()
 
-class ECSACTUNREALFPS_API UFloppybotsEcsactRunnerStarter : public UObject {
+class FLOPPYBOTS_API UFloppybotsEcsactRunnerStarter : public UObject {
 	GENERATED_BODY() // NOLINT
 
 public:

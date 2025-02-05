@@ -6,7 +6,7 @@
 
 UCLASS(meta = (DisplayName = "Follow Player"))
 
-class ECSACTUNREALFPS_API UFollowPlayerTrait : public UMassEntityTraitBase {
+class FLOPPYBOTS_API UFollowPlayerTrait : public UMassEntityTraitBase {
 	GENERATED_BODY()
 
 protected:

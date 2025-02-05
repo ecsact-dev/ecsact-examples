@@ -6,7 +6,7 @@
 
 UCLASS()
 
-class ECSACTUNREALFPS_API USyncRotationProcessor : public UMassProcessor {
+class FLOPPYBOTS_API USyncRotationProcessor : public UMassProcessor {
 	GENERATED_BODY() // nolint
 
 protected:

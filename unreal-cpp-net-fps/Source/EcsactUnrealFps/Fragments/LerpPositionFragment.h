@@ -4,7 +4,7 @@
 
 USTRUCT()
 
-struct ECSACTUNREALFPS_API FLerpPositionFragment : public FMassFragment {
+struct FLOPPYBOTS_API FLerpPositionFragment : public FMassFragment {
 	GENERATED_BODY() // nolint
 
 	UPROPERTY()

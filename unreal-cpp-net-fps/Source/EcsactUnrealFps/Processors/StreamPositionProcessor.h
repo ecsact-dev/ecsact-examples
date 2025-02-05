@@ -6,7 +6,7 @@
 
 UCLASS()
 
-class ECSACTUNREALFPS_API UStreamPositionProcessor : public UMassProcessor {
+class FLOPPYBOTS_API UStreamPositionProcessor : public UMassProcessor {
 	GENERATED_BODY() // nolint
 
 protected:

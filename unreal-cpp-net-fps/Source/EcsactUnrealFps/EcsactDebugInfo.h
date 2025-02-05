@@ -5,7 +5,7 @@
 
 UCLASS()
 
-class ECSACTUNREALFPS_API UEcsactDebugInfo : public UObject {
+class FLOPPYBOTS_API UEcsactDebugInfo : public UObject {
 	GENERATED_BODY()
 public:
 	/**

@@ -11,8 +11,7 @@ class UInputMappingContext;
  */
 UCLASS()
 
-class ECSACTUNREALFPS_API AFloppybotsPlayerController
-	: public APlayerController {
+class FLOPPYBOTS_API AFloppybotsPlayerController : public APlayerController {
 	GENERATED_BODY()
 
 protected:
