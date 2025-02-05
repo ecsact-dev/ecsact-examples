@@ -27,8 +27,7 @@ void AFloppybotsPlayerController::BeginPlay() {
 	auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
 	UE_LOG(LogTemp, Warning, TEXT("AFloppybotsPlayerController::BeginPlay()"));
 	if(player_spawner) {
-		// TODO: Reimplement this later
-		//  player_spawner->AddPlayerController(this);
+		player_spawner->AddPlayerController(this);
 	} else {
 		UE_LOG(LogTemp, Error, TEXT("Player Spawner is not ready"));
 	}
@@ -52,8 +51,7 @@ void AFloppybotsPlayerController::EndPlay( //
 	if(runner) {
 		auto player_spawner = runner->GetSubsystem<UEcsactPlayerEntitySpawner>();
 		if(player_spawner) {
-			// TODO: Reimplement this later
-			//  player_spawner->RemovePlayerController(this);
+			player_spawner->RemovePlayerController(this);
 		}
 	}
 	Super::EndPlay(Reason);
