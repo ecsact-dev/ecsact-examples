@@ -44,6 +44,14 @@
 		{
 			"Name": "StructUtils",
 			"Enabled": true
+		},
+		{
+			"Name": "Ecsact",
+			"Enabled": true
+		},
+		{
+			"Name": "EcsactNet",
+			"Enabled": true
 		}
 	],
 	"PreBuildSteps":
