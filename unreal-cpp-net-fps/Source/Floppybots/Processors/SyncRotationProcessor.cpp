@@ -41,9 +41,9 @@ auto USyncRotationProcessor::Execute(
 
 			for(auto i = 0; num_entities > i; ++i) {
 				auto ecsact_entity_rot = FVector{
+					rot_fragments[i].component.Roll,
 					rot_fragments[i].component.Pitch,
-					rot_fragments[i].component.Yaw,
-					rot_fragments[i].component.Roll
+					rot_fragments[i].component.Yaw
 				};
 				auto& entity_transform = transform_fragments[i].GetMutableTransform();
 
