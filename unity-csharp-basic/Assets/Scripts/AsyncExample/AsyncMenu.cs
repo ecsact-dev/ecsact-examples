@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Text;
 
 public class AsyncMenu : MonoBehaviour {
 
@@ -34,13 +35,18 @@ public class AsyncMenu : MonoBehaviour {
   }
 
   void onButtonClick() {
+    var asyncRunner = Ecsact.Defaults.Runner as Ecsact.AsyncRunner;
+    if(asyncRunner == null) {
+        Debug.LogError("Async menu example can only be used with the Async Runner - change your runner in the Ecsact Unity project settings");
+        return;
+    }
     var sceneName = options[dropdown.value];
     Debug.Log("Loading scene " + sceneName);
     SceneManager.LoadScene(sceneName);
 
     Debug.Log("connecting with: " + connectionString.text);
 
-    Ecsact.Defaults.Runtime.async.Connect(connectionString.text);
+    asyncRunner.sessionId = Ecsact.Defaults.Runtime.async.Start(Encoding.ASCII.GetBytes(connectionString.text));
 
     this.gameObject.SetActive(false);
   }
