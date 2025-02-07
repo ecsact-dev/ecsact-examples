@@ -4,6 +4,7 @@
 #include <format>
 #include <SDL.h>
 #include <SDL_render.h>
+#include "tracy/Tracy.hpp"
 
 extern SDL_Renderer* renderer;
 extern int           viewport_width;
@@ -21,6 +22,7 @@ static auto viewport_relative_pos(const auto& pos, auto& out_pos) -> void {
 }
 
 auto example::Render::impl(context& ctx) -> void {
+	ZoneScoped;
 	auto pos = ctx.get<Position>();
 	auto rect = SDL_Rect{};
 	rect.w = 10.0f;
@@ -32,6 +34,7 @@ auto example::Render::impl(context& ctx) -> void {
 }
 
 auto example::RenderAimer::impl(context& ctx) -> void {
+	ZoneScoped;
 	constexpr auto aimer_size = 5.f;
 	SDL_SetRenderDrawColor(renderer, 255, 128, 0, 255);
 

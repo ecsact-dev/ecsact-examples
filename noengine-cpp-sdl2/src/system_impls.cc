@@ -4,6 +4,7 @@
 #include <iostream>
 #include <format>
 #include "simulation_config.hh"
+#include "tracy/Tracy.hpp"
 
 constexpr auto player_speed = 600.f;
 constexpr auto player_jump_power = 1800.f;
@@ -12,12 +13,14 @@ constexpr auto projectile_speed = 2500.0f;
 constexpr auto terminal_velocity = 5000.0f;
 
 auto example::Move::impl(context& ctx) -> void {
+	ZoneScoped;
 	auto move_dir_x = std::clamp(ctx.action().dir_x, -1.f, 1.f);
 	auto move_dir_y = std::clamp(ctx.action().dir_y, -1.f, 1.f);
 	ctx.update(Moving{move_dir_x, move_dir_y});
 }
 
 auto example::Fire::impl(context& ctx) -> void {
+	ZoneScoped;
 	auto player_pos = ctx.get<Position>();
 	auto moving = ctx.get<Moving>();
 

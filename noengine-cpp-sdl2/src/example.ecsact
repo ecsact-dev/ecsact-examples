@@ -78,11 +78,11 @@ system ViewportCollision {
     readwrite Position;
 }
 
-system Render {
+system Render(parallel: false) {
     readonly Position;
 }
 
-system RenderAimer {
+system RenderAimer(parallel: false) {
     readonly Moving;
     readonly Position;
 }
