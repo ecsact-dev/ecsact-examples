@@ -57,6 +57,7 @@
 	"PreBuildSteps":
 	{
 		"Win64": [
+			"EcsactUnrealCodegen $(ProjectDir) --engine-dir $(EngineDir) --format || exit /b 1",
 			"pwsh $(ProjectDir)\\BuildSystemImpls.ps1 $(ProjectDir)"
 		]
 	}
