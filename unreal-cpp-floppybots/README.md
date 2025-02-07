@@ -12,6 +12,6 @@ This demo relies on two Unreal plugins as well as the [Ecsact SDK](https://ecsac
 These plugins should be installed as engine plugins in the marketplace folder. For example:
 
 ```
-<Unreal-Install-Dir>/Plugins/Marketplace/Ecsact
-<Unreal-Install-Dir>/Plugins/Marketplace/EcsactNet
+<Unreal-Install-Dir>/Engine/Plugins/Marketplace/Ecsact
+<Unreal-Install-Dir>/Engine/Plugins/Marketplace/EcsactNet
 ```
