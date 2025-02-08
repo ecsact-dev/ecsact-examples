@@ -1,0 +1,12 @@
+main package benchmark;
+
+component Counter {
+	i32 value;
+}
+component MassOnly;
+
+system IterateCounter {
+	exclude MassOnly;
+	readwrite Counter;
+}
+
