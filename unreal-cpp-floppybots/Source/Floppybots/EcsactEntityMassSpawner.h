@@ -16,7 +16,6 @@ UCLASS(Abstract)
 
 class UEcsactEntityMassSpawner : public UOneToOneFloppybotsMassSpawner {
 	GENERATED_BODY() // NOLINT
-									 //
 
 	/**
 	 * Entity Mass config used when Ecsact entity streaming is enabled.
