@@ -12,8 +12,6 @@ void UMassBenchmarkProcessor::ConfigureQueries() {
 
   EntityQuery.AddRequirement<FBenchmarkCounterFragment>(
       EMassFragmentAccess::ReadWrite);
-  EntityQuery.AddRequirement<FEcsactEntityFragment>(
-      EMassFragmentAccess::ReadOnly);
 }
 
 void UMassBenchmarkProcessor::Execute(FMassEntityManager &EntityManager,
@@ -25,18 +23,13 @@ void UMassBenchmarkProcessor::Execute(FMassEntityManager &EntityManager,
         auto counter_fragments =
             context.GetMutableFragmentView<FBenchmarkCounterFragment>();
 
-        const auto entity_fragments =
-            context.GetFragmentView<FEcsactEntityFragment>();
-
         for (int i = 0; i < entity_num; ++i) {
 
           auto &counter_fragment = counter_fragments[i];
-          auto entity_id = static_cast<int>(entity_fragments[i].GetId());
 
           counter_fragment.component.Value += 1;
 
-          UE_LOG(LogTemp, Warning,
-                 TEXT("MASS: Updated entity %i counter to %i"), entity_id,
+          UE_LOG(LogTemp, Warning, TEXT("MASS: Updated entity counter to %i"),
                  counter_fragment.component.Value);
         }
       });
