@@ -1,0 +1,35 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.5",
+	"Category": "",
+	"Description": "",
+    "PreBuildSteps": {
+        "Win64": [
+            "EcsactUnrealCodegen $(ProjectDir) --engine-dir $(EngineDir) || exit /b 1"
+        ]
+    },
+	"Modules": [
+		{
+			"Name": "EcsactBenchmark",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "MassGameplay",
+			"Enabled": true
+		},
+		{
+			"Name": "Ecsact",
+			"Enabled": true
+		}
+	]
+}
