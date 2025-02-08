@@ -76,3 +76,7 @@ DerivedDataCache/*
 # Clangd
 .cache
 compile_commands.json
+
+# Locally linked plugins - no plugins are checked into the project
+Plugins/Ecsact
+Plugins/EcsactNet
