@@ -3,6 +3,11 @@
 	"EngineAssociation": "5.5",
 	"Category": "",
 	"Description": "",
+    "PreBuildSteps": {
+        "Win64": [
+            "EcsactUnrealCodegen $(ProjectDir) --engine-dir $(EngineDir) || exit /b 1"
+        ]
+    },
 	"Modules": [
 		{
 			"Name": "EcsactBenchmark",
@@ -20,6 +25,10 @@
 		},
 		{
 			"Name": "MassGameplay",
+			"Enabled": true
+		},
+		{
+			"Name": "Ecsact",
 			"Enabled": true
 		}
 	]
