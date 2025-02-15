@@ -8,7 +8,8 @@
 #include "MassExecutionContext.h"
 #include "MassRequirements.h"
 
-USyncRotationProcessor::USyncRotationProcessor() : EntityQuery(*this) {
+USyncRotationProcessor::USyncRotationProcessor()
+	: EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -25,7 +26,7 @@ auto USyncRotationProcessor::ConfigureQueries() -> void {
 }
 
 auto USyncRotationProcessor::Execute(
-	FMassEntityManager&    EntityManager,
+	FMassEntityManager& EntityManager,
 	FMassExecutionContext& Context
 ) -> void {
 	EntityQuery.ForEachEntityChunk(

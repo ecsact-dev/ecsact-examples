@@ -8,7 +8,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "ecsact/runtime/async.h"
 
-AFloppybotsGameMode::AFloppybotsGameMode() : Super() {
+AFloppybotsGameMode::AFloppybotsGameMode()
+	: Super() {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(
 		TEXT("/Game/Blueprints/BP_FirstPersonCharacter")

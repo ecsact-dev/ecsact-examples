@@ -1,8 +1,8 @@
 #include "FloppybotsMovementComponent.h"
 
 auto UFloppybotsMovementComponent::TickComponent(
-	float                        DeltaTime,
-	enum ELevelTick              TickType,
+	float DeltaTime,
+	enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction
 ) -> void {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

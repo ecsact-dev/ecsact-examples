@@ -21,9 +21,9 @@ constexpr int32_t GENERATED_SOURCE_INDEX = 1;
 
 static auto inc_package_header_no_ext( //
 	ecsact::codegen_plugin_context& ctx,
-	ecsact_package_id               pkg_id,
-	std::string                     suffix,
-	std::string                     header_extension = ".h"
+	ecsact_package_id pkg_id,
+	std::string suffix,
+	std::string header_extension = ".h"
 ) -> void {
 	auto main_ecsact_file_path = ecsact::meta::package_file_path(ctx.package_id);
 	if(ctx.package_id == pkg_id) {
@@ -34,8 +34,7 @@ static auto inc_package_header_no_ext( //
 		inc_header(ctx, main_ecsact_file_path.filename().string());
 	} else {
 		auto cpp_header_path = fs::path{
-			ecsact::meta::package_file_path(pkg_id).replace_extension("").string() +
-			suffix
+			ecsact::meta::package_file_path(pkg_id).replace_extension("").string() + suffix
 		};
 		cpp_header_path.replace_extension(header_extension);
 		if(main_ecsact_file_path.has_parent_path()) {
@@ -67,10 +66,10 @@ static auto ecsact_decl_name_to_pascal(const std::string& input)
 
 auto ecsact_codegen_output_filenames( //
 	ecsact_package_id package_id,
-	char* const*      out_filenames,
-	int32_t           max_filenames,
-	int32_t           max_filename_length,
-	int32_t*          out_filenames_length
+	char* const* out_filenames,
+	int32_t max_filenames,
+	int32_t max_filename_length,
+	int32_t* out_filenames_length
 ) -> void {
 	auto pkg_basename = //
 		ecsact::meta::package_file_path(package_id)
@@ -133,8 +132,8 @@ static auto generate_source(ecsact::codegen_plugin_context ctx) -> void {
 }
 
 auto ecsact_codegen_plugin(
-	ecsact_package_id          package_id,
-	ecsact_codegen_write_fn_t  write_fn,
+	ecsact_package_id package_id,
+	ecsact_codegen_write_fn_t write_fn,
 	ecsact_codegen_report_fn_t report_fn
 ) -> void {
 	generate_header({package_id, GENERATED_HEADER_INDEX, write_fn, report_fn});

@@ -20,7 +20,7 @@
 
 auto UEcsactEntityMassSpawner::SetStreamEntities(
 	const UObject* WorldContext,
-	bool           bStreamEntities
+	bool bStreamEntities
 ) -> void {
 	auto world = WorldContext->GetWorld();
 	check(world);
@@ -91,7 +91,7 @@ auto UEcsactEntityMassSpawner::GetEntityMassConfig() const
 }
 
 auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
-	int32            Entity,
+	int32 Entity,
 	FFloppybotsEnemy Enemy
 ) -> void {
 	Super::InitEnemy_Implementation(Entity, Enemy);
@@ -115,7 +115,7 @@ auto UEcsactEntityMassSpawner::InitEnemy_Implementation(
 }
 
 auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
-	int32            Entity,
+	int32 Entity,
 	FFloppybotsEnemy Enemy
 ) -> void {
 	Super::RemoveEnemy_Implementation(Entity, Enemy);
@@ -138,7 +138,7 @@ auto UEcsactEntityMassSpawner::RemoveEnemy_Implementation(
 }
 
 auto UEcsactEntityMassSpawner::InitPosition_Implementation(
-	int32               Entity,
+	int32 Entity,
 	FFloppybotsPosition Position
 ) -> void {
 	Super::InitPosition_Implementation(Entity, Position);
@@ -163,7 +163,7 @@ auto UEcsactEntityMassSpawner::InitPosition_Implementation(
 }
 
 auto UEcsactEntityMassSpawner::InitRotation_Implementation(
-	int32               Entity,
+	int32 Entity,
 	FFloppybotsRotation Rotation
 ) -> void {
 	Super::InitRotation_Implementation(Entity, Rotation);
@@ -188,7 +188,7 @@ auto UEcsactEntityMassSpawner::InitRotation_Implementation(
 }
 
 auto UEcsactEntityMassSpawner::ToggleStreamTag(
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsToggle Toggle
 ) -> void {
 	auto& entity_manager =
@@ -205,7 +205,7 @@ auto UEcsactEntityMassSpawner::ToggleStreamTag(
 }
 
 auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsToggle Toggle
 ) -> void {
 	Super::InitToggle_Implementation(Entity, Toggle);
@@ -218,7 +218,7 @@ auto UEcsactEntityMassSpawner::InitToggle_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsToggle Toggle
 ) -> void {
 	Super::UpdateToggle_Implementation(Entity, Toggle);
@@ -231,7 +231,7 @@ auto UEcsactEntityMassSpawner::UpdateToggle_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
-	int32              Entity,
+	int32 Entity,
 	FFloppybotsStunned Stunned
 ) -> void {
 	Super::InitStunned_Implementation(Entity, Stunned);
@@ -254,7 +254,7 @@ auto UEcsactEntityMassSpawner::InitStunned_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
-	int32              Entity,
+	int32 Entity,
 	FFloppybotsStunned Stunned
 ) -> void {
 	Super::UpdateStunned_Implementation(Entity, Stunned);
@@ -277,7 +277,7 @@ auto UEcsactEntityMassSpawner::UpdateStunned_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
-	int32              Entity,
+	int32 Entity,
 	FFloppybotsStunned Stunned
 ) -> void {
 	Super::RemoveStunned_Implementation(Entity, Stunned);
@@ -308,7 +308,7 @@ auto UEcsactEntityMassSpawner::RemoveStunned_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
-	int32              Entity,
+	int32 Entity,
 	FFloppybotsPushing Pushing
 ) -> void {
 	Super::InitPushing_Implementation(Entity, Pushing);
@@ -331,7 +331,7 @@ auto UEcsactEntityMassSpawner::InitPushing_Implementation( //
 }
 
 auto UEcsactEntityMassSpawner::UpdateEnemy_Implementation( //
-	int32            Entity,
+	int32 Entity,
 	FFloppybotsEnemy Enemy
 ) -> void {
 	Super::UpdateEnemy_Implementation(Entity, Enemy);

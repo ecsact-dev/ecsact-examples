@@ -7,7 +7,8 @@
 #include "MassRequirements.h"
 #include "Math/UnrealMathUtility.h"
 
-ULerpPositionProcessor::ULerpPositionProcessor() : EntityQuery(*this) {
+ULerpPositionProcessor::ULerpPositionProcessor()
+	: EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PrePhysics;
 }
 
@@ -25,7 +26,7 @@ auto ULerpPositionProcessor::ConfigureQueries() -> void {
 }
 
 auto ULerpPositionProcessor::Execute(
-	FMassEntityManager&    EntityManager,
+	FMassEntityManager& EntityManager,
 	FMassExecutionContext& Context
 ) -> void {
 	EntityQuery.ForEachEntityChunk(
@@ -44,7 +45,7 @@ auto ULerpPositionProcessor::Execute(
 
 			for(auto i = 0; num_entities > i; ++i) {
 				auto& transform = transform_fragments[i].GetMutableTransform();
-				auto  lerp_pos = lerp_pos_fragments[i];
+				auto lerp_pos = lerp_pos_fragments[i];
 
 				if(lerp_pos_params.Disabled) {
 					transform.SetLocation(lerp_pos.DesiredPosition);

@@ -18,8 +18,8 @@ public:
 	auto IsMoveDirectionSimilar(float X, float Y) const -> bool;
 
 	auto TickComponent(
-		float                        DeltaTime,
-		enum ELevelTick              TickType,
+		float DeltaTime,
+		enum ELevelTick TickType,
 		FActorComponentTickFunction* ThisTickFunction
 	) -> void override;
 };

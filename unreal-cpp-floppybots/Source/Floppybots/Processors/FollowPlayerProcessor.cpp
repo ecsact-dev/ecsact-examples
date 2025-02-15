@@ -11,7 +11,8 @@
 #include "MassNavigationTypes.h"
 #include "MassRequirements.h"
 
-UFollowPlayerProcessor::UFollowPlayerProcessor() : EntityQuery(*this) {
+UFollowPlayerProcessor::UFollowPlayerProcessor()
+	: EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -29,7 +30,7 @@ auto UFollowPlayerProcessor::ConfigureQueries() -> void {
 }
 
 auto UFollowPlayerProcessor::Execute(
-	FMassEntityManager&    EntityManager,
+	FMassEntityManager& EntityManager,
 	FMassExecutionContext& Context
 ) -> void {
 	EntityQuery.ForEachEntityChunk(
@@ -46,10 +47,10 @@ auto UFollowPlayerProcessor::Execute(
 				Context.GetSharedFragment<FFollowPlayerTargetFragment>();
 
 			for(auto i = 0; num_entities > i; ++i) {
-				auto&       move_target = move_target_fragments[i];
+				auto& move_target = move_target_fragments[i];
 				const auto& transform = transform_fragments[i].GetTransform();
-				auto        entity_loc = transform.GetLocation();
-				const auto  closest_player_pos =
+				auto entity_loc = transform.GetLocation();
+				const auto closest_player_pos =
 					follow_player_target.GetClosestPlayerPosition(entity_loc);
 
 				move_target.CreateNewAction(

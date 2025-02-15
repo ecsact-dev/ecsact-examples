@@ -9,7 +9,7 @@
 static auto is_within_radius(
 	const floppybots::Position& pos,
 	const floppybots::Position& center,
-	float                       radius
+	float radius
 ) -> bool {
 	auto dist_x = pos.x - center.x;
 	auto dist_y = pos.y - center.y;
@@ -17,7 +17,7 @@ static auto is_within_radius(
 	return dist_x * dist_x + dist_y * dist_y < radius * radius;
 }
 
-template<std::floating_point T>
+template <std::floating_point T>
 static auto normalize2(T& a, T& b) -> void {
 	T magnitude = std::sqrt(a * a + b * b);
 
@@ -82,7 +82,7 @@ auto floppybots::FinishPush::PushEntities::impl(context& ctx) -> void {
 
 	const auto position = ctx.get<Position>();
 	const auto charge = ctx._ctx.parent().get<PushCharge>();
-	auto       toggle = ctx.get<Toggle>();
+	auto toggle = ctx.get<Toggle>();
 
 	float dist_x = std::abs(position.x - pusher_pos.x);
 	float dist_y = std::abs(position.y - pusher_pos.y);
@@ -151,8 +151,7 @@ auto floppybots::ApplyPush::impl(context& ctx) -> void {
 		const float a = pushing.max_height / (tick_peak * tick_peak);
 
 		velocity.z =
-			-a * (pushing.tick_count - tick_peak) * (pushing.tick_count - tick_peak) +
-			pushing.max_height;
+			-a * (pushing.tick_count - tick_peak) * (pushing.tick_count - tick_peak) + pushing.max_height;
 
 		ctx.update(pushing);
 		ctx.update(velocity);
@@ -161,7 +160,7 @@ auto floppybots::ApplyPush::impl(context& ctx) -> void {
 
 auto floppybots::ApplyVelocity::impl(context& ctx) -> void {
 	const auto velocity = ctx.get<Velocity>();
-	auto       position = ctx.get<Position>();
+	auto position = ctx.get<Position>();
 
 	// auto x = std::to_string(position.x);
 	// auto y = std::to_string(position.y);
@@ -184,7 +183,7 @@ auto floppybots::ApplyVelocity::impl(context& ctx) -> void {
 
 auto floppybots::ApplyDrag::impl(context& ctx) -> void {
 	const auto pushing = ctx.get<Pushing>();
-	auto       velocity = ctx.get<Velocity>();
+	auto velocity = ctx.get<Velocity>();
 
 	velocity.x = velocity.x * 0.9f;
 	velocity.y = velocity.y * 0.9f;

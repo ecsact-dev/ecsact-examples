@@ -9,7 +9,8 @@
 #include "MassExecutionContext.h"
 #include "MassRequirements.h"
 
-USyncPositionProcessor::USyncPositionProcessor() : EntityQuery(*this) {
+USyncPositionProcessor::USyncPositionProcessor()
+	: EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -26,7 +27,7 @@ auto USyncPositionProcessor::ConfigureQueries() -> void {
 }
 
 auto USyncPositionProcessor::Execute(
-	FMassEntityManager&    EntityManager,
+	FMassEntityManager& EntityManager,
 	FMassExecutionContext& Context
 ) -> void {
 	EntityQuery.ForEachEntityChunk(
@@ -42,7 +43,7 @@ auto USyncPositionProcessor::Execute(
 
 			for(auto i = 0; num_entities > i; ++i) {
 				const auto entity_pos = pos_fragments[i].component;
-				auto&      lerp_pos = lerp_pos_fragments[i];
+				auto& lerp_pos = lerp_pos_fragments[i];
 				lerp_pos.DesiredPosition = FVector{
 					entity_pos.X,
 					entity_pos.Y,
