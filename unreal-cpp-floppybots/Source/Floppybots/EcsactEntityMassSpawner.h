@@ -29,7 +29,8 @@ class UEcsactEntityMassSpawner : public UOneToOneFloppybotsMassSpawner {
 	bool StreamEntities;
 
 public:
-	UFUNCTION(BlueprintCallable) void CreateMassEntities(int count);
+	UFUNCTION(BlueprintCallable)
+	void CreateMassEntities(int count);
 
 	UFUNCTION(
 		BlueprintCallable,
@@ -38,7 +39,7 @@ public:
 	)
 	static void SetStreamEntities(
 		const UObject* WorldContext,
-		bool           bStreamEntities
+		bool bStreamEntities
 	);
 
 	UFUNCTION(
@@ -53,57 +54,57 @@ public:
 	auto ToggleStreamTag(int32 Entity, FFloppybotsToggle Toggle) -> void;
 
 	auto InitEnemy_Implementation( //
-		int32            Entity,
+		int32 Entity,
 		FFloppybotsEnemy Enemy
 	) -> void override;
 
 	auto UpdateEnemy_Implementation( //
-		int32            Entity,
+		int32 Entity,
 		FFloppybotsEnemy Enemy
 	) -> void override;
 
 	auto RemoveEnemy_Implementation( //
-		int32            Entity,
+		int32 Entity,
 		FFloppybotsEnemy Enemy
 	) -> void override;
 
 	auto InitPosition_Implementation( //
-		int32               Entity,
+		int32 Entity,
 		FFloppybotsPosition Position
 	) -> void override;
 
 	auto InitRotation_Implementation( //
-		int32               Entity,
+		int32 Entity,
 		FFloppybotsRotation Rotation
 	) -> void override;
 
 	auto InitToggle_Implementation( //
-		int32             Entity,
+		int32 Entity,
 		FFloppybotsToggle Toggle
 	) -> void override;
 
 	auto UpdateToggle_Implementation( //
-		int32             Entity,
+		int32 Entity,
 		FFloppybotsToggle Toggle
 	) -> void override;
 
 	auto InitStunned_Implementation( //
-		int32              Entity,
+		int32 Entity,
 		FFloppybotsStunned Stunned
 	) -> void override;
 
 	auto UpdateStunned_Implementation( //
-		int32              Entity,
+		int32 Entity,
 		FFloppybotsStunned Stunned
 	) -> void override;
 
 	auto RemoveStunned_Implementation( //
-		int32              Entity,
+		int32 Entity,
 		FFloppybotsStunned Stunned
 	) -> void override;
 
 	auto InitPushing_Implementation( //
-		int32              Entity,
+		int32 Entity,
 		FFloppybotsPushing Pushing
 	) -> void override;
 };

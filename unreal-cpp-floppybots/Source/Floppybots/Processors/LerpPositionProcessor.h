@@ -14,7 +14,7 @@ protected:
 
 	auto ConfigureQueries() -> void override;
 	auto Execute(
-		FMassEntityManager&    EntityManager,
+		FMassEntityManager& EntityManager,
 		FMassExecutionContext& Context
 	) -> void override;
 

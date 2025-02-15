@@ -33,8 +33,8 @@ static auto LoadWasmSystemImpls() -> void {
 				)
 			);
 			if(err != ECSACT_SI_WASM_OK) {
-#define HANDLE_ECSACT_SI_ERROR_CASE(err)                                   \
-	case err:                                                                \
+#define HANDLE_ECSACT_SI_ERROR_CASE(err)                                       \
+	case err:                                                                  \
 		UE_LOG(LogTemp, Error, TEXT("ecsact_si_wasm_load_file error: " #err)); \
 		break
 				switch(err) {
@@ -59,7 +59,7 @@ static auto LoadWasmSystemImpls() -> void {
 				LogTemp,
 				Error,
 				TEXT("ecsact_si_wasm_load_file unavailable - cannot load wasm system "
-						 "impls")
+					 "impls")
 			);
 		}
 	}

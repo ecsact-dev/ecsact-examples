@@ -8,7 +8,8 @@
 #include "MassExecutionContext.h"
 #include "MassRequirements.h"
 
-UStreamPositionProcessor::UStreamPositionProcessor() : EntityQuery(*this) {
+UStreamPositionProcessor::UStreamPositionProcessor()
+	: EntityQuery(*this) {
 	ProcessingPhase = EMassProcessingPhase::PostPhysics;
 }
 
@@ -24,7 +25,7 @@ auto UStreamPositionProcessor::ConfigureQueries() -> void {
 }
 
 auto UStreamPositionProcessor::Execute(
-	FMassEntityManager&    EntityManager,
+	FMassEntityManager& EntityManager,
 	FMassExecutionContext& Context
 ) -> void {
 	auto runner = EcsactUnrealExecution::Runner(GetWorld()).Get();

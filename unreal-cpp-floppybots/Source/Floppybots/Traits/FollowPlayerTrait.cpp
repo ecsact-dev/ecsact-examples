@@ -7,7 +7,7 @@
 
 auto UFollowPlayerTrait::BuildTemplate( //
 	FMassEntityTemplateBuildContext& BuildContext,
-	const UWorld&                    World
+	const UWorld& World
 ) const -> void {
 	auto& entity_manager = UE::Mass::Utils::GetEntityManagerChecked(World);
 	BuildContext.RequireFragment<FMassMoveTargetFragment>();

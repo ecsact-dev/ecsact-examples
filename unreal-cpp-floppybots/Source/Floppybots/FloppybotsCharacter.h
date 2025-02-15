@@ -108,19 +108,19 @@ protected:
 	UFUNCTION()
 	void OnOverlapBegin(
 		UPrimitiveComponent* OverlappedComp,
-		AActor*              OtherActor,
+		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
-		int32                OtherBodyIndex,
-		bool                 bFromSweep,
-		const FHitResult&    SweepResult
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
 	);
 
 	UFUNCTION()
 	void OnOverlapEnd(
 		UPrimitiveComponent* OverlappedComp,
-		AActor*              OtherActor,
+		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
-		int32                OtherBodyIndex
+		int32 OtherBodyIndex
 	);
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -135,7 +135,7 @@ protected:
 public:
 	// TODO: Use some kind of entity actor component
 	ecsact_entity_id CharacterEntity = ECSACT_INVALID_ID(entity);
-	int32            CharacterPlayerId = -1;
+	int32 CharacterPlayerId = -1;
 
 	auto SetMoveDirection(float X, float Y) -> void;
 

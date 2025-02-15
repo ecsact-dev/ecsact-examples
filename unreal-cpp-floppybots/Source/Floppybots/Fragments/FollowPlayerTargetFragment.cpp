@@ -1,7 +1,7 @@
 #include "FollowPlayerTargetFragment.h"
 
 auto FFollowPlayerTargetFragment::SetPlayerPosition(
-	int32   Entity,
+	int32 Entity,
 	FVector Position
 ) -> void {
 	auto i = PlayerEntities.IndexOfByKey(Entity);

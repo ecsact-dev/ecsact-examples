@@ -26,7 +26,7 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	// generator system of backend function. Refer to your Ecsact async
 	// implemenation for details.
 	Runner->CreateEntity()
-		.AddComponent(floppybots::Player{LocallyControllerPlayerId})
+		.AddComponent(floppybots::Player{ LocallyControllerPlayerId })
 		.AddComponent(floppybots::MoveDirection{})
 		.AddComponent(floppybots::Position{})
 		.AddComponent(floppybots::Rotation{});
@@ -50,7 +50,7 @@ auto UEcsactPlayerEntitySpawner::GetPlayerPosition( //
 
 auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
 	const UObject* WorldContext,
-	int32          NewPlayerId
+	int32 NewPlayerId
 ) -> void {
 	auto world = WorldContext->GetWorld();
 	if(!world) {
@@ -77,7 +77,7 @@ auto UEcsactPlayerEntitySpawner::SetLocalEcsactPlayerId( //
 			LogTemp,
 			Error,
 			TEXT("SetLocalEcsactPlayerId called too early - player entity spawner "
-					 "not ready")
+				 "not ready")
 		);
 		return;
 	}
@@ -111,7 +111,7 @@ auto UEcsactPlayerEntitySpawner::RunnerStart_Implementation( //
 }
 
 auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsPlayer Player
 ) -> void {
 	UE_LOG(LogTemp, Log, TEXT("InitPlayer"));
@@ -162,7 +162,7 @@ auto UEcsactPlayerEntitySpawner::InitPlayer_Implementation(
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsPlayer Player
 ) -> void {
 	PlayerEntities.Remove(Entity);
@@ -171,8 +171,8 @@ auto UEcsactPlayerEntitySpawner::RemovePlayer_Implementation(
 }
 
 auto UEcsactPlayerEntitySpawner::SetupController(
-	int32                        Entity,
-	FFloppybotsPlayer            Player,
+	int32 Entity,
+	FFloppybotsPlayer Player,
 	AFloppybotsPlayerController* Controller
 ) -> void {
 	UE_LOG(
@@ -241,14 +241,14 @@ auto UEcsactPlayerEntitySpawner::RemovePlayerController( //
 }
 
 auto UEcsactPlayerEntitySpawner::InitPosition_Implementation( //
-	int32               Entity,
+	int32 Entity,
 	FFloppybotsPosition Position
 ) -> void {
 	UpdatePosition_Implementation(Entity, Position);
 }
 
 auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
-	int32               Entity,
+	int32 Entity,
 	FFloppybotsPosition Position
 ) -> void {
 	auto itr = PlayerEntities.Find(Entity);
@@ -262,7 +262,7 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	}
 
 	if(!player->Controller) {
-		auto desired_location = FVector{Position.X, Position.Y, Position.Z};
+		auto desired_location = FVector{ Position.X, Position.Y, Position.Z };
 		player->SetActorLocation(desired_location);
 	}
 
@@ -285,7 +285,7 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 }
 
 auto UEcsactPlayerEntitySpawner::UpdateMovedirection_Implementation( //
-	int32                    Entity,
+	int32 Entity,
 	FFloppybotsMovedirection MoveDirection
 ) -> void {
 	auto itr = PlayerEntities.Find(Entity);
@@ -307,21 +307,21 @@ auto UEcsactPlayerEntitySpawner::UpdateMovedirection_Implementation( //
 }
 
 auto UEcsactPlayerEntitySpawner::InitPusher_Implementation( //
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsPusher Pusher
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Init Pusher"));
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePusher_Implementation( //
-	int32             Entity,
+	int32 Entity,
 	FFloppybotsPusher Pusher
 ) -> void {
 	UE_LOG(LogTemp, Warning, TEXT("Remove Pusher"));
 }
 
 auto UEcsactPlayerEntitySpawner::InitPushcharge_Implementation(
-	int32                 Entity,
+	int32 Entity,
 	FFloppybotsPushcharge Pushcharge
 ) -> void {
 	auto itr = PlayerEntities.Find(Entity);
@@ -338,7 +338,7 @@ auto UEcsactPlayerEntitySpawner::InitPushcharge_Implementation(
 }
 
 auto UEcsactPlayerEntitySpawner::UpdatePushcharge_Implementation(
-	int32                 Entity,
+	int32 Entity,
 	FFloppybotsPushcharge Pushcharge
 ) -> void {
 	auto itr = PlayerEntities.Find(Entity);
@@ -354,7 +354,7 @@ auto UEcsactPlayerEntitySpawner::UpdatePushcharge_Implementation(
 }
 
 auto UEcsactPlayerEntitySpawner::RemovePushcharge_Implementation(
-	int32                 Entity,
+	int32 Entity,
 	FFloppybotsPushcharge Pushcharge
 ) -> void {
 	auto itr = PlayerEntities.Find(Entity);

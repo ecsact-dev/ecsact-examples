@@ -5,8 +5,7 @@
 
 USTRUCT()
 
-struct FLOPPYBOTS_API FLerpPositionParameters
-	: public FMassConstSharedFragment {
+struct FLOPPYBOTS_API FLerpPositionParameters : public FMassConstSharedFragment {
 	GENERATED_BODY()
 
 	/** Instead of lerping - instantly set position */

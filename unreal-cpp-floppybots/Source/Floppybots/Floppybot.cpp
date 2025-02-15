@@ -31,7 +31,7 @@ void AFloppybot::BeginPlay() {
 						entity_handle
 					);
 				if(enemy_fragment) {
-					OnInitEnemy(FFloppybotsEnemy{enemy_fragment->component});
+					OnInitEnemy(FFloppybotsEnemy{ enemy_fragment->component });
 				} else {
 					UE_LOG(LogTemp, Warning, TEXT("No enemy fragment!"));
 				}

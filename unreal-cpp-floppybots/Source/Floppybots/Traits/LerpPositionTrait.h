@@ -12,7 +12,7 @@ class FLOPPYBOTS_API ULerpPositionTrait : public UMassEntityTraitBase {
 protected:
 	auto BuildTemplate( //
 		FMassEntityTemplateBuildContext& BuildContext,
-		const UWorld&                    World
+		const UWorld& World
 	) const -> void override;
 
 	UPROPERTY(EditAnywhere, Category = "")

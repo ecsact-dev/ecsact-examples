@@ -6,8 +6,7 @@
 
 UCLASS()
 
-class FLOPPYBOTS_API UEnemyVisualProcessor
-	: public UMassVisualizationLODProcessor {
+class FLOPPYBOTS_API UEnemyVisualProcessor : public UMassVisualizationLODProcessor {
 	GENERATED_BODY() // nolint
 
 public:
@@ -19,8 +18,7 @@ protected:
 
 UCLASS()
 
-class FLOPPYBOTS_API UEnemyRepresentationProcessor
-	: public UMassRepresentationProcessor {
+class FLOPPYBOTS_API UEnemyRepresentationProcessor : public UMassRepresentationProcessor {
 	GENERATED_BODY() // nolint
 
 protected:
