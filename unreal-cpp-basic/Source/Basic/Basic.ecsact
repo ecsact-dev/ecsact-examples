@@ -1,0 +1,4 @@
+main package basic;
+
+component Count { i32 value; }
+system Counter  { readwrite Count; }
