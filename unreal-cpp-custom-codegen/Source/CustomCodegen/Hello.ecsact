@@ -1,0 +1,11 @@
+main package hello;
+
+component Hello {
+	i32 value;
+}
+
+component Bonjour {
+	f32 value;
+}
+
+component TaggedUp;
