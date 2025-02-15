@@ -218,16 +218,16 @@ auto AFloppybotsCharacter::GetPlayerColour(int player_id) -> FLinearColor {
 
 	switch(h_i) {
 		case 0:
-			return FLinearColor{ v, t, p };
+			return FLinearColor{v, t, p};
 		case 1:
-			return FLinearColor{ q, v, p };
+			return FLinearColor{q, v, p};
 		case 2:
-			return FLinearColor{ p, v, t };
+			return FLinearColor{p, v, t};
 		case 3:
-			return FLinearColor{ p, q, v };
+			return FLinearColor{p, q, v};
 		case 4:
-			return FLinearColor{ t, p, v };
+			return FLinearColor{t, p, v};
 		default:
-			return FLinearColor{ v, p, q };
+			return FLinearColor{v, p, q};
 	}
 }

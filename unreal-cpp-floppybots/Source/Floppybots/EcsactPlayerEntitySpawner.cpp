@@ -26,7 +26,7 @@ auto UEcsactPlayerEntitySpawner::CreateInitialEntities( //
 	// generator system of backend function. Refer to your Ecsact async
 	// implemenation for details.
 	Runner->CreateEntity()
-		.AddComponent(floppybots::Player{ LocallyControllerPlayerId })
+		.AddComponent(floppybots::Player{LocallyControllerPlayerId})
 		.AddComponent(floppybots::MoveDirection{})
 		.AddComponent(floppybots::Position{})
 		.AddComponent(floppybots::Rotation{});
@@ -262,7 +262,7 @@ auto UEcsactPlayerEntitySpawner::UpdatePosition_Implementation( //
 	}
 
 	if(!player->Controller) {
-		auto desired_location = FVector{ Position.X, Position.Y, Position.Z };
+		auto desired_location = FVector{Position.X, Position.Y, Position.Z};
 		player->SetActorLocation(desired_location);
 	}
 

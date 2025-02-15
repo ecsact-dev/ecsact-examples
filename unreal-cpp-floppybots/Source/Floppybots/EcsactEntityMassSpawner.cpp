@@ -62,11 +62,12 @@ auto UEcsactEntityMassSpawner::CreateMassEntities(int count) -> void {
 			.AddComponent(floppybots::Position{
 				.x = static_cast<float>(RandomPointX),
 				.y = static_cast<float>(RandomPointY),
-				.z = 0 })
+				.z = 0
+			})
 			.AddComponent(floppybots::Rotation{})
 			.AddComponent(floppybots::Enemy{})
 			.AddComponent(floppybots::Velocity{})
-			.AddComponent(floppybots::Toggle{ .streaming = true })
+			.AddComponent(floppybots::Toggle{.streaming = true})
 			.OnCreate(TDelegate<void(ecsact_entity_id)>::CreateLambda( //
 				[](auto entity) {
 					UE_LOG(

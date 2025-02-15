@@ -12,7 +12,7 @@ void UFloppybotsMassSpawner::InitPlayer_Implementation(int32 Entity, FFloppybots
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsPlayerFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPlayerFragment{ Player });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPlayerFragment{Player});
 	}
 }
 void UFloppybotsMassSpawner::UpdatePlayer_Implementation(int32 Entity, FFloppybotsPlayer Player) {
@@ -50,7 +50,7 @@ void UFloppybotsMassSpawner::InitPusher_Implementation(int32 Entity, FFloppybots
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsPusherFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPusherFragment{ Pusher });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPusherFragment{Pusher});
 	}
 }
 void UFloppybotsMassSpawner::UpdatePusher_Implementation(int32 Entity, FFloppybotsPusher Pusher) {
@@ -108,7 +108,7 @@ void UFloppybotsMassSpawner::InitRotation_Implementation(int32 Entity, FFloppybo
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsRotationFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsRotationFragment{ Rotation });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsRotationFragment{Rotation});
 	}
 }
 void UFloppybotsMassSpawner::UpdateRotation_Implementation(int32 Entity, FFloppybotsRotation Rotation) {
@@ -146,7 +146,7 @@ void UFloppybotsMassSpawner::InitPosition_Implementation(int32 Entity, FFloppybo
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsPositionFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPositionFragment{ Position });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPositionFragment{Position});
 	}
 }
 void UFloppybotsMassSpawner::UpdatePosition_Implementation(int32 Entity, FFloppybotsPosition Position) {
@@ -184,7 +184,7 @@ void UFloppybotsMassSpawner::InitStunned_Implementation(int32 Entity, FFloppybot
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsStunnedFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsStunnedFragment{ Stunned });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsStunnedFragment{Stunned});
 	}
 }
 void UFloppybotsMassSpawner::UpdateStunned_Implementation(int32 Entity, FFloppybotsStunned Stunned) {
@@ -242,7 +242,7 @@ void UFloppybotsMassSpawner::InitPushcharge_Implementation(int32 Entity, FFloppy
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsPushchargeFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPushchargeFragment{ Pushcharge });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPushchargeFragment{Pushcharge});
 	}
 }
 void UFloppybotsMassSpawner::UpdatePushcharge_Implementation(int32 Entity, FFloppybotsPushcharge Pushcharge) {
@@ -280,7 +280,7 @@ void UFloppybotsMassSpawner::InitEnemy_Implementation(int32 Entity, FFloppybotsE
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsEnemyFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsEnemyFragment{ Enemy });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsEnemyFragment{Enemy});
 	}
 }
 void UFloppybotsMassSpawner::UpdateEnemy_Implementation(int32 Entity, FFloppybotsEnemy Enemy) {
@@ -318,7 +318,7 @@ void UFloppybotsMassSpawner::InitVelocity_Implementation(int32 Entity, FFloppybo
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsVelocityFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsVelocityFragment{ Velocity });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsVelocityFragment{Velocity});
 	}
 }
 void UFloppybotsMassSpawner::UpdateVelocity_Implementation(int32 Entity, FFloppybotsVelocity Velocity) {
@@ -356,7 +356,7 @@ void UFloppybotsMassSpawner::InitPushing_Implementation(int32 Entity, FFloppybot
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsPushingFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPushingFragment{ Pushing });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsPushingFragment{Pushing});
 	}
 }
 void UFloppybotsMassSpawner::UpdatePushing_Implementation(int32 Entity, FFloppybotsPushing Pushing) {
@@ -394,7 +394,7 @@ void UFloppybotsMassSpawner::InitToggle_Implementation(int32 Entity, FFloppybots
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsToggleFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsToggleFragment{ Toggle });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsToggleFragment{Toggle});
 	}
 }
 void UFloppybotsMassSpawner::UpdateToggle_Implementation(int32 Entity, FFloppybotsToggle Toggle) {
@@ -432,7 +432,7 @@ void UFloppybotsMassSpawner::InitMovedirection_Implementation(int32 Entity, FFlo
 	auto entity_handles = GetEcsactMassEntityHandles(Entity);
 	for(auto entity_handle : entity_handles) {
 		entity_manager.Defer().AddFragment<FFloppybotsMovedirectionFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsMovedirectionFragment{ Movedirection });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FFloppybotsMovedirectionFragment{Movedirection});
 	}
 }
 void UFloppybotsMassSpawner::UpdateMovedirection_Implementation(int32 Entity, FFloppybotsMovedirection Movedirection) {
@@ -505,7 +505,7 @@ auto UOneToOneFloppybotsMassSpawner::EntityCreated_Implementation(int32 Entity) 
 	MassEntities.Add(static_cast<ecsact_entity_id>(Entity), new_entity_handles);
 	for(auto entity_handle : new_entity_handles) {
 		entity_manager.Defer().AddFragment<FEcsactEntityFragment>(entity_handle);
-		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FEcsactEntityFragment{ static_cast<ecsact_entity_id>(Entity) });
+		entity_manager.Defer().PushCommand<FMassCommandAddFragmentInstances>(entity_handle, FEcsactEntityFragment{static_cast<ecsact_entity_id>(Entity)});
 		;
 	}
 }

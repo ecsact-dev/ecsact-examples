@@ -28,7 +28,7 @@ static auto inc_package_header_no_ext( //
 	auto main_ecsact_file_path = ecsact::meta::package_file_path(ctx.package_id);
 	if(ctx.package_id == pkg_id) {
 		main_ecsact_file_path =
-			fs::path{ main_ecsact_file_path.replace_extension("").string() + suffix }
+			fs::path{main_ecsact_file_path.replace_extension("").string() + suffix}
 				.replace_extension(header_extension);
 
 		inc_header(ctx, main_ecsact_file_path.filename().string());
@@ -136,6 +136,6 @@ auto ecsact_codegen_plugin(
 	ecsact_codegen_write_fn_t write_fn,
 	ecsact_codegen_report_fn_t report_fn
 ) -> void {
-	generate_header({ package_id, GENERATED_HEADER_INDEX, write_fn, report_fn });
-	generate_source({ package_id, GENERATED_SOURCE_INDEX, write_fn, report_fn });
+	generate_header({package_id, GENERATED_HEADER_INDEX, write_fn, report_fn});
+	generate_source({package_id, GENERATED_SOURCE_INDEX, write_fn, report_fn});
 }

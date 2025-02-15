@@ -48,7 +48,7 @@ auto floppybots::PusherApplyExpired::impl(context& ctx) -> void {
 auto floppybots::StartPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	if(player_id == ctx.action().player_id) {
-		ctx.add(PushCharge{ .radius = 3.f });
+		ctx.add(PushCharge{.radius = 3.f});
 	}
 }
 
@@ -56,7 +56,7 @@ auto floppybots::FinishPush::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 
 	if(player_id == ctx.action().player_id) {
-		ctx.add(Pusher{ 2.f });
+		ctx.add(Pusher{2.f});
 	}
 }
 
@@ -134,7 +134,7 @@ auto floppybots::Move::impl(context& ctx) -> void {
 	auto player_id = ctx.get<Player>().player_id;
 	auto action = ctx.action();
 	if(player_id == action.player_id) {
-		ctx.update(MoveDirection{ action.x, action.y });
+		ctx.update(MoveDirection{action.x, action.y});
 	}
 }
 
@@ -191,13 +191,13 @@ auto floppybots::ApplyDrag::impl(context& ctx) -> void {
 
 	if(std::abs(velocity.x) <= 2 && pushing.tick_count >= pushing.tick_total) {
 		ctx.add<RemovePushingTag>();
-		ctx.add(Stunned{ 10.f });
+		ctx.add(Stunned{10.f});
 	}
 	ctx.update(velocity);
 }
 
 auto floppybots::ResumeStreaming::impl(context& ctx) -> void {
-	ctx.update(Toggle{ .streaming = true });
+	ctx.update(Toggle{.streaming = true});
 }
 
 auto floppybots::TogglePushedEntities::impl(context& ctx) -> void {

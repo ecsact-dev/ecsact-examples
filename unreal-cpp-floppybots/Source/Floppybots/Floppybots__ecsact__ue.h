@@ -50,7 +50,149 @@ namespace EcsactUnreal::CodegenMeta {
 
 } // namespace EcsactUnreal::CodegenMeta
 
-/* removed some for sake of video (screenshot size was too big) */
+USTRUCT(BlueprintType)
+struct FFloppybotsPlayer {
+	GENERATED_BODY()
+
+	static FFloppybotsPlayer FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PlayerId;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsPusher {
+	GENERATED_BODY()
+
+	static FFloppybotsPusher FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CooldownRemaining;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsPusherexpired {
+	GENERATED_BODY()
+
+	static FFloppybotsPusherexpired FromEcsactComponentData(const void*);
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsRotation {
+	GENERATED_BODY()
+
+	static FFloppybotsRotation FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Pitch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Yaw;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Roll;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsPosition {
+	GENERATED_BODY()
+
+	static FFloppybotsPosition FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Y;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Z;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsStunned {
+	GENERATED_BODY()
+
+	static FFloppybotsStunned FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Remaining;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsStunnedexpired {
+	GENERATED_BODY()
+
+	static FFloppybotsStunnedexpired FromEcsactComponentData(const void*);
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsPushcharge {
+	GENERATED_BODY()
+
+	static FFloppybotsPushcharge FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Radius;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsEnemy {
+	GENERATED_BODY()
+
+	static FFloppybotsEnemy FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PlayerId;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsVelocity {
+	GENERATED_BODY()
+
+	static FFloppybotsVelocity FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Y;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Z;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsPushing {
+	GENERATED_BODY()
+
+	static FFloppybotsPushing FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
+	int32 TickTotal;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-32768", ClampMax = "32767"))
+	int32 TickCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHeight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ForceX;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ForceY;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ForceZ;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsToggle {
+	GENERATED_BODY()
+
+	static FFloppybotsToggle FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = "-128", ClampMax = "127"))
+	int32 Streaming;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsMovedirection {
+	GENERATED_BODY()
+
+	static FFloppybotsMovedirection FromEcsactComponentData(const void*);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Y;
+};
+
+USTRUCT(BlueprintType)
+struct FFloppybotsRemovepushingtag {
+	GENERATED_BODY()
+
+	static FFloppybotsRemovepushingtag FromEcsactComponentData(const void*);
+};
 
 UCLASS(Abstract, Blueprintable, meta = (DisplayName = "Ecsact Runner Package Subsystem (floppybots)"))
 class UFloppybotsEcsactRunnerSubsystem : public UEcsactRunnerSubsystem {
