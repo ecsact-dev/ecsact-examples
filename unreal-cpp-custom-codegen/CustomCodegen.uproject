@@ -1,0 +1,32 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.5",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "CustomCodegen",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "EcsactComponentActorCodegenPlugin",
+			"Type": "Editor",
+			"LoadingPhase": "None"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	],
+	"PreBuildSteps": {
+		"Win64": [
+			"ecsact codegen $(ProjectDir)/Source/CustomCodegen/Hello.ecsact --plugin=$(ProjectDir)/Binaries/Win64/UnrealEditor-EcsactComponentActorCodegenPlugin.dll || exit /b 1"
+		]
+	}
+}
