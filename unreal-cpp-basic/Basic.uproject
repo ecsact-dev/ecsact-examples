@@ -29,7 +29,7 @@
 	],
 	"PreBuildSteps": {
 		"Win64": [
-			"EcsactUnrealCodegen $(ProjectDir) --engine-dir $(EngineDir) || exit /b 1"
+			"$(ProjectDir)/EcsactUnrealCodegen.bat $(EngineDir) $(ProjectDir)"
 		]
 	}
 }
